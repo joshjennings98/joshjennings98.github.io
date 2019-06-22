@@ -1,17 +1,27 @@
 [
   {
-    "link": "https://github.com/yourprofile",
-    "title": "title1",
+    "link": "https://github.com/joshthepirate",
+    "title": "GitHub",
     "service": "github"
   },
   {
-    "link": "https://www.linkedin.com/in/yourprofile",
-    "title": "title2",
+    "link": "https://www.linkedin.com/in/josh-jennings-41a17213a",
+    "title": "LinkedIn",
     "service": "linkedin"
   },
   {
-    "link": "https://www.facebook.com/yourprofile",
-    "title": "title3",
+    "link": "https://www.facebook.com/JoshThePirate",
+    "title": "Facebook",
     "service": "facebook"
+  },
+  {
+    "link": "https://nbviewer.jupyter.org/github/joshthepirate/joshthepirate.github.io/blob/master/CV-Josh-Jennings.pdf",
+    "title": "Online CV",
+    "service": "cv"
+  },
+  {
+    "link": "mailto:jenninjl01@gmail.com",
+    "title": "Email",
+    "service": "telegram"
   }
 ]

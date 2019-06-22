@@ -1,20 +1,14 @@
 [
   {
-    "title": "Backend software developer",
-    "timeframe": "10.2018 - 01.2019",
-    "place": "company | Somewhere",
-    "description": "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum."
+    "title": "Javascript developer for MOOC interactive visualisations",
+    "timeframe": "06/2019 - Now",
+    "place": "Digital Learning Hub | Imperial College London",
+    "description": "Worked with the Digital Learning Hub at Imperial College London to develop interactive visualisations for the upcoming online masters course in Machine London that is currently being devloped by Imperial College London. This mainly involved Javascript development and backend web devlopment. I used javascript to create useful visualisations that could improve understanding of complex mathematical ideas such as the effects of different types of regularisation techniques or how different machine learning algorithms work."
   },
   {
-    "title": "Intern frontend software developer",
-    "timeframe": "07.2018 - 09.2019",
-    "place": "company.git | Somewhere, Poland",
-    "description": "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum."
-  },
-  {
-    "title": "Motion graphic designer",
-    "timeframe": "06.2017 - 07.2017",
-    "place": "company.com | Elsewhere, UK",
-    "description": "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum."
+    "title": "Lead Engineer - SensUS Competition 2018",
+    "timeframe": "02/2018 - 09/2018",
+    "place": "Department of Chemistry | Imperial College London",
+    "description": "Worked with the Department of Chemistry at Imperial College London to develop a biosensor that could detect the Vancomycin concentration in blood plasma for an international competition which came third place. I led the engineering subgroup, managing both electrical engineers and biomedical engineers during the development process. My programming work involved creating an android application that implemented an image processing neural network that could determine the colour of lines on a Lateral Flow Assay. As part of this competition I represented Imperial College London internationally"
   }
 ]
