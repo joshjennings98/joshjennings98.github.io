@@ -1,0 +1,31 @@
+:root {
+    --background-main-color: #fff;
+    --main-font-family: 'Open Sans', sans-serif;
+    --header-font-family: 'Lato', sans-serif;
+    --default-transition-length: .7s;
+    --default-padding: 20px;
+    --main-font-color: #000;
+    --secondary-font-color: rgba(0, 0, 0, .2);
+    --bullet-size: 11px;
+    --scrollbar-background: darkgrey;
+    --scrollbar-outline: slategrey;
+    --accent-color: #ee4565;
+}
+
+body::-webkit-scrollbar {
+    width: 5px;
+}
+
+body::-webkit-scrollbar-track {
+    -webkit-box-shadow: inset 0 0 6px rgba(0,0,0,0.3);
+}
+
+body::-webkit-scrollbar-thumb {
+    background-color: var(--scrollbar-background);
+    outline: 1px solid var(--scrollbar-outline);
+}
+
+a {
+    color: var(--accent-color);
+    text-decoration: none;
+}
