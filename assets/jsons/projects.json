@@ -1,14 +1,44 @@
 [
   {
-    "title": "some project I made",
-    "date": "03.2019 - 06.2019",
-    "imgUrl": "assets/img/myimage.gif",
-    "description": "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum."
+    "title": "Chess in F#",
+    "date": "06/2019 - Now",
+    "imgUrl": "assets/img/chess-sharp.png",
+    "description": "A game of console chess written in F#. It is played against an API opponent. It has scalable levels of difficulty which change the maximum depth of the alpha beta pruning tree search used by the opponent. It has multiple choices of initial board and games can be saved and loaded. Source on GitHub: https://github.com/joshthepirate/chess-sharp"
   },
   {
-    "title": "another project I made",
-    "date": "03.2019 - 05.2019",
-    "imgUrl": "assets/img/anotherimage.png",
-    "description": "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum."
+    "title": "Orbis Health App",
+    "date": "04/2019 - 06/2019",
+    "imgUrl": "assets/img/healthapp.jpg",
+    "description": "The Orbis Health App is an application created using react native and JavaScript that is designed to help improve quality of life for patients that are suffering from Intermittent Claudation. It contains events creation and tracking, the ability to monitor distance and pace travelled and the ability to message other users of the applciation. It is designed as an alternative to surgery. I was in charge of the Events creation and the initial naviagtion as well as the documentation. Source on GitHub: https://github.com/rahulberry/HealthApp"
+  },
+  {
+    "title": "Brainfuck to C transpiler written in F#",
+    "date": "04/2019 - 05/2019",
+    "imgUrl": "assets/img/fsharp-brainfuck-to-c.png",
+    "description": "A simple BrainFuck to C Transpiler written in F#. This program contains several optimisations to reduce the size of the outputted code. The transpiler contains parser, optimiser, and compiler components. Source on GitHub: https://github.com/joshthepirate/fsharp-brainfuck-to-c"
+  },
+  {
+    "title": "Pong written in F#",
+    "date": "04/2019 - 04/2019",
+    "imgUrl": "assets/img/pong-fsharp.png",
+    "description": "A game of pong written in F# using the MonoGame API. A very simple version of pong that I wrote in order to gain an understanding of how the MonoGame API works. Source on GitHub: https://github.com/joshthepirate/pong-fsharp"
+  },
+  {
+    "title": "Visual2 Extension: UAL Assemebly to GNU Assembler",
+    "date": "02/2018 - 04/2019",
+    "imgUrl": "assets/img/visual.png",
+    "description": "An extension to the Visual2 ARM Assembly writing software that allows the UAL assembly used in the program to be outputted as GNU Assembler which can be used to program hardware. This was written in F# for the individual component of the High Level Programming Module in my 3rd Year of Electrical and Electronic Engineering at Imperial College London. Source on GitHub: https://github.com/Xride20/visual2-edits-team6/tree/jlj16"
+  },
+  {
+    "title": "Small Neural Network Library written in C++",
+    "date": "12/2018 - 01/2019",
+    "imgUrl": "assets/img/cpp-neural-network.png",
+    "description": "A small library that provides the ability to create a scalable fully connected neural network. This was written using only the C++ Standard Library. Contains multiple activation functions and can be have any number of hidden layers or nodes per layer. Tested using the MNist dataset. Source on GitHub: https://github.com/joshthepirate/cpp-uni-work/blob/master/NeuralNetwork.cpp"
+  },
+  {
+    "title": "SensUS 2018 Vancomycin Biosenser Application",
+    "date": "06/2018 - 08/2018",
+    "imgUrl": "assets/img/sensus2018.jpg",
+    "description": "This took real time images from the phone's camera and converted the relevant areas of the image to the HSV colour space to allow the splitting of colour and intensity. This application was used in conjunction with lateral flow assay membranes designed by chemistry students to detect Vancomycin concentrations in blood plasma and went on to win third place in the SensUs 2018 competition."
   }
 ]
