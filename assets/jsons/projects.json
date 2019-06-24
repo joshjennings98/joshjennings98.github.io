@@ -26,7 +26,7 @@
   {
     "title": "Visual2 Extension: UAL Assemebly to GNU Assembler",
     "date": "02/2018 - 04/2019",
-    "imgUrl": "assets/img/visual.PNG",
+    "imgUrl": "assets/img/visual.png",
     "description": "An extension to the Visual2 ARM Assembly writing software that allows the UAL assembly used in the program to be outputted as GNU Assembler which can be used to program hardware. This was written in F# for the individual component of the High Level Programming Module in my 3rd Year of Electrical and Electronic Engineering at Imperial College London. Source on GitHub: https://github.com/Xride20/visual2-edits-team6/tree/jlj16"
   },
   {
