@@ -99,7 +99,7 @@ var traces = [
     z: arrayZ,
     mode: 'markers',
     type: 'scatter3d',
-    marker: {color: 'rgb(0,0,255)', size: 14}
+    marker: {color: 'rgb(0,0,255)', size: 7}
   },
   { // Orange Class Points
     name: 'Orange Class',
@@ -108,7 +108,7 @@ var traces = [
     z: arrayZ,
     mode: 'markers',
     type: 'scatter3d',
-    marker: {color: 'rgb(255,165,0)', size: 14}
+    marker: {color: 'rgb(255,165,0)', size: 7}
   },
   { // Blue Class Points
     name: 'Blue Class',
@@ -117,7 +117,7 @@ var traces = [
     z: arrayZ.map(function (el, i) {return (2 ** 0.5) * arrayXBlue[i] * arrayYBlue[i];}),
     mode: 'markers',
     type: 'scatter3d',
-    marker: {color: 'rgb(0,0,255)', size: 14}
+    marker: {color: 'rgb(0,0,255)', size: 7}
   },
   { // Orange Class Points
     name: 'Orange Class',
@@ -126,7 +126,7 @@ var traces = [
     z: arrayZ.map(function (el, i) {return (2 ** 0.5) * arrayXOrange[i] * arrayYOrange[i];}),
     mode: 'markers',
     type: 'scatter3d',
-    marker: {color: 'rgb(255,165,0)', size: 14}
+    marker: {color: 'rgb(255,165,0)', size: 7}
   },
   {
     x : [0, 0, 80, 80, 0],
@@ -185,7 +185,7 @@ updatePlot = () => {
       break;
     case 3.0:
       Plotly.react('nonlinear', [traces[8], traces[9]], layout3);  
-      document.getElementById("step").innerHTML = "That important step is to map each data point to another one in a higher dimension. There are many ways we could do this but we will use the following mapping: <br><img style=\"width:60%\" src=\"assets/mapping.png\"> <br>This is a simple mapping and it causes our data to become linearly separable!!"
+      document.getElementById("step").innerHTML = "That important step is to map each data point to another one in a higher dimension. There are many ways we could do this but we will use the following mapping: <br><img style=\"width:60%\" src=\"assets/mapping.PNG\"> <br>This is a simple mapping and it causes our data to become linearly separable!!"
       break;
     case 4.0:
       Plotly.react('nonlinear', [traces[8], traces[9], traces[10], traces[11], traces[12]], layout3);
