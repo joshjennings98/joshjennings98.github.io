@@ -99,7 +99,7 @@ var traces = [
     z: arrayZ,
     mode: 'markers',
     type: 'scatter3d',
-    marker: {color: 'rgb(0,0,255)', size: 7}
+    marker: {color: 'rgb(0,0,255)', size: 14}
   },
   { // Orange Class Points
     name: 'Orange Class',
@@ -108,7 +108,7 @@ var traces = [
     z: arrayZ,
     mode: 'markers',
     type: 'scatter3d',
-    marker: {color: 'rgb(255,165,0)', size: 7}
+    marker: {color: 'rgb(255,165,0)', size: 14}
   },
   { // Blue Class Points
     name: 'Blue Class',
@@ -117,7 +117,7 @@ var traces = [
     z: arrayZ.map(function (el, i) {return (2 ** 0.5) * arrayXBlue[i] * arrayYBlue[i];}),
     mode: 'markers',
     type: 'scatter3d',
-    marker: {color: 'rgb(0,0,255)', size: 7}
+    marker: {color: 'rgb(0,0,255)', size: 14}
   },
   { // Orange Class Points
     name: 'Orange Class',
@@ -126,7 +126,7 @@ var traces = [
     z: arrayZ.map(function (el, i) {return (2 ** 0.5) * arrayXOrange[i] * arrayYOrange[i];}),
     mode: 'markers',
     type: 'scatter3d',
-    marker: {color: 'rgb(255,165,0)', size: 7}
+    marker: {color: 'rgb(255,165,0)', size: 14}
   },
   {
     x : [0, 0, 80, 80, 0],
@@ -174,32 +174,43 @@ updatePlot = () => {
     case 0.0:
       Plotly.react('nonlinear', [traces[0], traces[1]], layout);
       document.getElementById("step").innerHTML = "First, we start out with out dataset that can't be classified using a linear classifier."
+      document.getElementById("decrease").style.display = "none";
+      document.getElementById("increase").style.display = "block";
       break;
     case 1.0:
       Plotly.react('nonlinear', [traces[0], traces[1], traces[2], traces[3], traces[4], traces[5]], layout);     
       document.getElementById("step").innerHTML = "You can see here that no matter how we try to split the data we cannot separate it with a linear classifier. We have to try a different approach." 
+      document.getElementById("decrease").style.display = "block";
+      document.getElementById("increase").style.display = "block";
       break;
     case 2.0:
       Plotly.react('nonlinear', [traces[6], traces[7]], layout2);   
       document.getElementById("step").innerHTML = "This approach involves projecting the plane from 2D to 3D. This will allow us to do the most important step."
+      document.getElementById("decrease").style.display = "block";
+      document.getElementById("increase").style.display = "block";
       break;
     case 3.0:
       Plotly.react('nonlinear', [traces[8], traces[9]], layout3);  
       document.getElementById("step").innerHTML = "That important step is to map each data point to another one in a higher dimension. There are many ways we could do this but we will use the following mapping: <br><img style=\"width:60%\" src=\"assets/mapping.PNG\"> <br>This is a simple mapping and it causes our data to become linearly separable!!"
+      document.getElementById("decrease").style.display = "block";
+      document.getElementById("increase").style.display = "block";
       break;
     case 4.0:
       Plotly.react('nonlinear', [traces[8], traces[9], traces[10], traces[11], traces[12]], layout3);
       document.getElementById("step").innerHTML = "Now that our data is linearly separable, we can carry use the SVM to find a plane that separates them."
+      document.getElementById("decrease").style.display = "block";
+      document.getElementById("increase").style.display = "block";
       break;
     case 5.0:
       Plotly.react('nonlinear', [traces[0], traces[1], traces[13], traces[14]], layout);
       document.getElementById("step").innerHTML = "The final step is to project the 3D plot back to 2D by and the final plot can be seen on the right. As you can see, a classifier has been found! Now you know the trick to using SVMs to classify not-linearly separable data, you just have to project it to a higher dimension where the data <b>IS</b> linearly separable. Create the SVM there, then project everything back to the original dimension."
+      document.getElementById("decrease").style.display = "block";
+      document.getElementById("increase").style.display = "none";
       break;
     default:
         break;
   }
 }
-
 
 function increaseValue() {
   var value = parseInt(document.getElementById('number').value, 10);
@@ -220,3 +231,6 @@ function decreaseValue() {
 
 Plotly.newPlot('nonlinear', [traces[0], traces[1]], layout);
 updatePlot();
+
+document.getElementById("decrease").style.display = "none";
+document.getElementById("increase").style.display = "block";

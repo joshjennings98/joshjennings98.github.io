@@ -16,6 +16,17 @@
 
     <script src="./script/svm.js"></script>
 
+    <script type="text/javascript">
+        // Toggle visibility of <div>
+        function toggle_visibility(id) {
+            var e = document.getElementById(id);
+            if(e.style.display == 'block')
+                e.style.display = 'none';
+            else
+                e.style.display = 'block';
+        }
+    </script>
+
     <meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
 </head>
 <body>
@@ -56,6 +67,44 @@
             This is because, a Hard Margin SVM can only successfully classify <b>linearly separable data</b>.
             This is data where at least one line exists that can split the data into the two catagories.
         </p>
+        
+        <div>
+            <p>
+                <a href="#" onclick="toggle_visibility('hardSVMMaths');">See some maths.</a>
+            </p>
+            <div id="hardSVMMaths" style="display: none">
+                <h4>
+                    Formal Definition of the Hard Margin SVM
+                </h4>
+                <p>    
+                    To define Hard Margin SVM formally, we express the distance between a point to a hyperplane using the parameters that define the halfspace:
+                    \[
+                        \text{The distance between a point }x\text{ and the hyperplane defined by }(\mathbf{w}, b)\text{ where }||\mathbf{w}|| = 1\text{ is }|\langle \mathbf{w}, \mathbf{x}\rangle + b|.
+                    \]
+                    On the basis of this claim, the closest point in the training set to the separating hyperplane is \(\text{min}_{i\in[m]} |\langle\mathbf{w}, \mathbf{x}_i + b|\). Therefore, the Hard-SVM rule is:
+                    \[
+                        \underset{(\mathbf{w},b):||\mathbf{w}||=1}{\text{argmax}} \; \underset{\left. i \in [m] \right.}{\text{min}} \; |\langle\mathbf{w}, \mathbf{x}_i \rangle + b| \quad \text{s.t.}\quad \forall i, \; y_i\left( \langle \mathbf{w}, \mathbf{x}_i \rangle + b\right) > 0
+                    \]
+                    Or equivalently:
+                    \[
+                        \underset{(\mathbf{w},b):||\mathbf{w}||=1}{\text{argmax}} \; \underset{\left. i \in [m] \right.}{\text{min}} \; y_i\left( \langle \mathbf{w},\mathbf{x}_i \rangle + b\right)
+                    \]
+                    The output of a Hard Margin SVM is an output of this equation.
+                </p> 
+                <p>
+                    As a quadratic optimization problem:
+                    <div align="center">
+                        <img src="assets/hardsvm.png" style="width: 60%">
+                    </div>
+                </p>
+                <p>
+                    For homegenous halfspaces (halfspaces that pass through the origin meaning \(b=0\)), the Hard Margin SVM can be found by solving:
+                    \[
+                        \underset{\mathbf{w}}{\text{min}} \;||\mathbf{w}||^2 \quad \text{s.t.} \quad \forall i, \; y_i \langle \mathbf{w}, \mathbf{x}_i \rangle \ge 1
+                    \]
+                </p>
+            </div>
+        </div>
         <h4>
             What about data that's not completely Linearly Separable?
         </h4>
@@ -67,6 +116,7 @@
                     <input type="submit" value="Find out about Soft Margin SVMs!" />
                 </form>
             </div>
+            
         </p>
     </div>
     <!--THE BRAINS-->

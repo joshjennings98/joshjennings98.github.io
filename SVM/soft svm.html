@@ -16,6 +16,17 @@
 
     <script src="./script/svm.js"></script>
 
+    <script type="text/javascript">
+        // Toggle visibility of <div>
+        function toggle_visibility(id) {
+            var e = document.getElementById(id);
+            if(e.style.display == 'block')
+                e.style.display = 'none';
+            else
+                e.style.display = 'block';
+        }
+    </script>
+
     <meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
 </head>
 <body>
@@ -25,20 +36,57 @@
         </h1>
         <p>
             If our data is not completely linearly separable due to a few points, depsite still looking like a linear classifer would generally do a good job, we can use <b>Soft Margin SVMs</b>.
-            <br> These are a type of Support Vector Machine that allows for a certain amount of error during training.
-            The amount of error is known as <b><i>C</i></b> or the <b>Hinge Loss</b>.
-            The use of this parameter is a tradeoff between having a large margin and correctly classifying the training data.
-            You get better classification of training data at the expense of a wide margin.
-            By choosing a higher value of <i>C</i> you imply that you want less errors on the training data.
+            These are a type of Support Vector Machine that allows for a certain amount of error during training.
         </p>
         <p>
-            The choice of <i>C</i> can be a complicated task in istelf and sometimes requires complex algorithms to decide it.
-            Have a look at the plot below to see how adjusting the size of <i>C</i> affects the margin width.
+            In contrast to Hard Margin SVMs, the contraint of \(y_i(\langle\mathbf{w},\mathbf{x}_i\rangle+b)\ge 1\) becomes \(y_i(\langle\mathbf{w},\mathbf{x}_i\rangle+b)\ge 1 - \zeta_i\).
+            The term \(\zeta_i \) measures by how much the Hard Margin SVM contraint is being violated.
+            The Soft Margin SVM then tries to maximise the width of the margin whilst also minimising the average value of \( \zeta_i \).
+            The <b>Hinge Loss</b> is the tradeoff between \(\zeta_i\) and the margin width and is known as \( \lambda\).
+        </p>
+        <p>
+            <a href="#" onclick="toggle_visibility('softSVMMaths');">See some maths.</a>
+       </p>
+        <div id="softSVMMaths" style="display: none">
+            <h4>
+                Formal Definition of the Soft Margin SVM
+            </h4>
+            <p>
+                As a quadratic optimization problem the Soft Margin SVM can be defined as:
+                <div align="center">
+                    <img src="assets/softsvm.png" style="width: 60%">
+                </div>
+                Using the definition of hinge loss:
+                \[
+                    \ell^{\text{hinge}}((\mathbf{w},b),(\mathbf{x},y))=\text{max}\{0,1-y(\langle \mathbf{w}, x \rangle + b)\}
+                \]
+                We can represent the Soft Margin SVM as:
+                \[
+                    \underset{\mathbf{w},b}{\text{min}}\left( \lambda||\mathbf{w}||^2+L_S^{\text{hinge}}((\mathbf{w},b)) \right)
+                \]
+                For the homogenous case, it can be defined as:
+                \[
+                    \underset{\mathbf{w}}{\text{min}}\left( \lambda||\mathbf{w}||^2+L_S^{\text{hinge}}((\mathbf{w})) \right)
+                \]
+                Where
+                \[
+                    L_s^{\text{hinge}}(\mathbf{w})=\frac{1}{m}\sum_{i=1}^{m}\text{max}\{0, 1-y\langle \mathbf{w}, \mathbf{x}_i\rangle\}
+                \]
+            </p>
+        </div>
+        <p>
+            The use of the \( \lambda \) parameter is a tradeoff between having a large margin and correctly classifying the training data.
+            You get better classification of training data at the expense of a wide margin.
+            By choosing a higher value of \( \lambda \) you imply that you want less errors on the training data.
+        </p>
+        <p>
+            The choice of \( \lambda \) can be a complicated task in istelf and sometimes requires complex algorithms to decide it.
+            Have a look at the plot below to see how adjusting the size of \( \lambda \) affects the margin width.
         </p>
         <p>
             <div align="center">
                 <div id="softSVMPlot" style="width:100%;height:100%"></div>
-                <label class="sliderTitle" style="font-size: x-large">C:&nbsp;<!--rho-->
+                <label class="sliderTitle" style="font-size: x-large">λ:&nbsp;<!--rho-->
                     <span id="CSliderDisplay" data-unit="">1</span>&nbsp; <!--default: 0-->
                 </label>
                 <div style="width: 60%">

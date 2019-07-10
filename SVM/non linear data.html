@@ -19,7 +19,7 @@
     <meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
 </head>
 <body>
-    <div class="container"> 
+    <div class="container">
         <h1>How SVMs deal with Non-Linearably Separable Data</h1>
         <div class="row">
             <!-- Graph -->
@@ -34,11 +34,13 @@
                 <p id="step">
                     First, we start out with out dataset that can't be classified using a linear classifier.
                 </p>
-                <div type="input" id="number" value="1" class="columns" align="center">
-                    <form>
-                        <div class="button" id="decrease" onclick="decreaseValue()" value="Decrease Value">Last Step</div> 
-                        <div class="button" id="increase" onclick="increaseValue()" value="Increase Value">Next Step</div>
-                    </form>
+                <div type="input" id="number" value="1" class="columns" align="center" >
+                    <div style="width: 40%">
+                        <form>
+                            <div class="button" id="decrease" onclick="decreaseValue()" value="Decrease Value">Previous Step</div> 
+                            <div class="button" id="increase" onclick="increaseValue()" value="Increase Value">Next Step</div>
+                        </form>
+                    </div>
                 </div>                
             </div>
             <!--Bottons/Sliders-->
@@ -49,7 +51,7 @@
         </div>
         <div align="left">
             <p>
-                The method outlined above is very useful, but for depending on the number of dimensions, the complexity can grow extremely quickly until it becomes too difficult to calculate.
+                The method outlined above is very useful, but depending on the number of dimensions, the complexity can grow extremely quickly until it becomes too difficult to calculate.
                 To counter this, Support Vector Machines have another trick, this one known as the <b>Kernel Trick</b>.
             </p>
             <div class="columns" align="center">

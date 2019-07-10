@@ -21,19 +21,17 @@
 <body>
     <div class="container">
         <h1>Kernels and The Kernel Trick</h1>
-        <h3>
-            Now for some maths...
-        </h3>
         <p>
-            Support Vector Machines use things called <b>kernels methods</b>.
-            Kernel methods are a type of instance-based learner which means that rather than learning some fixed characteristics for each of the datapoints, they instead learn a specific <b>weight</b> \(w_i\) for each value.
+            Support Vector Machines use techniques known as <b>kernels methods</b>.
+            To understand kernel methods, we will need to use some maths.
         </p>
         <p>
+            Kernel methods are a type of instance-based learner which means that rather than learning some fixed characteristics for each of the datapoints, they instead learn a specific <b>weight</b> \(w_i\) that corresponds to the speific datapoint \((x_i,y_i)\).
             When they are presented with a new unknown data point, the kernel method will use a <b>kernel</b> to classify the new input.
+        </p>
+        <p>
             A kernel is a type of function that takes a new input as well as all the known values and measures the similarity between all those known values and the new input. 
             The output of this will be either a positive or negative number and the sign of this number is the output of the Kernel.
-        </p>
-        <p>
             The equation for this is:
             \[
                 \hat{y}=\text{sgn}\sum_{i=1}^{n}w_iy_ik(\mathbf{x}_i,\mathbf{x}')
@@ -53,9 +51,10 @@
             Example of reduced complexity
         </h3>
         <p>
-            First lets look at the complexity of our previous method of mapping from 2D to 3D.
+            Now we will show how the use of the kernel trick reduces the amount of operations that a computer would have to compute in comparison to projecting the data points to a higher dimension and then finding the SVM there.
         </p>
         <p>
+            First lets look at the complexity of our previous method of mapping from 2D to 3D.
             We start of with our mapping:
             \[
                 (x_i, y_i) \Rightarrow (x_i^2, y_i^2, \sqrt{2}x_iy_i)
@@ -128,11 +127,10 @@
         </p>
         <p>
             There are many different types of kernel functions. 
-            One of the most popular ones is the <b>Radial Basis Function</b>.
         </p>
         <div align="center">
             <form action="./rbf.html">
-                <input type="submit" value="Learn about the Radial Basis Function" />
+                <input type="submit" value="Learn about different types of Kernel" />
             </form>
         </div>
     </div>
