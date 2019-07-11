@@ -65,8 +65,8 @@
                 K(x,y) = \left( x^{\top}y+C \right)^d
             \]
             <ul style="padding-left:20px">
-                <li>\(x\) and \(y\) are vectors in the input space.</li>
-                <li>\(c \ge 0\) is a free parameter trading off the influence of higher-order versus lower-order terms in the polynomial.</li>
+                <li> \(x\) and \(y\) are vectors in the input space.</li>
+                <li> \(c \ge 0\) is a free parameter trading off the influence of higher-order versus lower-order terms in the polynomial.</li>
             </ul>
             The polynomial kernel is the one that we used in the projection example earlier. 
             The polynomial kernel is useful in natural language processing although in most other applications, the Radial Basis Function is used instead.
@@ -96,9 +96,12 @@
         </div>
             The radial basis function is very useful because it allows for us to represent an infinite dimension projection. Since a dot product is just a summation, we can use an approach similar to <a href="https://www.mathsisfun.com/algebra/infinite-series.html">infiite series</a> to find an approximation of this dot product.
         </p>
-        <p>
-            <a href="#" onclick="toggle_visibility('infiniteRBF');">See how the RBF represents an infinite dimension projection.</a>
-        </p>
+        <div align="center">
+            <form onclick="toggle_visibility('infiniteRBF');">
+                <input type="button" value="See how the RBF represents an infinite dimension projection." />
+            </form>
+        </div>
+            <!--a href="#" onclick="toggle_visibility('infiniteRBF');">See how the RBF represents an infinite dimension projection.</a--->
         <div id="infiniteRBF" style="display: none">
             <h3>
                 How the RBF represents an infinite dimension projection

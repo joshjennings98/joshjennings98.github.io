@@ -44,9 +44,11 @@
             The Soft Margin SVM then tries to maximise the width of the margin whilst also minimising the average value of \( \zeta_i \).
             The <b>Hinge Loss</b> is the tradeoff between \(\zeta_i\) and the margin width and is known as \( \lambda\).
         </p>
-        <p>
-            <a href="#" onclick="toggle_visibility('softSVMMaths');">See some maths.</a>
-       </p>
+        <div align="center">
+            <form onclick="toggle_visibility('softSVMMaths');">
+                <input type="button" value="See some maths behind the Soft Margin SVM." />
+            </form>
+        </div>
         <div id="softSVMMaths" style="display: none">
             <h4>
                 Formal Definition of the Soft Margin SVM
