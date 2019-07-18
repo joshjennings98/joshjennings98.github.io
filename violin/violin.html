@@ -1,0 +1,67 @@
+<!doctype html>
+<html>
+
+<head>
+    <!--Page Info-->
+    <title>Violin Plots</title>
+    <!--css link-->
+    <link rel="stylesheet" href="https://manglekuo.com/i-v/styles.css?v=2">
+    <!--Required JS resources--> <!--NB: better to have resources before the main body but still works even if they are not-->
+    <script src="https://cdn.plot.ly/plotly-latest.min.js"></script>
+    <script src="https://code.jquery.com/jquery-3.2.1.min.js"></script>
+    <script src=script/numeric/src/numeric.js></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/mathjs/3.15.0/math.min.js"></script>
+    <meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+</head>
+<body>
+
+    <div class="container">
+        <div class="row">
+            <div class="six columns">
+                <h1>Violin Plots</h1>
+                <p>
+                    Violin plots are used for plotting numeric data.
+                </p>
+                <p>
+                    They are similar to box plots except they also combine the basic box plot with a rotated version of kernel density estimation.
+                    This allows them to show the probability density of the data along with the information that a box plot provides.
+                </p>
+                <p>
+                    Compared to standard box plots that only show basic statistics (such as mean, median, and interquartile ranges), violin plots show the full distribution of the data. 
+                    This especially useful when the data distribution has multiple peaks and trughs (multimodal). 
+                    A violin plot is able to show the different peaks, their position and relative amplitude whereas the box plot can only show the maximum amplitude. 
+                </p>
+                <p>
+                    Use the dropdown menu below to compare the box and violin plots for various datasets.
+                </p>
+                <select id="datadropdown" onchange="getData(datadropdown.value)">
+                    <option value="1" selected>Global Alcohol Consumption 2010</option>
+                    <option value="2">Apple Stock</option>
+                    <option value="3">Test Gaussian</option>
+                </select> 
+            </div>
+
+            <div class="six columns" >
+                <ul class="tab-nav">
+                    <li><a class="button active" href="#BoxViolin">Box and Violin Plots</a></li>
+                    <li><a id="data" class="button" href="#dataset">Alcohol Global Dataset</a></li>
+                </ul>
+
+                <div class="tab-content">
+                    <div class="tab-pane active" id="BoxViolin" align="right">
+                        <div id="graph" align="center" style="width:450px; height:450px; margin-left: -10%"></div>
+                    </div>
+                    <div class="tab-pane" id="dataset" align="right">
+                        <div id="graph1" align="center" style="width:500px; height:750; overflow-x:scroll; "></div> 
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!--THE BRAINS-->
+    <script src=script/objects.js></script>
+    <script src=script/violin.js></script>
+</body>
+
+</html>
