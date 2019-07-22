@@ -19,7 +19,7 @@
         <div class="row">
             <div class="six columns">
                 <h1>Violin Plots</h1>
-                <p>
+                <p id="testCSV">
                     Violin plots are used for plotting numeric data.
                 </p>
                 <p>
@@ -28,23 +28,31 @@
                 </p>
                 <p>
                     Compared to standard box plots that only show basic statistics (such as mean, median, and interquartile ranges), violin plots show the full distribution of the data. 
-                    This especially useful when the data distribution has multiple peaks and trughs (multimodal). 
+                    This especially useful when the data distribution has multiple peaks and troughs (multimodal). 
                     A violin plot is able to show the different peaks, their position and relative amplitude whereas the box plot can only show the maximum amplitude. 
                 </p>
                 <p>
                     Use the dropdown menu below to compare the box and violin plots for various datasets.
                 </p>
                 <select id="datadropdown" onchange="getData(datadropdown.value)">
-                    <option value="1" selected>Global Alcohol Consumption 2010</option>
-                    <option value="2">Apple Stock</option>
-                    <option value="3">Test Gaussian</option>
+                    <option value="1" selected>Global Alcohol Consumption 2010 </option>
+                    <option value="2">Apple Stock Price 2014 </option>
+                    <option value="3">Apple Stock Traded 2015-2017 </option>
+                    <option value="4">World GDP 2014 </option>
+                    <option value="5">US City Populations 2014 </option>
+                    <option value="6">US Agricultural Exports 2011 </option>
+                    <option value="7">North America Precipitation Rates </option>
+                    <option value="8">US State Populations 2014 </option>
                 </select> 
+                <p id="special">
+                    The violin plot here shows a lot more information about how the data is distributed.
+                </p>
             </div>
 
             <div class="six columns" >
                 <ul class="tab-nav">
                     <li><a class="button active" href="#BoxViolin">Box and Violin Plots</a></li>
-                    <li><a id="data" class="button" href="#dataset">Alcohol Global Dataset</a></li>
+                    <li><a id="data" class="button" href="#dataset">Alcohol Consumption</a></li>
                 </ul>
 
                 <div class="tab-content">
