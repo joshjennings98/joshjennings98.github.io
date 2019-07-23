@@ -4,20 +4,36 @@ x1 = parseInt(document.getElementById("XInput").value);
 y1 = parseInt(document.getElementById("YInput").value);
 initialError = 1.25*(x1 + 6)**2 + (y1 - 8)**2;
 
+function round(value, decimals) {
+  return Number(Math.round(value+'e'+decimals)+'e-'+decimals);
+}
+
 var layout = {
   legend: {
     x: 0,
     y: 1
   },
-  width: 1300, height: 600,
-  margin: {l:30, r:30, t:30, b:30},
+  width: 600, height: 600,
+  //margin: {l:30, r:30, t:30, b:30},
   hovermode: "closest",
   showlegend: true,
-  grid: {rows: 1, columns: 2, pattern: 'independent'},
-  xaxis2: {range: [0, iterations], zeroline: true, title: "Iteration"},
-  yaxis2: {range: [0, initialError], zeroline: true, title: "Error"},
   //aspectratio: {x:1, y:1},
+  title: {text: "How Gradient Descent finds the minimum of a plane"}
 }
+
+var layout2 = {
+  legend: {
+    x: 0,
+    y: 1
+  },
+  width: 600, height: 700,
+  xaxis: {range: [0, iterations], zeroline: true, title: "Iteration"},
+  yaxis: {range: [0, initialError], zeroline: true, title: "Error"},
+  hovermode: "closest",
+  showlegend: true,
+  title: {text: "Absolute Error against Number of Iterations"}
+}
+
 let x = [];
 let y = [];
 let z = [];
@@ -64,7 +80,6 @@ randomIntFromInterval = (min,max) => {
 let currentAverage = [];
 
 updatePlot = () => {
-  // Plotly.newPlot('graph', data, layout);
   
   let iterations = document.getElementById("interationsInput").value;
   let learningRate = document.getElementById("LRInput").value;
@@ -82,37 +97,6 @@ updatePlot = () => {
 
   let xAxis = [0];
 
-
-  /*
-  Plotly.animate('graph', {
-    data: [
-      {
-        opacity:0.15,
-        color:'rgb(0,0,0)',
-        type: 'mesh3d',
-        x: x,
-        y: y,
-        z: z,
-      },
-      {x: xGD, y: yGD, z: zGD},
-      {},
-      //{x: [xMean], y: [yMean], z: [1.25*(xMean + 6)**2 + (yMean - 8)**2]},
-      {x: [xGD[xGD.length-1]], y: [yGD[yGD.length-1]], z: [zGD[zGD.length-1]]},
-      
-      {x: xAxis, y: zGD}
-    ],
-    layout: {}
-  }, {
-    transition: {
-      duration: 0,
-      easing: 'cubic-in-out'
-    },
-    frame: {
-      duration: 0
-    }
-  })
-  */
-
   let runPoint = 0;
   let it = -1;
 
@@ -128,19 +112,24 @@ updatePlot = () => {
       var math = MathJax.Hub.getAllJax("averageVector")[0];
       MathJax.Hub.Queue(["Text",math,
       "\\left(\\begin{matrix}" +
-        xMean + "\\\\" +
-        yMean + "\\\\" +
-        1.25*(xMean + 6)**2 + (yMean - 8)**2 + 
+        round(xMean, 2) + "\\\\" +
+        round(yMean, 2) + "\\\\" +
+        round(1.25*(xMean + 6)**2 + (yMean - 8)**2, 2) + 
         "\\end{matrix}\\right)"
       ]);
       var math = MathJax.Hub.getAllJax("bestVector")[0];
       MathJax.Hub.Queue(["Text",math,
       "\\left(\\begin{matrix}" +
-        xGD[xGD.length-1] + "\\\\" +
-        yGD[yGD.length-1] + "\\\\" +
-        zGD[zGD.length-1] + 
+        round(xGD[xGD.length-1], 2) + "\\\\" +
+        round(yGD[yGD.length-1], 2) + "\\\\" +
+        round(zGD[zGD.length-1], 2) + 
         "\\end{matrix}\\right)"
       ]);
+      var math = MathJax.Hub.getAllJax("finalError")[0];
+      MathJax.Hub.Queue(["Text",math,
+        round(zGD[zGD.length-1], 2)
+      ]);
+      
     }
 
     if (xGDlength < iterations) {
@@ -211,6 +200,20 @@ updatePlot = () => {
           {x: [xMean], y: [yMean], z: [1.25*(xMean + 6)**2 + (yMean - 8)**2]},
           {x: [xGD[xGD.length-1]], y: [yGD[yGD.length-1]], z: [zGD[zGD.length-1]]},
           
+          //{x: xAxis, y: zGD}
+        ],
+        layout: {}
+      }, {
+        transition: {
+          duration: 00,
+          easing: 'cubic-in-out'
+        },
+        frame: {
+          duration: 0
+        }
+      })
+      Plotly.animate('graph1', {
+        data: [          
           {x: xAxis, y: zGD}
         ],
         layout: {}
@@ -270,25 +273,31 @@ var data=[
     name: 'Best Vector'
   },
 
+
+];
+
+var data2 = [
   {
     x: [],
     y: [],
     mode: 'lines',
     type: 'scatter',
-    name: 'Error',
-    xaxis: 'x2',
-    yaxis: 'y2',
+    name: 'Absolute Error',
+    xaxis: 'x1',
+    yaxis: 'y1',
   }
-];
+]
 
 
 Plotly.newPlot('graph', data, layout);
+Plotly.newPlot('graph1', data2, layout2);
+
 
 $("input[id=runGD]").each(function () {
   $(this).on('input', function(){
       $("#runGD").val(parseFloat(document.getElementById('runGD').value));
+      console.log("Starting Simulation")
       updatePlot();
-      console.log("clicked")
   });
 });
 
@@ -306,17 +315,28 @@ $("input").each(function () {
         x: 0,
         y: 1
       },
-      width: 1300, height: 600,
-      margin: {l:30, r:30, t:30, b:30},
+      width: 600, height: 600,
+      //margin: {l:30, r:30, t:30, b:30},
       hovermode: "closest",
       showlegend: true,
-      grid: {rows: 1, columns: 2, pattern: 'independent'},
-      xaxis2: {range: [0, iterations], zeroline: true, title: "Iteration"},
-      yaxis2: {range: [0, initialError], zeroline: true, title: "Error"},
       //aspectratio: {x:1, y:1},
+    }
+    
+    layout2 = {
+      legend: {
+        x: 0,
+        y: 1
+      },
+      width: 600, height: 600,
+      xaxis: {range: [0, iterations], zeroline: true, title: "Iteration"},
+      yaxis: {range: [0, initialError], zeroline: true, title: "Error"},
+      hovermode: "closest",
+      showlegend: true,
+      title: {text: "Absolute Error"}
     }
 
     Plotly.react('graph', data, layout);
+    Plotly.react('graph1', data2, layout2);
   });
 });
 

@@ -18,91 +18,182 @@
 </head>
 <body>
     <div class="container">
-        <h1>
-            Stochastic Gradient Descent
-        </h1>
+            <h1>Stochastic Gradient Descent</h1>
+            <div>
+                <p>
+                    Gradient Descent is a method of finding the minimum of a function.
+                    This is extremely useful in machine learning and neural networks as we want to find the correct combination of weights to minimise the error at the output of the neural network.
+                    We can treat the error function for a neural network with one hundred connections as a function with one hundred parameters:
+                    \( 
+                        f(x_1, x_2,..., x_{100})
+                    \)
+                    The goal is to find the combination of \(x_i\) that make the function as close to zero as possible.
+                </p>
+                <p>
+                    This is a difficult process to imagine in \(100\) dimensions, so lets imagine we have a neural network that has only two connections.
+                    We can then write the function we are trying to solve as \(f(x, y) = 0\) where \(x\) and \(y\) are the weights for the two connections.
+                    Each connection is a data point in a function we are trying to minimise.
+                </p>
+                <p>
+                    In three dimensions, we can view the error function as a plane and we are trying to find the \(x\) and \(y\) values of the planes minimum.
+                </p>
+            </div>
         <div class="row">
-            <!-- Graph -->
-            <div>
-                <div id="graph" align="left" style="margin-left: -20%" ></div>
-            </div>
-
-            <div class="input">
-                <label>f(x, y) =
-                    <select id="datadropdown" onchange="updateVals()">
-                        <option value="1" selected>1.25(x+6)^2+(y-8)^2</option>
-                    </select>
-                </label>
-            </div>
-            <div class="input">
-                <label>Learning Rate =
-                    <input id = "LRInput" type="text" value = "0.05">
-                    <p id= "LRInputError" style="color:#ff0000" hidden></p>
-                </label>
-            </div>
-            <div class="input">
-                <label>Starting X =
-                    <input id = "XInput" type="text" value = "100">
-                    <p id= "XInputError" style="color:#ff0000" hidden></p>
-                </label>
-            </div>
-            <div class="input">
-                <label>Starting Y =
-                    <input id = "YInput" type="text" value = "100">
-                    <p id= "YInputError" style="color:#ff0000" hidden></p>
-                </label>
-            </div>
-            <div class="input">
-                <label>Number of Iterations =
-                    <input id = "interationsInput" type="text" value = "60">
-                    <p id= "interationsInputError" style="color:#ff0000" hidden></p>
-                </label>
-            </div>
-
-            <div>
-                <label class="GDType">Gradient Descent Type:</label>
-                <select id="type" onchange="updateVals()">
-                    <option value="basic" selected>Full</option>
-                    <option value="batch" >Batch</option>
-                    <option value="stochastic" >Stochastic</option>
-                </select>
-            </div>
-
-            <!--
-            <label class="checkbox">
-                <input type="checkbox" id="stochastic" value="off"/><span for="checkbox"></span>
-            </label>
-            <label class="checkboxTitle">Stochastic</label>
-            -->
-            <br>
-            <div class="button" id="runGD" onclick="updatePlot()">Run Simulation</div>
-            <div class="row">
-                <div class="six columns" align="center">
-                    Average Vector:
-                    <div id="averageVector">
+            <div class="six columns">
+                <div>
+                    <h5>
+                        Full Gradient Descent
+                    </h5>
+                    <p>
+                        In <b>Full Gradient Descent</b>, we find the error in every point and we take small steps proportional to the negative of the gradient:
                         \[
-                            \left(\begin{matrix}
-                            0 \\
-                            0 \\
-                            0
-                            \end{matrix}\right)
+                            \mathbf{x_{i+1}}=\mathbf{x_i}-\gamma\nabla f(\mathbf{x_i})
                         \]
-                    </div>
-                </div>
-                <div class="six columns" align="center">
-                    Best Vector:
-                    <div id="bestVector">
+                        We tune how fast the function learns using the learning rate \(\gamma\).
+                        Using this technique, we can find the local minumum of the function.
+                    </p>
+                    <p>
+                        In the context of our three dimensional function, we find the error with our current choice of \(x\) and \(y\) and then we update both of them in accordance to full gradient descent.
+                    </p>
+                    <h5>
+                        Stochastic Gradient Descent
+                    </h5>
+                    <p>
+                        In <b>Stochastic Gradient Descent</b>, we randomly pick one random data point and we only adjust that data point leaving the rest unmodified. 
+                        We then repeat this many times until the error is small.
                         \[
-                            \left(\begin{matrix}
-                            0 \\
-                            0 \\
-                            0
-                            \end{matrix}\right)
+                            \mathbf{x_{i+1}}=\mathbf{x_i}-\gamma\nabla f(x')
+                            \quad \text{where} \quad
+                            x' \in \mathbf{x}
                         \]
-                    </div>
+                        Stochastic gradient descent usually to converge faster (in terms of time) than full gradient descent since instead of updating hundreds of parameters, only one parameter needs to be updated.
+                        The overall error in stochastic gradient descent tends to be greater than full gradient descent.
+                        This can be due to the the function reaching the optimal value and then oscillating around it.
+                    </p>
+                    <p>
+                        In the context of our three dimensional function, we choose randomly wether to update either \(x\) or \(y\) and then update accordingly.
+                    </p>
+                    <h5>
+                        Learning Rate
+                    </h5>
+                    <p>
+                        <b>Learning Rate</b> needs to be chosen carefully. 
+                        Choosing a value that is too high can cause the minimum of the function to be overshot and the function won't be able to converge.
+                        Choosing a value that is too low will take a long time to converge.
+                        Variable learing rates can be use that will modify the learning rate under different conditions, for example if the error plateaus, this may be because the function is scollating around the mimimum but since the learning rate is too high, it can get closer.
+                        In that case, the learning rate can be lowered.
+                    </p>
                 </div>
+            </div>
+            <div class="six columns" >
+                <h5>
+                    Batch Gradient Descent
+                </h5>
+                <p>
+                    In <b>Batch Gradient Descent</b>, we split the dataset into batches of data points. 
+                    We then carry out full gradient descent on each batch, shuffling the data points each time.
+                    \[
+                        \mathbf{x'_{i+1}}=\mathbf{x'_i}-\gamma\nabla f(\mathbf{x'_i})
+                        \quad \text{where} \quad
+                        \mathbf{x'} \subseteq \mathbf{x}
+                    \]
+                    This is often repeated multiple times.
+                    Batch Gradient Descent can be useful if the data set is extremely large as we don't have to process all of the data.
+                </p>
+                <p>
+                    In the context of our three dimensional function, this is like if we found and reduced the error in the \(x\) values and \(y\) values separately.
+                    Batch gradient descent doesn't make much sense in this context since we only have two possible data points.
+                </p>
+                <br>
+                <div id="graph1" align="left" style="margin-left: 0%" ></div>
             </div>
         </div>
+        <br>
+        <br>
+        <div class="row">
+            <div class="six columns">
+                <h5>
+                    Try it for yourself
+                </h5>
+                <p>
+                    Modify the parameters to see how they affect the gradient descent.
+                </p>
+                <div class="input">
+                    <label>f(x, y) =
+                        <select id="datadropdown" onchange="updateVals()">
+                            <option value="1" selected>1.25(x+6)^2+(y-8)^2</option>
+                        </select>
+                    </label>
+                </div>
+                <div class="input">
+                    <label>Learning Rate =
+                        <input id = "LRInput" type="text" value = "0.05">
+                        <p id= "LRInputError" style="color:#ff0000" hidden></p>
+                    </label>
+                </div>
+                <div class="input">
+                    <label>Starting X =
+                        <input id = "XInput" type="text" value = "100">
+                        <p id= "XInputError" style="color:#ff0000" hidden></p>
+                    </label>
+                </div>
+                <div class="input">
+                    <label>Starting Y =
+                        <input id = "YInput" type="text" value = "100">
+                        <p id= "YInputError" style="color:#ff0000" hidden></p>
+                    </label>
+                </div>
+                <div class="input">
+                    <label>Number of Iterations =
+                        <input id = "interationsInput" type="text" value = "60">
+                        <p id= "interationsInputError" style="color:#ff0000" hidden></p>
+                    </label>
+                </div>
+
+                <div>
+                    <label class="GDType">Gradient Descent Type:</label>
+                    <select id="type" onchange="updateVals()">
+                        <option value="basic" selected>Full</option>
+                        <option value="batch" >Batch</option>
+                        <option value="stochastic" >Stochastic</option>
+                    </select>
+                </div>
+                <br>
+                <div align="center">
+                    <div class="button" id="runGD" onclick="updatePlot()" >Run Simulation</div>
+                </div>
+                <div class="row">
+                    <div class="six columns" align="center">
+                        Average Vector:
+                        <div id="averageVector">
+                            \[
+                                \left(\begin{matrix}
+                                0 \\
+                                0 \\
+                                0
+                                \end{matrix}\right)
+                            \]
+                        </div>
+                    </div>
+                    <div class="six columns" align="center">
+                        Best Vector:
+                        <div id="bestVector">
+                            \[
+                                \left(\begin{matrix}
+                                0 \\
+                                0 \\
+                                0
+                                \end{matrix}\right)
+                            \]
+                        </div>
+                    </div>
+                </div>
+                <p id="finalError" align="center">Final error: \(0.0\)</p>
+            </div>
+            <div class="six columns">
+                <br>
+                <div id="graph" align="left" style="margin-left: 0%" ></div>
+            </div>
     </div>
 
     <!--THE BRAINS-->
