@@ -1,0 +1,113 @@
+<!doctype html>
+<html>
+
+<head>
+    <!--Page Info-->
+    <title>SGD</title>
+    <!--css link-->
+    <link rel="stylesheet" href="https://manglekuo.com/i-v/styles.css?v=2">
+    <!--Required JS resources--> <!--NB: better to have resources before the main body but still works even if they are not-->
+    <script src="https://cdn.plot.ly/plotly-latest.min.js"></script>
+    <script src="https://code.jquery.com/jquery-3.2.1.min.js"></script>
+    <script src=script/numeric/src/numeric.js></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/mathjs/3.15.0/math.min.js"></script>
+    
+    <meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+
+    <script src='https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/MathJax.js?config=TeX-MML-AM_CHTML' async></script>
+</head>
+<body>
+    <div class="container">
+        <h1>
+            Stochastic Gradient Descent
+        </h1>
+        <div class="row">
+            <!-- Graph -->
+            <div>
+                <div id="graph" align="left" style="margin-left: -20%" ></div>
+            </div>
+
+            <div class="input">
+                <label>f(x, y) =
+                    <select id="datadropdown" onchange="updateVals()">
+                        <option value="1" selected>1.25(x+6)^2+(y-8)^2</option>
+                    </select>
+                </label>
+            </div>
+            <div class="input">
+                <label>Learning Rate =
+                    <input id = "LRInput" type="text" value = "0.05">
+                    <p id= "LRInputError" style="color:#ff0000" hidden></p>
+                </label>
+            </div>
+            <div class="input">
+                <label>Starting X =
+                    <input id = "XInput" type="text" value = "100">
+                    <p id= "XInputError" style="color:#ff0000" hidden></p>
+                </label>
+            </div>
+            <div class="input">
+                <label>Starting Y =
+                    <input id = "YInput" type="text" value = "100">
+                    <p id= "YInputError" style="color:#ff0000" hidden></p>
+                </label>
+            </div>
+            <div class="input">
+                <label>Number of Iterations =
+                    <input id = "interationsInput" type="text" value = "60">
+                    <p id= "interationsInputError" style="color:#ff0000" hidden></p>
+                </label>
+            </div>
+
+            <div>
+                <label class="GDType">Gradient Descent Type:</label>
+                <select id="type" onchange="updateVals()">
+                    <option value="basic" selected>Full</option>
+                    <option value="batch" >Batch</option>
+                    <option value="stochastic" >Stochastic</option>
+                </select>
+            </div>
+
+            <!--
+            <label class="checkbox">
+                <input type="checkbox" id="stochastic" value="off"/><span for="checkbox"></span>
+            </label>
+            <label class="checkboxTitle">Stochastic</label>
+            -->
+            <br>
+            <div class="button" id="runGD" onclick="updatePlot()">Run Simulation</div>
+            <div class="row">
+                <div class="six columns" align="center">
+                    Average Vector:
+                    <div id="averageVector">
+                        \[
+                            \left(\begin{matrix}
+                            0 \\
+                            0 \\
+                            0
+                            \end{matrix}\right)
+                        \]
+                    </div>
+                </div>
+                <div class="six columns" align="center">
+                    Best Vector:
+                    <div id="bestVector">
+                        \[
+                            \left(\begin{matrix}
+                            0 \\
+                            0 \\
+                            0
+                            \end{matrix}\right)
+                        \]
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!--THE BRAINS-->
+    <script src=script/objects.js></script>
+    <script src=script/SGD.js></script>
+</body>
+
+</html>
