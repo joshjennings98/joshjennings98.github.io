@@ -120,28 +120,28 @@
                 </p>
                 <div class="input">
                     <label>f(x, y) =
-                        <select id="datadropdown" onchange="updateVals()">
-                            <option value="1" selected>1.25(x+6)^2+(y-8)^2</option>
+                        <select id="datadropdown" onchange="initEverything(value)">
+                            <option value='1.25*(i + 6)**2 + (j - 8)**2' selected>1.25(x+6)^2+(y-8)^2</option>
+                            <option value='(1 - i)**2+100*(j - i**2)**2'>(1 - x)^2+100*(y - x^2)^2</option>
                         </select>
                     </label>
                 </div>
                 <div class="input">
-                    <label>Learning Rate =
-                        <input id = "LRInput" type="text" value = "0.05">
-                        <p id= "LRInputError" style="color:#ff0000" hidden></p>
+                    <label class="sliderTitle" style="font-size: x-large">Learning Rate:&nbsp;<!--rho-->
+                        <span id="LRInputSlider" data-unit="">0.05</span>&nbsp; <!--default: 0-->
                     </label>
+                    <div>
+                        <label class="slider">
+                            <input id="LRInput" class="inputs" type="range" value="7" min="0" max="12" step="1"/>
+                            <span class="sliderMin">5e-7</span><span class="sliderMax">0.7</span>
+                        </label>
+                    </div>
                 </div>
                 <div class="input">
-                    <label>Starting X =
-                        <input id = "XInput" type="text" value = "100">
-                        <p id= "XInputError" style="color:#ff0000" hidden></p>
-                    </label>
+                    <label id = "XInput" value = "100">Starting X = 100</label>
                 </div>
                 <div class="input">
-                    <label>Starting Y =
-                        <input id = "YInput" type="text" value = "100">
-                        <p id= "YInputError" style="color:#ff0000" hidden></p>
-                    </label>
+                    <label id = "YInput" value = "100">Starting Y = 100</label>
                 </div>
                 <div class="input">
                     <label>Number of Iterations =
@@ -161,6 +161,7 @@
                 <br>
                 <div align="center">
                     <div class="button" id="runGD" onclick="updatePlot()" >Run Simulation</div>
+                    <div class="button" id="reset" onclick="reset()" >Reset</div>
                 </div>
                 <div class="row">
                     <div class="six columns" align="center">
