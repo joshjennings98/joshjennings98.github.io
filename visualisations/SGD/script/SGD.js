@@ -23,6 +23,8 @@ var dx = '(2.5 * xCur + 15)';
 var dy = '(2 * yCur - 16)';
 var meanFunc = '1.25 * (xMean + 6) ** 2 + (yMean - 8) ** 2';
 var breakFlag = false
+var MAXERROR = 2**6400;
+var clipValue = 1000;
 
 let currentAverage = [];
 let xVals = [];
@@ -165,11 +167,11 @@ initEverything = (func) => {
 			meanFunc = '1.25 * (xMean + 6) ** 2 + (yMean - 8) ** 2';
 			break;
 		case '(1 - i)**2+100*(j - i**2)**2':
-			startX = -2;
-			endX = 2;
-			startY = -1;
-			endY = 3;
-			incrValue = 0.1;
+			startX = -200;
+			endX = 200;
+			startY = -100;
+			endY = 300;
+			incrValue = 10;
 			curFunc = '(1 - xGD[xGD.length - 1])**2+100*(yGD[yGD.length - 1] - xGD[xGD.length - 1]**2)**2';
 			dx = '2 * xCur * (200 * xCur**2 - 200 * yCur - 1)';
 			dy = '200 * (yCur - xCur**2)';
@@ -275,6 +277,14 @@ updateVals = () => {
 	}
 }
 
+newSign = (x) => {
+	if (x < 0.0) {
+		return -1.0;
+	} else {
+		return 1.0;
+	}
+} 
+
 // Resets the simulation
 reset = () => {
 	// Reinitialise everything
@@ -368,9 +378,23 @@ updatePlot = () => {
 			// Different things are set to happen depending on the gradient descent method chosen
 			switch (type) {
 				case "basic":
-					xGD.push(xCur - learningRate * eval(dx));
-					yGD.push(yCur - learningRate * eval(dy));
+					let nx = xCur - learningRate * eval(dx);
+					if (Math.abs(nx) > clipValue) { nx = newSign(nx) * clipValue; learningRate = learningRate / 2.0;}
+					console.log(nx)
+					let ny = yCur - learningRate * eval(dy);
+					if (Math.abs(ny) > clipValue) { ny = newSign(ny) * clipValue; learningRate = learningRate / 2.0; }
+					console.log(ny)
+					xGD.push(nx);
+					yGD.push(ny);
 					zGD.push(eval(curFunc));
+
+					console.log("\nX Adjust: ", round(xCur, 4) + ' - ' + learningRate + ' * ' + round(eval(dx), 4) + ' = ' + round(nx, 4))
+					console.log("Y Adjust: ", round(yCur, 4) + ' - ' + learningRate + ' * ' + round(eval(dy), 4) + ' = ' + round(ny, 4))
+					console.log("New Error: ", eval(curFunc) + "\n")
+
+					console.log("xCur^3", round(xCur**3, 4), "\nnewxCur", round(xCur - learningRate * eval(dx), 4))
+
+
 					break;
 				case "stochastic":
 					let randVal = Math.random();
@@ -454,7 +478,7 @@ updatePlot = () => {
 				}
 			});
 			// If error gets too big then set breakflag
-			if (zGD[zGD.length - 1] > 2**31) {
+			if (zGD[zGD.length - 1] > MAXERROR) {
 				breakFlag = true;
 			}
 		} else {
@@ -493,6 +517,8 @@ $("input").each(function() {
 		iterations = document.getElementById("interationsInput").value;
 		learningRate = lrVals[document.getElementById("LRInput").value];
 		document.getElementById("LRInputSlider").innerHTML = learningRate;
+
+		console.log("test", initialError);
 
 		layout = {
 			legend: {
