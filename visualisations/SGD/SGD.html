@@ -18,7 +18,7 @@
 </head>
 <body>
     <div class="container">
-            <h1>Stochastic Gradient Descent</h1>
+            <h1>Gradient Descent</h1>
             <div>
                 <p>
                     Gradient Descent is a method of finding the minimum of a function.
@@ -123,6 +123,8 @@
                         <select id="datadropdown" onchange="initEverything(value)">
                             <option value='1.25*(i + 6)**2 + (j - 8)**2' selected>1.25(x+6)^2+(y-8)^2</option>
                             <option value='(1 - i)**2+100*(j - i**2)**2'>(1 - x)^2+100*(y - x^2)^2</option>
+                            <option value='Math.sin(10*(i**2+j**2))/10'>sin(10*(x^2+y^2))/10</option>sin(5x)*cos(5y)/5
+                            <option value='Math.sin(5*i)*Math.cos(5*j)/5'>sin(5x)*cos(5y)/5</option>
                         </select>
                     </label>
                 </div>
@@ -132,7 +134,7 @@
                     </label>
                     <div>
                         <label class="slider">
-                            <input id="LRInput" class="inputs" type="range" value="7" min="0" max="12" step="1"/>
+                            <input id="LRInput" class="inputs" type="range" value="10" min="0" max="15" step="1"/>
                             <span class="sliderMin">5e-7</span><span class="sliderMax">0.7</span>
                         </label>
                     </div>
@@ -157,6 +159,17 @@
                         <option value="batch" >Batch</option>
                         <option value="stochastic" >Stochastic</option>
                     </select>
+                </div>
+                <div>
+                    <label class="checkbox">
+                        <input type="checkbox" id="clipping" value="off"/><span for="checkbox"></span>
+                    </label>
+                    <label class="checkboxTitle">Clip maximum values</label>
+                    <br>
+                    <label class="checkbox">
+                        <input type="checkbox" id="learningRateDecrease" value="off"/><span for="checkbox"></span>
+                    </label>
+                    <label class="checkboxTitle">Vary Learning Rate.</label>
                 </div>
                 <br>
                 <div align="center">
@@ -188,8 +201,21 @@
                             \]
                         </div>
                     </div>
+                    <div class="six columns" align="center">
+                        Final Vector:
+                        <div id="finalVector">
+                            \[
+                                \left(\begin{matrix}
+                                0 \\
+                                0 \\
+                                0
+                                \end{matrix}\right)
+                            \]
+                        </div>
+                    </div>
                 </div>
                 <p id="finalError" align="center">Final error: \(0.0\)</p>
+                <p id="localMinima"></p>
             </div>
             <div class="six columns">
                 <br>

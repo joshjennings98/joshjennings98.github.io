@@ -1,15 +1,17 @@
-// To Do:
-// 
-// Remove eval() since its apparently quite bad :(
-// Remove absolute pixel sizes (less important).
-// 
-// Add more learning rate values, add more functions, add popup explaning why it seems to break
+/*
+	SGD.js
 
+	To Do:
+	Remove eval() since its apparently quite bad :(
+	Remove absolute pixel sizes (less important).
+*/
+
+// Set up the intitial state using nasty global (sort of) variables
 var myPlot = document.getElementById('graph')
 var x1 = -100;
 var y1 = -100;
 var initialError = '1.25 * (x1 + 6) ** 2 + (y1 - 8) ** 2';
-var lrVals = [0.0000005, 0.001, 0.003, 0.005, 0.007, 0.01, 0.03, 0.05, 0.07, 0.1, 0.3, 0.5, 0.7]
+var lrVals = [0.0000005, 0.000005, 0.00005,  0.0005, 0.001, 0.003, 0.005, 0.007, 0.01, 0.03, 0.05, 0.07, 0.1, 0.3, 0.5, 0.7]
 var isStochastic = false;
 var type = "basic";
 var startX = -100;
@@ -23,8 +25,11 @@ var dx = '(2.5 * xCur + 15)';
 var dy = '(2 * yCur - 16)';
 var meanFunc = '1.25 * (xMean + 6) ** 2 + (yMean - 8) ** 2';
 var breakFlag = false
-var MAXERROR = 2**6400;
+var MAXERROR = 2**64;
 var clipValue = 1000;
+var clipFlag = false;
+var lrFlag = false;
+var prevError = 2**64;
 
 let currentAverage = [];
 let xVals = [];
@@ -39,6 +44,7 @@ let zGD = [];
 let c = 0;
 let iterations = document.getElementById("interationsInput").value;
 let learningRate = lrVals[document.getElementById("LRInput").value];
+
 
 var layout = {
 	legend: {
@@ -167,20 +173,46 @@ initEverything = (func) => {
 			meanFunc = '1.25 * (xMean + 6) ** 2 + (yMean - 8) ** 2';
 			break;
 		case '(1 - i)**2+100*(j - i**2)**2':
-			startX = -200;
-			endX = 200;
-			startY = -100;
-			endY = 300;
-			incrValue = 10;
+			startX = -2;
+			endX = 2;
+			startY = -1;
+			endY = 3;
+			incrValue = 0.1;
 			curFunc = '(1 - xGD[xGD.length - 1])**2+100*(yGD[yGD.length - 1] - xGD[xGD.length - 1]**2)**2';
 			dx = '2 * xCur * (200 * xCur**2 - 200 * yCur - 1)';
 			dy = '200 * (yCur - xCur**2)';
 			initialError = '(1 - x1)**2+100*(y1 - x1**2)**2';
 			meanFunc = '(1 - xMean)**2+100*(yMean - xMean**2)**2';
 			break;
+		case 'Math.sin(10*(i**2+j**2))/10':
+			startX = -1;
+			endX = 1;
+			startY = -1;
+			endY = 1;
+			incrValue = 0.01;
+			curFunc = 'Math.sin(10*(xGD[xGD.length - 1]**2+yGD[yGD.length - 1]**2))/10';
+			dx = '2 * yCur * Math.cos(10 * (xCur**2 + yCur**2))';
+			dy = '2 * xCur * Math.cos(10 * (xCur**2 + yCur**2))';
+			initialError = 'Math.sin(10*(x1**2+y1**2))/10';
+			meanFunc = 'Math.sin(10*(xMean**2+yMean**2))/10';
+			break;
+		case 'Math.sin(5*i)*Math.cos(5*j)/5':
+			startX = -1;
+			endX = 1;
+			startY = -1;
+			endY = 1;
+			incrValue = 0.01;
+			curFunc = 'Math.sin(5*xGD[xGD.length - 1])*Math.cos(5*yGD[yGD.length - 1])/5';
+			dx = 'Math.cos(5 * xCur) * Math.cos(5 * yCur)';
+			dy = '-1 * Math.sin(5 * xCur) * Math.sin(5 * yCur)';
+			initialError = 'Math.sin(5*x1)*Math.cos(5*y1)/5';
+			meanFunc = 'Math.sin(5*xMean)*Math.cos(5*yMean)/5';
+			break;
 		default:
 			break;
 	}
+
+	// layout2.yaxis = {range: [0, eval(initialError)]};
 
 	for (i = startX; i < endX; i += incrValue) {
 		for (j = startY; j < endY; j += incrValue) {
@@ -240,8 +272,7 @@ initEverything = (func) => {
 			size: 5
 		},
 		name: 'Best Vector'
-	}
-];
+	}];
 
 	document.getElementById("LRInputSlider").innerHTML = learningRate;
 	Plotly.newPlot('graph', data, layout);
@@ -257,7 +288,14 @@ initEverything = (func) => {
 			document.getElementById("XInput").innerHTML = "Starting X = " + x1;
 			document.getElementById("YInput").innerHTML = "Starting Y = " + y1;
 		};
+	fixAxis(zGD);
 	});
+}
+
+// Explain gradient explosion
+gradientExplosion = () => {
+  	alert("Due to the choice of learning rate and/or starting location, the gradient has increased so much that it has caused an overflow.\nThis is known as Gradient Explosion.\nWays to counter this include capping the maximum size the new x and y can be, or by decreasing the learning rate.\nTry implementing either of these things using the check boxes and seeing how that affects the outcome.")
+	reset();
 }
 
 // Gets called in the HTML for setting the type
@@ -277,6 +315,7 @@ updateVals = () => {
 	}
 }
 
+// Defining a sign function that returns positive for zero
 newSign = (x) => {
 	if (x < 0.0) {
 		return -1.0;
@@ -295,7 +334,6 @@ reset = () => {
 	initEverything(func)
 	// Mark the breakflag as true to break out of the set interval
 	breakFlag = true;
-	console.log("Reset.")
 }
 
 // Function for updating the plot
@@ -310,13 +348,6 @@ updatePlot = () => {
 
 	document.getElementById("LRInputSlider").innerHTML = learningRate;
 
-	console.log('Learning Rate:', learningRate);
-	console.log('Iterations:', iterations);
-	console.log('Type:', type);
-	console.log('Initial x:', x1);
-	console.log('Initial y:', y1);
-	console.log('Initial Error', eval(initialError));
-
 	// Use setInterval() to run this code segment every x miliseconds
 	var run = setInterval(function() {
 		let xGDlength = xGD.length;
@@ -325,17 +356,27 @@ updatePlot = () => {
 		if (xGDlength == iterations) {
 			let xMean = xGD.reduce(function(a, b) { return a + b; }) / xGD.length;
 			let yMean = yGD.reduce(function(a, b) { return a + b; }) / yGD.length;
+			let bestZIndex = zGD.indexOf(Math.min(...zGD));
 
 			var math = MathJax.Hub.getAllJax("averageVector")[0];
 			MathJax.Hub.Queue(["Text", math,
 				"\\left(\\begin{matrix}" +
 				round(xMean, 2) + "\\\\" +
 				round(yMean, 2) + "\\\\" +
-				round(1.25 * (xMean + 6) ** 2 + (yMean - 8) ** 2, 2) +
+				round(eval(meanFunc), 2) +
 				"\\end{matrix}\\right)"
 			]);
 
 			var math = MathJax.Hub.getAllJax("bestVector")[0];
+			MathJax.Hub.Queue(["Text", math,
+				"\\left(\\begin{matrix}" +
+				round(xGD[bestZIndex], 2) + "\\\\" +
+				round(yGD[bestZIndex], 2) + "\\\\" +
+				round(zGD[bestZIndex], 2) +
+				"\\end{matrix}\\right)"
+			]);
+
+			var math = MathJax.Hub.getAllJax("finalVector")[0];
 			MathJax.Hub.Queue(["Text", math,
 				"\\left(\\begin{matrix}" +
 				round(xGD[xGD.length - 1], 2) + "\\\\" +
@@ -349,7 +390,11 @@ updatePlot = () => {
 				round(zGD[zGD.length - 1], 2)
 			]);
 
-			console.log('Final Error: ', zGD[zGD.length - 1]);
+			if (zGD.slice(Math.floor(zGD.length * 0.9)).reduce(function(a, b) { return a + b; }) / Math.floor(zGD.length * 0.1) > 1) {
+				document.getElementById("localMinima").innerHTML = "You are probably stuck in a local minima not the global minima.<br>Alternatively, it might be that more iterations are required to find the global minima."
+			} else {
+				document.getElementById("localMinima").innerHTML = "";
+			}
 		}
 
 		// Since we use the setInterval() to run the loop slow enough to see the graph update, and it can't 
@@ -375,45 +420,51 @@ updatePlot = () => {
 			let xCur = xGD[xGD.length - 1];
 			let yCur = yGD[yGD.length - 1];
 
+			let nx = xCur - learningRate * eval(dx);
+			if (Math.abs(nx) > clipValue && clipFlag == true) { nx = newSign(nx) * clipValue }
+
+			let ny = yCur - learningRate * eval(dy);
+			if (Math.abs(ny) > clipValue && clipFlag == true) { ny = newSign(ny) * clipValue }
+
+			let nz = eval(curFunc);
+			if (nz > MAXERROR) { gradientExplosion(); }
+
+			if (nz > prevError && lrFlag == true) {
+				learningRate = learningRate * 0.5;
+				document.getElementById("LRInputSlider").innerHTML = learningRate;
+				fixAxis(zGD);
+			} else if (nz >= prevError && lrFlag == false) {
+				fixAxis(zGD);
+			} else if (nz <= prevError && lrFlag == true) {
+				learningRate = learningRate * 1.25;
+			}
+			prevError = nz;
+
 			// Different things are set to happen depending on the gradient descent method chosen
 			switch (type) {
 				case "basic":
-					let nx = xCur - learningRate * eval(dx);
-					if (Math.abs(nx) > clipValue) { nx = newSign(nx) * clipValue; learningRate = learningRate / 2.0;}
-					console.log(nx)
-					let ny = yCur - learningRate * eval(dy);
-					if (Math.abs(ny) > clipValue) { ny = newSign(ny) * clipValue; learningRate = learningRate / 2.0; }
-					console.log(ny)
 					xGD.push(nx);
 					yGD.push(ny);
-					zGD.push(eval(curFunc));
-
-					console.log("\nX Adjust: ", round(xCur, 4) + ' - ' + learningRate + ' * ' + round(eval(dx), 4) + ' = ' + round(nx, 4))
-					console.log("Y Adjust: ", round(yCur, 4) + ' - ' + learningRate + ' * ' + round(eval(dy), 4) + ' = ' + round(ny, 4))
-					console.log("New Error: ", eval(curFunc) + "\n")
-
-					console.log("xCur^3", round(xCur**3, 4), "\nnewxCur", round(xCur - learningRate * eval(dx), 4))
-
-
+					zGD.push(nz);
 					break;
 				case "stochastic":
 					let randVal = Math.random();
 					if (randVal < 0.5) {
-						xGD.push(xCur - learningRate * eval(dx));
+						xGD.push(nx);
 						yGD.push(yCur);
 					} else {
 						xGD.push(xCur);
-						yGD.push(yCur - learningRate * eval(dy));
+						yGD.push(ny);
 					}
 					zGD.push(eval(curFunc));
 					break;
 				case "batch":
 					if (xGDlength < Math.floor(iterations / 2)) {
-						xGD.push(xCur - learningRate * eval(dx));
+						xGD.push(nx);
 						yGD.push(yCur);
 					} else {
 						xGD.push(xCur);
-						yGD.push(yCur - learningRate * eval(dy));
+						yGD.push(ny);
 					}
 					zGD.push(eval(curFunc));
 					break;
@@ -505,7 +556,6 @@ initEverything('1.25*(i + 6)**2 + (j - 8)**2');
 $("input[id=runGD]").each(function() {
 	$(this).on('input', function() {
 		$("#runGD").val(parseFloat(document.getElementById('runGD').value));
-		console.log("Starting Simulation");
 		updatePlot();
 	});
 });
@@ -517,8 +567,6 @@ $("input").each(function() {
 		iterations = document.getElementById("interationsInput").value;
 		learningRate = lrVals[document.getElementById("LRInput").value];
 		document.getElementById("LRInputSlider").innerHTML = learningRate;
-
-		console.log("test", initialError);
 
 		layout = {
 			legend: {
@@ -561,3 +609,59 @@ $("input").each(function() {
 		Plotly.react('graph1', data2, layout2);
 	});
 });
+
+$("input[id=\"clipping\"]").each(function () {
+	$(this).on("change", function() {
+		let val = document.getElementById("clipping").value;
+		if (val === "off") {
+			document.getElementById("clipping").value = "on";
+			clipFlag = true;
+		} else {
+			document.getElementById("clipping").value = "off";
+			clipFlag = false;
+		}
+	});
+});
+
+$("input[id=\"learningRateDecrease\"]").each(function () {
+	$(this).on("change", function() {
+		let val = document.getElementById("learningRateDecrease").value;
+		if (val === "off") {
+			document.getElementById("learningRateDecrease").value = "on";
+			lrFlag = true;
+		} else {
+			document.getElementById("learningRateDecrease").value = "off";
+			lrFlag = false;
+		}
+	});
+});
+
+// Sometimes the error will increase so the axis of the error graph will need to be changed on the fly
+fixAxis = (zVals) => {
+	layout2 = {
+		legend: {
+			x: 0,
+			y: 1
+		},
+		width: 600,
+		height: 600,
+		xaxis: {
+			range: [0, iterations],
+			zeroline: true,
+			title: "Iteration"
+		},
+		yaxis: {
+			range: [Math.min(...zVals) * 1.1, Math.max(...zVals) * 1.1],
+			zeroline: true,
+			title: "Error"
+		},
+		hovermode: "closest",
+		showlegend: true,
+		title: {
+			text: "Absolute Error"
+		}
+	};
+
+	// Update graph
+	Plotly.react('graph1', data2, layout2);
+}
