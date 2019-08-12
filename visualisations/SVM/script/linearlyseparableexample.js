@@ -440,7 +440,7 @@ var data = [
       x: orangeY.map(el => -3*el + 60),
       mode: 'markers',
       type: 'scatter',
-      marker: {color: 'rgb(0,255,0)'}
+      marker: {color: 'rgb(0,0,255)'}
     },
     { // Rejected Class Points
       name: 'Rejected',
@@ -448,13 +448,13 @@ var data = [
       x: blueY.map(el => -3 * el + 40),
       mode: 'markers',
       type: 'scatter',
-      marker: {color: 'rgb(255,0,0)'},
+      marker: {color: 'rgb(255,165,0)'},
     },
     {
         x: [35, 65],
         y: [100, 0],
         mode: 'lines',
-        line: {color: 'rgb(255,0,255)'},
+        line: {color: 'rgb(0,0,0)'},
     },
     { // Accepted Class Points
         name: 'Accepted',
@@ -462,7 +462,7 @@ var data = [
       x: orangeY.map(el => -3*el + 60),
         mode: 'markers',
         type: 'scatter',
-        marker: {color: 'rgb(0,255,0)'},
+        marker: {color: 'rgb(0,0,255)'},
         xaxis: 'x2',
         yaxis: 'y2'
       },
@@ -472,7 +472,7 @@ var data = [
         x: blueY.map(el => -3 * el + 40),
         mode: 'markers',
         type: 'scatter',
-        marker: {color: 'rgb(255,0,0)'},
+        marker: {color: 'rgb(255,165,0)'},
         xaxis: 'x2',
         yaxis: 'y2'
       },
@@ -480,7 +480,7 @@ var data = [
         x: [0, 100],
         y: [75, 40],
         mode: 'lines',
-        line: {color: 'rgb(255,0,255)'},
+        line: {color: 'rgb(0,0,0)'},
         xaxis : 'x2',
         yaxis: 'y2'
     },
@@ -493,7 +493,7 @@ var data1 = [
       x: orangeY.map(el => -3*el + 60),
       mode: 'markers',
       type: 'scatter',
-      marker: {color: 'rgb(0,255,0)'}
+      marker: {color: 'rgb(0,0,255)'}
     },
     { // Rejected Class Points
       name: 'Rejected',
@@ -501,7 +501,7 @@ var data1 = [
       x: blueY.map(el => -3 * el + 40),
       mode: 'markers',
       type: 'scatter',
-      marker: {color: 'rgb(255,0,0)'},
+      marker: {color: 'rgb(255,165,0)'},
     }
 ]
 
