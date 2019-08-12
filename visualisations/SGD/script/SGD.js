@@ -11,7 +11,7 @@ var myPlot = document.getElementById('graph')
 var x1 = -100;
 var y1 = -100;
 var initialError = '1.25 * (x1 + 6) ** 2 + (y1 - 8) ** 2';
-var lrVals = [0.0000005, 0.000005, 0.00005,  0.0005, 0.001, 0.003, 0.005, 0.007, 0.01, 0.03, 0.05, 0.07, 0.1, 0.3, 0.5, 0.7]
+var lrVals = [0.0000005, 0.000005, 0.00005,  0.0005, 0.001, 0.003, 0.005, 0.007, 0.01, 0.03, 0.05, 0.07, 0.1, 0.3, 0.5, 0.7, 1.0, 1.3, 1.5, 1.7]
 var isStochastic = false;
 var type = "basic";
 var startX = -100;
@@ -285,8 +285,8 @@ initEverything = (func) => {
 			
 			x1 = xVals[yIndex][xIndex];
 			y1 = yVals[yIndex][xIndex];
-			document.getElementById("XInput").innerHTML = "Starting X = " + x1;
-			document.getElementById("YInput").innerHTML = "Starting Y = " + y1;
+			document.getElementById("XInput").innerHTML = "Starting X = " + round(x1, 2);
+			document.getElementById("YInput").innerHTML = "Starting Y = " + round(y1, 2);
 		};
 	fixAxis(zGD);
 	});
