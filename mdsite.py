@@ -23,6 +23,17 @@ test 1 test 1 test 1
 thia ia a adhdhd
 - test point 1
 - test pouny 2
+
+v
+
+```
+testtsg
+ddddd
+
+# habdb
+
+h
+```
 """
 
 pages = [
@@ -56,6 +67,7 @@ def parse(tokens):
 
 def tokenise(lines):
     tokens = []
+    cFlag = False
     
     for line in lines:
         words = line.split(" ")
@@ -64,22 +76,26 @@ def tokenise(lines):
         data = "".join(list(map(lambda x: x + " ", words[1:])))
         
 
-        if header == "#":
+        if header == "#" and cFlag == False:
             token = (("h", 1), data[:-1])
-        elif header == "##":
+        elif header == "##" and cFlag == False:
             token = (("h", 2), data[:-1])
-        elif header == "###":
+        elif header == "###" and cFlag == False:
             token = (("h", 3), data[:-1])
-        elif header == "####":
+        elif header == "####" and cFlag == False:
             token = (("h", 4), data[:-1])
-        elif header == "#####":
+        elif header == "#####" and cFlag == False:
             token = (("h", 5), data[:-1])
         else: # paragraph
             
-            if header in "-*+":
+            if header in "-*+" and cFlag == False:
                  token = (("p", "b"), (header + " " + data))
-            elif header[:-1] + "." == header and int(header[:-1]) in range(1000):
+            elif header[:-1] + "." == header and int(header[:-1]) in range(1000) and cFlag == False:
                  token = (("p", "n"), (header + " " + data))
+            elif header[:3] == "```":
+                lang = "" if header == "```" else " <!--" + header[3:] + "--> "
+                cFlag = not cFlag
+                token = (("p", "c"), lang)
             else:
                  token = (("p", "none"), (header + " " + data))
 
@@ -92,6 +108,7 @@ def lexer(tokens):
     print(tokens)
     newTokens =[]
     bFlag = 0
+    cFlag = False
     i = 0
     
     while i < len(tokens):
@@ -127,6 +144,11 @@ def lexer(tokens):
                             bFlag = 2
                             data = data + "\n<ol>"
                         data = data + "\n<li>" + token[1][3:-1] + "</li>"
+                        incr += 1
+                    elif token[0][1][0] == "c":
+                        cFlag = not cFlag
+                        x = "" if cFlag else "/"
+                        data = data + "\n<" + x + "code" + token[1] + ">"
                         incr += 1
                 else:
                     break
