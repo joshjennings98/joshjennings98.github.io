@@ -15,9 +15,14 @@ page2 = """testnot2
 
 ## Test Test
 
-test test test
+thsjj hdnd **test test test** skkd
 d
-test 1 test 1 test 1
+*test 1 test 1 `magic` test 1*
+sjjsjs jsjsh **djdjjs** djej
+
+*f*
+
+***x***
 
 ### tititit
 thia ia a adhdhd
@@ -34,6 +39,7 @@ ddddd
 
 h
 ```
+*m*
 """
 
 pages = [
@@ -102,10 +108,43 @@ def tokenise(lines):
         tokens.append(token)
     
     return tokens
+
+def emphasis(lines):
+    bold = False
+    italics = False
+    code = False # inline
+    cFlag = False
+    newLines =[]
     
+    for line in lines:
+        newLine =[]
+        if line[:5] == "<code":
+            cFlag = True
+        elif line[:6] == "</code>":
+            cFlag = False
+        
+        words = line[1]
+        i = 0
+        while i < len(words) - 1:
+            if words[i] == "*" and words[i+1] == "*":
+                b = "<b>" if bold == False else "</b>"
+                bold = not bold
+                words = words[:i] + b + words[i+2:]
+            if (words[i] != "*" or i == 0) and words[i+1] == "*" and (i+2 >= (len(words) - 1) or words[i+2] != "*"):
+                it = "<i>" if italics == False else "</i>"
+                italics = not italics
+                words = words[:i+1] + it + words[i+2:]
+            if (words[i] != "`" or i == 0) and words[i+1] == "`" and (i+2 >= (len(words) - 1) or words[i+2] != "`"):
+                cd = "<code>" if code == False else "</code>"
+                code = not code
+                words = words[:i+1] + cd + words[i+2:]
+            i += 1
+        newLine = (lines[0], words)
+        newLines.append(newLine)
+    return newLines
     
 def lexer(tokens):
-    print(tokens)
+    #print(tokens)
     newTokens =[]
     bFlag = 0
     cFlag = False
@@ -158,7 +197,7 @@ def lexer(tokens):
         newTokens.append((tokens[i][0], data))
         
         i += incr
-    print(newTokens)
+    #print(newTokens)
     return newTokens
 
 def toHTML(pages):
@@ -173,6 +212,7 @@ def toHTML(pages):
         
         tokens = tokenise(lines)
         tokens = lexer(tokens)
+        tokens = emphasis(tokens)
         
         html.append(head + parse(tokens) + foot)
 
