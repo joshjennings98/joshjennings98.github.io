@@ -3,6 +3,10 @@ page1 = """test 1
 
 ## Test
 
+
+1. tttt
+2. bsbsbs
+
 test test test
 """
 
@@ -14,6 +18,9 @@ page2 = """testnot2
 test test test
 d
 test 1 test 1 test 1
+
+### tititit
+thia ia a adhdhd
 - test point 1
 - test pouny 2
 """
@@ -40,8 +47,6 @@ def parse(tokens):
             html = "<h4>%s</h4>\n\n" % data
         elif token == ("h", 5):
             html = "<h5>%s</h5>\n\n" % data
-        elif token == ("p", "b"):
-            html = "<ul>%s</ul>\n\n" % data
         else: # paragraph
             html = "<p>\n%s\n</p>\n\n" % data
         
@@ -70,8 +75,11 @@ def tokenise(lines):
         elif header == "#####":
             token = (("h", 5), data[:-1])
         else: # paragraph
-            if header in "-*":
+            
+            if header in "-*+":
                  token = (("p", "b"), (header + " " + data))
+            elif header[:-1] + "." == header and int(header[:-1]) in range(1000):
+                 token = (("p", "n"), (header + " " + data))
             else:
                  token = (("p", "none"), (header + " " + data))
 
@@ -87,23 +95,38 @@ def lexer(tokens):
     i = 0
     
     while i < len(tokens):
-        data = tokens[i][1]
+        if str(tokens[i][0][1]) == "b":
+            data = "<ul>\n<li>" + tokens[i][1][2:-1] + "</li>"
+            bFlag = 1
+        elif str(tokens[i][0][1]) == "n":
+            data = "<ol>\n<li>" + tokens[i][1][3:-1] + "</li>"
+            bFlag = 2
+        else:
+            data = tokens[i][1]
         incr = 1
         
-        if tokens[i][0][0] == "p":
+        if tokens[i][0][0] in "p":
             for token in tokens[i+1:]:        
                 if token[0][0] == "p":
                     if token[0][1] == "none":
                         if bFlag == 1:
                             data = data + "\n</ul>"
                             bFlag = 0
+                        elif bFlag == 2:
+                            data = data + "\n</ol>"
                         data = data + "\n" + token[1]
                         incr += 1
                     elif token[0][1] == "b":
                         if bFlag == 0:
                             bFlag = 1
                             data = data + "\n<ul>"
-                        data = data + "\n<li>" + token[1][2:] + "</li>"
+                        data = data + "\n<li>" + token[1][2:-1] + "</li>"
+                        incr += 1
+                    elif token[0][1] == "n":
+                        if bFlag == 0:
+                            bFlag = 2
+                            data = data + "\n<ol>"
+                        data = data + "\n<li>" + token[1][3:-1] + "</li>"
                         incr += 1
                 else:
                     break
