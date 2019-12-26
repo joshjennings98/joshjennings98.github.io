@@ -166,7 +166,7 @@ def toHTML(pages):
 
     for page in pages:
         lines = page.split("\n")
-        head = "<!DOCTYPE html>\n<html>\n<head>\n<title>%s</title>\n</head>\n\n<body>\n\n" % lines[0]
+        head = "<!DOCTYPE html>\n<html>\n<head>\n<title>%s</title>\n<script type=\"text/javascript\" id=\"MathJax-script\" async\n    src=\"https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml.js\">\n</script>\n</head>\n\n<body>\n\n" % lines[0]
         foot = "</body>\n</html>"
         lines = list(filter(lambda x: x != "", lines[1:]))
  # Ignore whitespace
