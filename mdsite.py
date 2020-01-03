@@ -31,14 +31,14 @@ thia ia a adhdhd
 
 v
 
-```
-testtsg
-ddddd
 
-# habdb
+testtsg
+[I'm an inline-style link](https://www.google.com)
+aafggg
+[I'm an inline-style link2](https://www.google.co.uk)
 
 h
-```
+
 *m*
 """
 
@@ -114,7 +114,8 @@ def emphasis(lines):
     italics = False
     code = False # inline
     cFlag = False
-    newLines =[]
+    newLines = []
+    gotURLs = []
     
     for line in lines:
         newLine =[]
@@ -126,6 +127,7 @@ def emphasis(lines):
         words = line[1]
         i = 0
         while i < len(words) - 1:
+        # Sort emphasis
             if words[i] == "*" and words[i+1] == "*":
                 b = "<b>" if bold == False else "</b>"
                 bold = not bold
@@ -139,10 +141,51 @@ def emphasis(lines):
                 code = not code
                 words = words[:i+1] + cd + words[i+2:]
             i += 1
+        i = 0
+        gotURL = (False, 0, 0, 0)
+        while i < len(words):
+        # sort URLs
+            if words[i] == "[":
+                j = 0
+                while j < len(words[i:]):
+                    if words[i+j] == "]" and words[i+j+1] == "(":
+                        name = words[i+1:i+j]
+                        print(name)
+                        gotURL = (False, i, i + j, 0)
+                        i += j
+                        k = 0
+                        while k < len(words[i:]):
+                            if words[i+k] == ")":
+                                url = words[i+2:i+k]
+                                print(url)
+                                i += k
+                                gotURL = (True, gotURL[1], gotURL[2], i)
+                                print(gotURL)
+                                gotURLs.append(gotURL)
+                                break 
+                            
+                            i += 1
+                        break
+                    j += 1
+            i += 1            
+        if gotURLs:
+                #words = words[:gotURL[1]] + "!" + words[gotURL[1]+1:gotURL[2]] + "!!" + words[gotURL[2]+2:gotURL[3]] + "!"
+            print(gotURLs)    
+            for i in range(len(gotURLs)):
+                print("xx", "!" + words[gotURLs[i][1]+1:gotURLs[i][2]] + "!!" + words[gotURLs[i][2]+2:gotURLs[i][3]] + "!")
+                
+                
+                #words = words[:gotURLs[i][1]] + "!" + words[gotURLs[i][1]+1:gotURLs[i][2]] + "!!" + words[gotURLs[i][2]+2:gotURLs[i][3]] + "!"
+                    
+                #print("text=", words[gotURL[1]+1:gotURL[2]], ", url=", words[gotURL[2]+2:gotURL[3]], sep="")
+                
+                
+            #print(gotURLs)
         newLine = (lines[0], words)
         newLines.append(newLine)
     return newLines
     
+   
 def lexer(tokens):
     #print(tokens)
     newTokens =[]
@@ -214,9 +257,12 @@ def toHTML(pages):
         tokens = lexer(tokens)
         tokens = emphasis(tokens)
         
+        #sortURLs(tokens)
+        
         html.append(head + parse(tokens) + foot)
 
     return html
             
 for page in toHTML(pages):
     print(page)
+    
