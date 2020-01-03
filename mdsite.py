@@ -15,6 +15,8 @@ page2 = """testnot2
 
 ## Test Test
 
+![I'm an imasdasdsaaage](https://www.image.com/imageasaaaaas.png)
+
 thsjj hdnd **test test test** skkd
 d
 *test 1 test 1 `magic` test 1*
@@ -38,6 +40,8 @@ aafggg
 [I'm an inline-style link2](https://www.google.co.uk)
 
 h
+
+![I'm an image](https://www.image.com/images.png)
 
 *m*
 """
@@ -142,16 +146,19 @@ def emphasis(lines):
                 words = words[:i+1] + cd + words[i+2:]
             i += 1
         i = 0
-        gotURL = (False, 0, 0, 0)
+        gotURL = (False, 0, 0, 0, "")
         while i < len(words):
-        # sort URLs
+        # sort URLs and images
+            flagU = "img"
             if words[i] == "[":
+                if i == 0 or words[i - 1] != "!":
+                    flagU = "a"
                 j = 0
                 while j < len(words[i:]):
                     if words[i+j] == "]" and words[i+j+1] == "(":
                         name = words[i+1:i+j]
                         print(name)
-                        gotURL = (False, i, i + j, 0)
+                        gotURL = (False, i, i + j, 0, "")
                         i += j
                         k = 0
                         while k < len(words[i:]):
@@ -159,7 +166,7 @@ def emphasis(lines):
                                 url = words[i+2:i+k]
                                 print(url)
                                 i += k
-                                gotURL = (True, gotURL[1], gotURL[2], i)
+                                gotURL = (True, gotURL[1], gotURL[2], i, flagU)
                                 print(gotURL)
                                 gotURLs.append(gotURL)
                                 break 
@@ -171,9 +178,11 @@ def emphasis(lines):
             charAdjustment = 0
             print(gotURLs)    
             for i in range(len(gotURLs)):
-                # print("xx", "!" + words[gotURLs[i][1]+charAdjustment+1:gotURLs[i][2]+charAdjustment] + "!!" + words[gotURLs[i][2]+charAdjustment+2:gotURLs[i][3]+charAdjustment] + "!")   
-                words = words[:gotURLs[i][1]+charAdjustment] + "<a href=\"" + words[gotURLs[i][2]+charAdjustment+2:gotURLs[i][3]+charAdjustment] + "\">" + words[gotURLs[i][1]+charAdjustment+1:gotURLs[i][2]+charAdjustment] + "</a>" + words[gotURLs[i][3]+1+charAdjustment:]
-                charAdjustment += 11
+                x = 0
+                if gotURLs[i][4] == "img":
+                    x = 1
+                words = words[:gotURLs[i][1]+charAdjustment-x] + "<" + gotURLs[i][4] + " href=\"" + words[gotURLs[i][2]+charAdjustment+2:gotURLs[i][3]+charAdjustment] + "\">" + words[gotURLs[i][1]+charAdjustment+1:gotURLs[i][2]+charAdjustment] + "</" + gotURLs[i][4] + ">" + words[gotURLs[i][3]+1+charAdjustment:]
+                charAdjustment = charAdjustment + 9 + 2 * len(gotURLs[i][4]) - x
         newLine = (lines[0], words)
         newLines.append(newLine)
     return newLines
