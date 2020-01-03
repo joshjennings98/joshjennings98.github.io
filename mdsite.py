@@ -163,24 +163,17 @@ def emphasis(lines):
                                 print(gotURL)
                                 gotURLs.append(gotURL)
                                 break 
-                            
                             i += 1
                         break
                     j += 1
             i += 1            
         if gotURLs:
-                #words = words[:gotURL[1]] + "!" + words[gotURL[1]+1:gotURL[2]] + "!!" + words[gotURL[2]+2:gotURL[3]] + "!"
+            charAdjustment = 0
             print(gotURLs)    
             for i in range(len(gotURLs)):
-                print("xx", "!" + words[gotURLs[i][1]+1:gotURLs[i][2]] + "!!" + words[gotURLs[i][2]+2:gotURLs[i][3]] + "!")
-                
-                
-                #words = words[:gotURLs[i][1]] + "!" + words[gotURLs[i][1]+1:gotURLs[i][2]] + "!!" + words[gotURLs[i][2]+2:gotURLs[i][3]] + "!"
-                    
-                #print("text=", words[gotURL[1]+1:gotURL[2]], ", url=", words[gotURL[2]+2:gotURL[3]], sep="")
-                
-                
-            #print(gotURLs)
+                # print("xx", "!" + words[gotURLs[i][1]+charAdjustment+1:gotURLs[i][2]+charAdjustment] + "!!" + words[gotURLs[i][2]+charAdjustment+2:gotURLs[i][3]+charAdjustment] + "!")   
+                words = words[:gotURLs[i][1]+charAdjustment] + "<a href=\"" + words[gotURLs[i][2]+charAdjustment+2:gotURLs[i][3]+charAdjustment] + "\">" + words[gotURLs[i][1]+charAdjustment+1:gotURLs[i][2]+charAdjustment] + "</a>" + words[gotURLs[i][3]+1+charAdjustment:]
+                charAdjustment += 11
         newLine = (lines[0], words)
         newLines.append(newLine)
     return newLines
