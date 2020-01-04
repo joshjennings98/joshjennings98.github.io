@@ -146,7 +146,7 @@ def emphasis(lines):
                 words = words[:i+1] + cd + words[i+2:]
             i += 1
         i = 0
-        gotURL = (False, 0, 0, 0, "", num + 1)
+        gotURL = (False, 0, 0, 0, "", num)
         while i < len(words):
         # sort URLs and images
             flagU = "img"
@@ -160,37 +160,32 @@ def emphasis(lines):
                         break
                     if words[i+j] == "]" and words[i+j+1] == "(":
                         name = words[i+1:i+j]
-                        gotURL = (False, i, i + j, 0, "", num + 1)
+                        gotURL = (False, i, i + j, 0, "", num)
                         i += j
                         k = 0
                         while k < len(words[i:]):
                             if words[i+k] == ")":
                                 url = words[i+2:i+k]
                                 i += k
-                                gotURL = (True, gotURL[1], gotURL[2], i, flagU, num + 1)
+                                gotURL = (True, gotURL[1], gotURL[2], i, flagU, num)
                                 gotURLs.append(gotURL)
                                 break 
                             i += 1
                         break
                     j += 1
             i += 1         
-
-
-        # IT'S DOING IT MULTIPLE TIMES, WE ONLY WANT TO DO IT ON THE LAST ONE.
-        # LOOK AT GOTURLS
-        # USE THE FINAL NUMBER AS THE 'LINE' IN LINES AND ONLY CHANGE IN THOSE
-
-
+      
         if gotURLs:
             charAdjustment = 0
             print("URLs:", gotURLs)    
             for i in range(len(gotURLs)):
-                x = 0
-                if gotURLs[i][4] == "img":
-                    x = 1
-                
-                words = words[:gotURLs[i][1]+charAdjustment-x] + "<" + gotURLs[i][4] + " href=\"" + words[gotURLs[i][2]+charAdjustment+2:gotURLs[i][3]+charAdjustment] + "\">" + words[gotURLs[i][1]+charAdjustment+1:gotURLs[i][2]+charAdjustment] + "</" + gotURLs[i][4] + ">" + words[gotURLs[i][3]+1+charAdjustment:]
-                charAdjustment = charAdjustment + 9 + 2 * len(gotURLs[i][4]) - x
+                if gotURLs[i][5] == num:
+                    x = 0
+                    if gotURLs[i][4] == "img":
+                        x = 1
+                    
+                    words = words[:gotURLs[i][1]+charAdjustment-x] + "<" + gotURLs[i][4] + " href=\"" + words[gotURLs[i][2]+charAdjustment+2:gotURLs[i][3]+charAdjustment] + "\">" + words[gotURLs[i][1]+charAdjustment+1:gotURLs[i][2]+charAdjustment] + "</" + gotURLs[i][4] + ">" + words[gotURLs[i][3]+1+charAdjustment:]
+                    charAdjustment = charAdjustment + 9 + 2 * len(gotURLs[i][4]) - x
         newLine = (lines[0], words)
         newLines.append(newLine)
     return newLines
