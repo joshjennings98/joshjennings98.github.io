@@ -4,7 +4,7 @@ Josh Jennings - Projects
 
 # My Projects
 
-## Static Site Generator
+## Static Site Generator (md-site)
 
 This is a nice easy way of turning markdown pages into a nice static HTML website. Used for this website! [Read More](https://github.com/joshjennings98/md-site)
 
