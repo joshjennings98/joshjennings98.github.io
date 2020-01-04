@@ -5,6 +5,9 @@ test 1
 
 ## Test
 
+$$
+x = \frac{1}{2}
+$$
 
 1. tttt
 2. bsbsbs

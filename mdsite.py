@@ -262,5 +262,12 @@ def main():
 if __name__ == "__main__":
     main()
 
+"""
+To Do:
 
+- Make work with links to other site pages
+- Add header and footer stuff
+- Make work with local images
+
+"""
     
