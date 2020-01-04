@@ -230,7 +230,7 @@ def toHTML(pages):
     for page in pages:
         lines = page.split("\n")
         metadata = getMetadata(lines)
-        head = "<!DOCTYPE html>\n<html>\n<head>\n<title>%s</title>\n<link rel=\"stylesheet\" type=\"text/css\" href=\"style.css\">\n<meta charset=\"UTF-8\">\n<meta name=\"viewport\" content=\"width=device-width\">\n<script type=\"text/javascript\" id=\"MathJax-script\" async\n    src=\"https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml.js\">\n</script>\n</head>\n\n<body>\n<nav>\n<section>\n<span class=\"home\">\n<a href=\"%s\">Home</a>\n</span>\n<span class=\"links\">\n<a href=\"%s\">Projects</a>\n<a href=\"%s\">Experience</a>\n<a href=\"%s\">About</a>\n</span>\n</section>\n</nav>\n<div id=\"page-container\">\n<div id=\"content-wrap\">\n<main>\n\n" % (metadata[2], metadata[3], metadata[4], metadata[5], metadata[6])
+        head = "<!DOCTYPE html>\n<html>\n<head>\n<title>%s</title>\n<link rel=\"shortcut icon\" type=\"image/png\" href=\"./favicon.png\"/>\n<link rel=\"stylesheet\" type=\"text/css\" href=\"style.css\">\n<meta charset=\"UTF-8\">\n<meta name=\"viewport\" content=\"width=device-width\">\n<script type=\"text/javascript\" id=\"MathJax-script\" async\n    src=\"https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml.js\">\n</script>\n</head>\n\n<body>\n<nav>\n<section>\n<span class=\"home\">\n<a href=\"%s\">Home</a>\n</span>\n<span class=\"links\">\n<a href=\"%s\">Projects</a>\n<a href=\"%s\">Experience</a>\n<a href=\"%s\">About</a>\n</span>\n</section>\n</nav>\n<div id=\"page-container\">\n<div id=\"content-wrap\">\n<main>\n\n" % (metadata[2], metadata[3], metadata[4], metadata[5], metadata[6])
         foot = "</main>\n</div>\n<footer>\n<section>\n<p>&copy; 2019 Josh Jennings</p>\n<p>\n<a href=\"https://www.linkedin.com/in/josh-jennings-41a17213a/\">LinkedIn</a>\n<a href=\"https://github.com/joshjennings98\">GitHub</a>\n<a href=\"https://nbviewer.jupyter.org/github/joshthepirate/joshthepirate.github.io/blob/master/CV-Josh-Jennings.pdf\">Online CV</a>\n<a href=\"mailto:jlj16@ic.ac.uk\">Email</a>\n</p>\n</section>\n</footer>\n</div>\n</body>\n</html>"
         lines = list(filter(lambda x: x != "", lines[metadata[0]:]))
         # Ignore whitespace
@@ -259,6 +259,7 @@ def main():
         # This will only work on linux, should probably change it
         os.system('mkdir -p _site')
         os.system('cp -f style.css _site')
+        os.system('cp -f favicon.png _site')
         
         file = open("_site/" + title + ".html", "w")
         file.write(html)

@@ -1,5 +1,5 @@
 index
-Josh Jennings
+Josh Jennings - Homepage
 <start page>
 
 # Josh Jennings

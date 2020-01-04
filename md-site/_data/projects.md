@@ -1,5 +1,5 @@
 projects
-Projects
+Josh Jennings - Projects
 <start page>
 
 # My Projects
