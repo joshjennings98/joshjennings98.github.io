@@ -51,13 +51,12 @@ pages = [
     page2
 ]
 
-def parse(tokens):
+def sortMainTags(tokens):
     allHTML = []
 
     for tokenised in tokens:
         token = tokenised[0]
-        data = tokenised[1]
-
+        data = tokenised[1]        
         if token == ("h", 1):
             html = "<h1>%s</h1>\n\n" % data
         elif token == ("h", 2):
@@ -73,7 +72,7 @@ def parse(tokens):
         
         allHTML.append(html)
         
-    return "".join(allHTML)
+    return allHTML
 
 def tokenise(lines):
     tokens = []
@@ -85,7 +84,6 @@ def tokenise(lines):
         header = words[0]
         data = "".join(list(map(lambda x: x + " ", words[1:])))
         
-
         if header == "#" and cFlag == False:
             token = (("h", 1), data[:-1])
         elif header == "##" and cFlag == False:
@@ -110,18 +108,18 @@ def tokenise(lines):
                  token = (("p", "none"), (header + " " + data))
 
         tokens.append(token)
-    
+
     return tokens
 
-def emphasis(lines):
+def sortEmphasis(lines):
     bold = False
     italics = False
-    code = False # inline
+    code = False # inline code
     cFlag = False
     newLines = []
     gotURLs = []
     
-    for num, line in enumerate(lines):
+    for line in lines:
         newLine =[]
         if line[:5] == "<code":
             cFlag = True
@@ -145,6 +143,18 @@ def emphasis(lines):
                 code = not code
                 words = words[:i+1] + cd + words[i+2:]
             i += 1
+        
+        newLine = (line[0], words)
+        newLines.append(newLine)
+        
+    return newLines
+
+def sortURLs(lines):
+    newLines = []
+    gotURLs = []
+    
+    for num, line in enumerate(lines):
+        words = line[1]
         i = 0
         gotURL = (False, 0, 0, 0, "", num)
         while i < len(words):
@@ -155,9 +165,6 @@ def emphasis(lines):
                     flagU = "a"
                 j = 0
                 while j < len(words[i:]):
-                    if words[i] not in "qwertyuiopasdfghjklzxcvbnm./:% ()[]!": # need all valid url chars
-                        i += j
-                        break
                     if words[i+j] == "]" and words[i+j+1] == "(":
                         name = words[i+1:i+j]
                         gotURL = (False, i, i + j, 0, "", num)
@@ -177,22 +184,21 @@ def emphasis(lines):
       
         if gotURLs:
             charAdjustment = 0
-            print("URLs:", gotURLs)    
             for i in range(len(gotURLs)):
                 if gotURLs[i][5] == num:
                     x = 0
                     if gotURLs[i][4] == "img":
                         x = 1
-                    
                     words = words[:gotURLs[i][1]+charAdjustment-x] + "<" + gotURLs[i][4] + " href=\"" + words[gotURLs[i][2]+charAdjustment+2:gotURLs[i][3]+charAdjustment] + "\">" + words[gotURLs[i][1]+charAdjustment+1:gotURLs[i][2]+charAdjustment] + "</" + gotURLs[i][4] + ">" + words[gotURLs[i][3]+1+charAdjustment:]
                     charAdjustment = charAdjustment + 9 + 2 * len(gotURLs[i][4]) - x
-        newLine = (lines[0], words)
+
+        newLine = (line[0], words)
         newLines.append(newLine)
+
     return newLines
     
    
-def lexer(tokens):
-    #print(tokens)
+def sortInsideParagraphs(tokens):
     newTokens =[]
     bFlag = 0
     cFlag = False
@@ -245,7 +251,7 @@ def lexer(tokens):
         newTokens.append((tokens[i][0], data))
         
         i += incr
-    #print(newTokens)
+
     return newTokens
 
 def toHTML(pages):
@@ -256,15 +262,15 @@ def toHTML(pages):
         head = "<!DOCTYPE html>\n<html>\n<head>\n<title>%s</title>\n<script type=\"text/javascript\" id=\"MathJax-script\" async\n    src=\"https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml.js\">\n</script>\n</head>\n\n<body>\n\n" % lines[0]
         foot = "</body>\n</html>"
         lines = list(filter(lambda x: x != "", lines[1:]))
- # Ignore whitespace
+        # Ignore whitespace
         
         tokens = tokenise(lines)
-        tokens = lexer(tokens)
-        tokens = emphasis(tokens)
+        tokens = sortInsideParagraphs(tokens)
+        tokens = sortEmphasis(tokens)
+        tokens = sortURLs(tokens)
+        tokens = sortMainTags(tokens)
         
-        #sortURLs(tokens)
-        
-        html.append(head + parse(tokens) + foot)
+        html.append(head + "".join(tokens) + foot)
 
     return html
             
