@@ -1,55 +1,5 @@
-page1 = """test 1
-# Test Page 1
-
-## Test
-
-
-1. tttt
-2. bsbsbs
-
-test test test
-"""
-
-page2 = """testnot2
-# Test Page 2
-
-## Test Test
-
-![I'm an imasdasdsaaage](https://www.image.com/imageasaaaaas.png)
-
-thsjj hdnd **test test test** skkd
-d
-*test 1 test 1 `magic` test 1*
-sjjsjs jsjsh **djdjjs** djej
-
-*f*
-
-***x***
-
-### tititit
-thia ia a adhdhd
-- test point 1
-- test pouny 2
-
-v
-
-
-testtsg
-[I'm an inline-style link](https://www.google.com)
-aafggg
-[I'm an inline-style link2](https://www.google.co.uk)
-
-h
-
-![I'm an image](https://www.image.com/images.png)
-
-*m*
-"""
-
-pages = [
-    page1,
-    page2
-]
+import os
+import glob
 
 def sortMainTags(tokens):
     allHTML = []
@@ -254,14 +204,27 @@ def sortInsideParagraphs(tokens):
 
     return newTokens
 
+def getMetadata(lines):
+    pageStart = 1
+    i = 0 # while loop to find where page starts
+    while i < len(lines):
+        if lines[i] != "<start page>":
+            pageStart += 1
+        else:
+            break
+        i += 1
+    title = lines[0]
+    return (pageStart, title)
+
 def toHTML(pages):
     html = []
 
     for page in pages:
         lines = page.split("\n")
-        head = "<!DOCTYPE html>\n<html>\n<head>\n<title>%s</title>\n<script type=\"text/javascript\" id=\"MathJax-script\" async\n    src=\"https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml.js\">\n</script>\n</head>\n\n<body>\n\n" % lines[0]
+        metadata = getMetadata(lines)
+        head = "<!DOCTYPE html>\n<html>\n<head>\n<title>%s</title>\n<script type=\"text/javascript\" id=\"MathJax-script\" async\n    src=\"https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml.js\">\n</script>\n</head>\n\n<body>\n\n" % metadata[1]
         foot = "</body>\n</html>"
-        lines = list(filter(lambda x: x != "", lines[1:]))
+        lines = list(filter(lambda x: x != "", lines[metadata[0]:]))
         # Ignore whitespace
         
         tokens = tokenise(lines)
@@ -270,10 +233,27 @@ def toHTML(pages):
         tokens = sortURLs(tokens)
         tokens = sortMainTags(tokens)
         
-        html.append(head + "".join(tokens) + foot)
+        html.append((head + "".join(tokens) + foot, metadata[1]))
 
     return html
-            
-for page in toHTML(pages):
-    print(page)
+
+def main():
+    
+    pages = []
+    for filepath in glob.glob(os.path.join('*.md')):
+        with open(filepath) as f:
+            pages.append(f.read())
+
+    for page in toHTML(pages):
+        title = page[1]
+        html = page[0]
+        
+        file = open(title + ".html", "w")
+        file.write(html)
+        file.close
+
+if __name__ == "__main__":
+    main()
+
+
     
