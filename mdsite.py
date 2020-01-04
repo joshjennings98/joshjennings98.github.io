@@ -216,8 +216,13 @@ def getMetadata(lines):
         else:
             break
         i += 1
-    title = lines[0]
-    return (pageStart, title)
+    url = lines[0]
+    title = lines[1]
+    home = "./index.html"
+    projects = "./projects.html"
+    experience = "./experience.html"
+    about = "./about.html"
+    return (pageStart, url, title, home, projects, experience, about)
 
 def toHTML(pages):
     html = []
@@ -225,8 +230,8 @@ def toHTML(pages):
     for page in pages:
         lines = page.split("\n")
         metadata = getMetadata(lines)
-        head = "<!DOCTYPE html>\n<html>\n<head>\n<title>%s</title>\n<link rel=\"stylesheet\" type=\"text/css\" href=\"style.css\">\n<meta charset=\"UTF-8\">\n<meta name=\"viewport\" content=\"width=device-width\">\n<script type=\"text/javascript\" id=\"MathJax-script\" async\n    src=\"https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml.js\">\n</script>\n</head>\n\n<body>\n<main>\n\n" % metadata[1]
-        foot = "</main>\n</body>\n</html>"
+        head = "<!DOCTYPE html>\n<html>\n<head>\n<title>%s</title>\n<link rel=\"stylesheet\" type=\"text/css\" href=\"style.css\">\n<meta charset=\"UTF-8\">\n<meta name=\"viewport\" content=\"width=device-width\">\n<script type=\"text/javascript\" id=\"MathJax-script\" async\n    src=\"https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml.js\">\n</script>\n</head>\n\n<body>\n<nav>\n<section>\n<span class=\"home\">\n<a href=\"%s\">Home</a>\n</span>\n<span class=\"links\">\n<a href=\"%s\">Projects</a>\n<a href=\"%s\">Experience</a>\n<a href=\"%s\">About</a>\n</span>\n</section>\n</nav>\n<div id=\"page-container\">\n<div id=\"content-wrap\">\n<main>\n\n" % (metadata[2], metadata[3], metadata[4], metadata[5], metadata[6])
+        foot = "</main>\n</div>\n<footer>\n<section>\n<p>&copy; 2019 Josh Jennings</p>\n<p>\n<a href=\"https://www.linkedin.com/in/josh-jennings-41a17213a/\">LinkedIn</a>\n<a href=\"https://github.com/joshjennings98\">GitHub</a>\n<a href=\"https://nbviewer.jupyter.org/github/joshthepirate/joshthepirate.github.io/blob/master/CV-Josh-Jennings.pdf\">Online CV</a>\n<a href=\"mailto:jlj16@ic.ac.uk\">Email</a>\n</p>\n</section>\n</footer>\n</div>\n</body>\n</html>"
         lines = list(filter(lambda x: x != "", lines[metadata[0]:]))
         # Ignore whitespace
         
@@ -265,9 +270,10 @@ if __name__ == "__main__":
 """
 To Do:
 
-- Make work with links to other site pages
-- Add header and footer stuff
 - Make work with local images
+- Remove need for <br> stuff
+- Remove hard coded title stuff etc.
+- Make a config json file or something for above point
 
 """
     

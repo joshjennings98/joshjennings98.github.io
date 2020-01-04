@@ -31,13 +31,12 @@ a:hover, a:active {
 
 
 /* Single column layout */
-nav section, header section, main, footer section {
+nav section, header section, footer section, main, img {
     max-width: 40em;
     margin-left: auto;
     margin-right: auto;
     padding: 0 0.5em;
 }
-
 
 /* Navigation panel */
 nav {
@@ -59,6 +58,15 @@ nav a:hover, nav a:active {
     text-decoration: none;
 }
 
+#page-container {
+  position: relative;
+  min-height: 90vh;
+}
+
+#content-wrap {
+  padding-bottom: 5rem;    /* Footer height */
+}
+
 /* Footer */
 footer {
     background: #f0f0f0;
@@ -67,7 +75,10 @@ footer {
     padding: 1em 0;
     box-shadow: 0 100vh 0 100vh #f0f0f0;
     text-align: center;
-    max-height: 5%;
+    position: absolute;
+    bottom: 0;
+    width: 100%;
+    height: 5rem;            /* Footer height */
 }
 
 footer section p {
@@ -80,89 +91,6 @@ footer a {
 
 footer a:last-child {
     margin-right: 0;
-}
-
-
-/* Posts */
-article {
-    margin-top: 1em;
-    margin-bottom: 1em;
-}
-
-article h2 a:link, article h2 a:visited,
-article h1 a:link, article h1 a:visited,
-.more:link, .more:visited {
-    color: #333333;
-}
-
-article h2 a:hover, article h2 a:active,
-article h1 a:hover, article h1 a:active,
-.more:hover, .more:active {
-    color: #777777;
-}
-
-p.meta {
-    margin-top: 0;
-    font-size: 0.8em;
-    color: #777777;
-    font-style: italic;
-}
-
-p.summary {
-    margin-top: 0.25em;
-    margin-bottom: 0.25em;
-}
-
-div .more {
-    margin-top: 0;
-    font-weight: bold;
-}
-
-
-/* RSS */
-.rss {
-    padding: 0.3em 0.35em;
-    border-radius: 0.25em;
-    font-size: 0.75em;
-    font-weight: bold;
-}
-
-.rss:link, .rss:visited, .rss:hover, .rss:active {
-    color: #ffffff;
-    text-decoration: none;
-}
-
-.rss:link, .rss:visited {
-    background: #ff6600;
-}
-
-.rss:hover, .rss:active {
-    background: #ff8822;
-}
-
-.container {
-    height: 50vh;
-    width: 100ch;
-    position: relative;
-}
-
-.center {
-    position: absolute;
-    top: 43%;
-    left: 35ch;
-    -ms-transform: translate(-50%, -50%);
-    transform: translate(-50%, -50%);
-}
-
-.ml3 {
-    font-weight: 900;
-    font-size: 10vh;
-}
-
-.bottom-container {
-    height: 5vh;
-    width: 100ch;
-    position: relative;
 }
 
 @media screen and (min-width: 600px) {
