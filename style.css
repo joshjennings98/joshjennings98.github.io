@@ -1,0 +1,100 @@
+/* General */
+body {
+    margin: 0;
+    line-height: 1.5em;
+    color: #333333;
+    font-family: helvetica, arial, sans-serif;
+}
+
+h1, h2 {
+    margin-bottom: 0;
+    line-height: 1.2em;
+    margin-top: 1em;
+}
+
+h3, h4, h5, h6 {
+    margin-bottom: 0;
+    line-height: 1.2em;
+    margin-top: 1em;
+    color: #aaaaaa;
+}
+
+a:link, a:visited {
+    color: #0000e0;
+    text-decoration: none
+}
+
+a:hover, a:active {
+    color: #0000ff;
+    text-decoration: underline
+}
+
+
+/* Single column layout */
+nav section, header section, footer section, main, img {
+    max-width: 40em;
+    margin-left: auto;
+    margin-right: auto;
+    padding: 0 0.5em;
+}
+
+/* Navigation panel */
+nav {
+    background: #333333;
+    border-bottom: thin solid #111111;
+    line-height: 3em;
+}
+
+nav a {
+    margin-right: 1em;
+}
+
+nav a:link, nav a:visited {
+    color: #cccccc;
+}
+
+nav a:hover, nav a:active {
+    color: #ffffff;
+    text-decoration: none;
+}
+
+#page-container {
+  position: relative;
+  min-height: 90vh;
+}
+
+#content-wrap {
+  padding-bottom: 5rem;    /* Footer height */
+}
+
+/* Footer */
+footer {
+    background: #f0f0f0;
+    border-top: thin solid #e0e0e0;
+    margin-top: 2em;
+    padding: 1em 0;
+    box-shadow: 0 100vh 0 100vh #f0f0f0;
+    text-align: center;
+    position: absolute;
+    bottom: 0;
+    width: 100%;
+    height: 5rem;            /* Footer height */
+}
+
+footer section p {
+    font-size: 0.8em;
+}
+
+footer a {
+    margin-right: 1em;
+}
+
+footer a:last-child {
+    margin-right: 0;
+}
+
+@media screen and (min-width: 600px) {
+    nav .links {
+        float: right;
+    }
+}
