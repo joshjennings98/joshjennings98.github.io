@@ -139,7 +139,9 @@ def sortURLs(lines):
                     x = 0
                     if gotURLs[i][4] == "img":
                         x = 1
-                    words = words[:gotURLs[i][1]+charAdjustment-x] + "<" + gotURLs[i][4] + " href=\"" + words[gotURLs[i][2]+charAdjustment+2:gotURLs[i][3]+charAdjustment] + "\">" + words[gotURLs[i][1]+charAdjustment+1:gotURLs[i][2]+charAdjustment] + "</" + gotURLs[i][4] + ">" + words[gotURLs[i][3]+1+charAdjustment:]
+                        words = words[:gotURLs[i][1]+charAdjustment-x] + "<" + gotURLs[i][4] + " src=\"" + words[gotURLs[i][2]+charAdjustment+2:gotURLs[i][3]+charAdjustment] + "\" alt=\"" + words[gotURLs[i][1]+charAdjustment+1:gotURLs[i][2]+charAdjustment] + "\">" + words[gotURLs[i][3]+1+charAdjustment:]
+                    else:
+                        words = words[:gotURLs[i][1]+charAdjustment-x] + "<" + gotURLs[i][4] + " href=\"" + words[gotURLs[i][2]+charAdjustment+2:gotURLs[i][3]+charAdjustment] + "\">" + words[gotURLs[i][1]+charAdjustment+1:gotURLs[i][2]+charAdjustment] + "</" + gotURLs[i][4] + ">" + words[gotURLs[i][3]+1+charAdjustment:]
                     charAdjustment = charAdjustment + 9 + 2 * len(gotURLs[i][4]) - x
 
         newLine = (line[0], words)
@@ -174,6 +176,7 @@ def sortInsideParagraphs(tokens):
                             bFlag = 0
                         elif bFlag == 2:
                             data = data + "\n</ol>"
+                            bFlag = 0
                         data = data + "\n" + token[1]
                         incr += 1
                     elif token[0][1] == "b":
@@ -222,8 +225,8 @@ def toHTML(pages):
     for page in pages:
         lines = page.split("\n")
         metadata = getMetadata(lines)
-        head = "<!DOCTYPE html>\n<html>\n<head>\n<title>%s</title>\n<script type=\"text/javascript\" id=\"MathJax-script\" async\n    src=\"https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml.js\">\n</script>\n</head>\n\n<body>\n\n" % metadata[1]
-        foot = "</body>\n</html>"
+        head = "<!DOCTYPE html>\n<html>\n<head>\n<title>%s</title>\n<link rel=\"stylesheet\" type=\"text/css\" href=\"style.css\">\n<meta charset=\"UTF-8\">\n<meta name=\"viewport\" content=\"width=device-width\">\n<script type=\"text/javascript\" id=\"MathJax-script\" async\n    src=\"https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml.js\">\n</script>\n</head>\n\n<body>\n<main>\n\n" % metadata[1]
+        foot = "</main>\n</body>\n</html>"
         lines = list(filter(lambda x: x != "", lines[metadata[0]:]))
         # Ignore whitespace
         
@@ -238,17 +241,21 @@ def toHTML(pages):
     return html
 
 def main():
-    
+
     pages = []
-    for filepath in glob.glob(os.path.join('*.md')):
+    for filepath in glob.glob(os.path.join('_data/', '*.md')):
         with open(filepath) as f:
             pages.append(f.read())
 
     for page in toHTML(pages):
         title = page[1]
         html = page[0]
+
+        # This will only work on linux, should probably change it
+        os.system('mkdir -p _site')
+        os.system('cp -f style.css _site')
         
-        file = open(title + ".html", "w")
+        file = open("_site/" + title + ".html", "w")
         file.write(html)
         file.close
 

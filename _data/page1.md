@@ -10,3 +10,7 @@ test 1
 2. bsbsbs
 
 test test test
+
+![pic](https://i.imgur.com/7tH62tG.jpg)
+
+test
