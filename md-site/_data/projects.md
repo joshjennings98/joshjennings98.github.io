@@ -6,7 +6,11 @@ Josh Jennings - Projects
 
 ## Static Site Generator (md-site)
 
-This is a nice easy way of turning markdown pages into a nice static HTML website. Used for this website! [Read More](https://github.com/joshjennings98/md-site)
+This is a nice easy way of turning markdown pages into a nice static HTML website. It was used for this website!! [Read More](https://github.com/joshjennings98/md-site)
+
+## Self Organising Multi-Agent Colony
+
+This is a self-organising multi-agent system that simulates colonists trying to survive on a planet. Developed in a group for Jeremy Pitt. [Read More](https://github.com/joshjennings98/multi-agent-systems)
 
 ## Maze.py
 
@@ -14,7 +18,7 @@ This is a simple program that generates, prints, and solves a maze in the termin
 
 ## F# Neural Network
 
-Implemented a library for building and training neural networks designed for and built with F#. [Read More](https://github.com/joshjennings98/fsharp-neural-network)
+A small library for building and training neural networks designed for and built with F#. [Read More](https://github.com/joshjennings98/fsharp-neural-network)
 
 ## Orbis Intermitent Claudication Health App
 
@@ -30,7 +34,7 @@ A game of pong written in F# using the MonoGame API. [Read More](https://github.
 
 ## Visual2 Extension: UAL Assemebly to GNU Assembler
 
-This work was an add on to the VisUAL2 Arm Assembly emulator. [Read More](https://github.com/joshjennings98/team6-hlp-final)
+This work was an add on to the VisUAL2 Arm Assembly emulator. [Read More](https://github.com/tomcl/visual2.github.io)
 
 ## SensUS 2018 Vancomycin Biosenser Application
 

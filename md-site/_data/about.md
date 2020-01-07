@@ -8,7 +8,7 @@ My name is Josh Jennings and I'm a 4th year student at Imperial College London s
 
 <br><br>
 
-I have experience: in F#, C++, Python (including Keras), ARM Assembly, and JavaScript; as well as: Arduino Development, PCB Design, and Linux.
+On the software side I have a fair amout of experience in: F#, C++, Python (including Keras), ARM Assembly, Bash Scripting, and JavaScript. Other more miscellaneous skills I have involve: Arduino Development, PCB Design, and Linux.
 
 <br><br>
 

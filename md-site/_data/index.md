@@ -10,9 +10,9 @@ This is my personal website and online portfolio.
 
 ## Projects
 
-See some of my projects on my [project page](./projects.html).
+See a collection of some of my projects on my [project page](./projects.html).
 
-Alternatively, the source code for most of the projects are available on my [GitHub page](https://github.com/joshjennings98).
+As well as this, the source code for most of my projects are available on my [GitHub page](https://github.com/joshjennings98).
 
 ## Professional Experience
 
