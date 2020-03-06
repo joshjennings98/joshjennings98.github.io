@@ -12,6 +12,9 @@ The website pages will be in `_site`.
 
 ## To Do
 
-- Make work with links to other site pages
-- Add header and footer stuff
-- Make work with local images
+- Make work with things other than linux.
+- Make work with arbitrary pages, not just about, projects, experience etc.
+- Add doctypes and type annotations.
+- Make work with links to other site pages.
+- Add header and footer stuff.
+- Make work with local images.
