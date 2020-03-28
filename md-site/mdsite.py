@@ -114,6 +114,7 @@ def sortURLs(lines):
                 if i == 0 or words[i - 1] != "!":
                     flagU = "a"
                 j = 0
+                # these nested while loops look horrible, but they break out of the loops and keep track of the index so they should have good complexity despite their horrible look.........
                 while j < len(words[i:]):
                     if words[i+j] == "]" and words[i+j+1] == "(":
                         name = words[i+1:i+j]
@@ -256,7 +257,7 @@ def main():
         title = page[1]
         html = page[0]
 
-        # This will only work on linux, should probably change it
+        # TODO: Make work with other operating systems
         os.system('mkdir -p _site')
         os.system('cp -f style.css _site')
         os.system('cp -f favicon.png _site')
@@ -267,14 +268,4 @@ def main():
 
 if __name__ == "__main__":
     main()
-
-"""
-To Do:
-
-- Make work with local images
-- Remove need for <br> stuff
-- Remove hard coded title stuff etc.
-- Make a config json file or something for above point
-
-"""
     
