@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>Posts on joshj.dev</title>
+    <link>http://joshjennings.co.uk/posts/</link>
+    <description>Recent content in Posts on joshj.dev</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>en-gb</language>
+    <lastBuildDate>Thu, 25 Apr 2019 14:22:37 +0100</lastBuildDate>
+    
+	<atom:link href="http://joshjennings.co.uk/posts/index.xml" rel="self" type="application/rss+xml" />
+    
+    
+    <item>
+      <title>F# Neural Network</title>
+      <link>http://joshjennings.co.uk/posts/fsharp-neural-network/</link>
+      <pubDate>Thu, 25 Apr 2019 14:22:37 +0100</pubDate>
+      
+      <guid>http://joshjennings.co.uk/posts/fsharp-neural-network/</guid>
+      <description>&lt;p&gt;&lt;img src=&#34;http://joshjennings.co.uk/images/neuralnetwork.png&#34; alt=&#34;Neural Network&#34;&gt;&lt;/p&gt;
+&lt;p&gt;A scalable fully-connected neural network maker developed for and built using FSharp.&lt;/p&gt;</description>
+    </item>
+    
+  </channel>
+</rss>

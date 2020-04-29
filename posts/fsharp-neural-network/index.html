@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en-gb" lang="en-gb">
+<head>
+  <link href="https://gmpg.org/xfn/11" rel="profile">
+  <meta http-equiv="content-type" content="text/html; charset=utf-8">
+  <meta name="generator" content="Hugo 0.69.2" />
+
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  <title>F# Neural Network &middot; joshj.dev</title>
+  <meta name="description" content="" />
+
+  
+  <link type="text/css" rel="stylesheet" href="http://joshjennings.co.ukcss/print.css" media="print">
+  <link type="text/css" rel="stylesheet" href="http://joshjennings.co.ukcss/poole.css">
+  <link type="text/css" rel="stylesheet" href="http://joshjennings.co.ukcss/syntax.css">
+  <link type="text/css" rel="stylesheet" href="http://joshjennings.co.ukcss/hyde.css">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Abril+Fatface|PT+Sans:400,400i,700">
+
+
+  
+  <link rel="icon" href="http://joshjennings.co.ukfavicon.ico" type="image/x-icon"> 
+  <link rel="shortcut icon" href="http://joshjennings.co.ukfavicon.ico" type="image/x-icon"> 
+
+  
+  
+</head>
+
+  <body class="theme-base-08 ">
+  <aside class="sidebar">
+  <div class="container sidebar-sticky">
+    <div class="sidebar-about">
+      <a href="http://joshjennings.co.uk"><h1>joshj.dev</h1></a>
+      <p class="lead">
+       My name is Josh Jennings and this is my website and portfolio. 
+      </p>
+    </div>
+
+    <nav>
+      <ul class="sidebar-nav">
+        <li><a href="http://joshjennings.co.uk">Home</a> </li>
+        <li><a href="mailto:jenninjl01@gmail.com"> Email </a></li><li><a href="https://github.com/joshjennings98/"> Github </a></li><li><a href="https://www.linkedin.com/in/josh-jennings-41a17213a/"> LinkedIn </a></li><li><a href="https://nbviewer.jupyter.org/github/joshthepirate/joshthepirate.github.io/blob/master/CV-Josh-Jennings.pdf"> Online CV </a></li>
+      </ul>
+    </nav>
+
+    <p>&copy; 2020. All rights reserved. </p>
+  </div>
+</aside>
+
+    <main class="content container">
+    <div class="post">
+  <h1>F# Neural Network</h1>
+  <time datetime=2019-04-25T14:22:37&#43;0100 class="post-date">Thu, Apr 25, 2019</time>
+  <p><img src="/images/neuralnetwork.png" alt="Neural Network"></p>
+<p>A scalable fully-connected neural network maker developed for and built using FSharp.</p>
+<h2 id="usage">Usage</h2>
+<p>Networks can be specified using the following format. Any number of layers are supported.</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-fsharp" data-lang="fsharp"><span style="color:#66d9ef">let</span> networkArchitecture <span style="color:#f92672">=</span> <span style="color:#f92672">[</span>
+    <span style="color:#f92672">{</span>inputDims <span style="color:#f92672">=</span> 3<span style="color:#f92672">;</span> outputDims <span style="color:#f92672">=</span> 3<span style="color:#f92672">;</span> activation <span style="color:#f92672">=</span> Relu<span style="color:#f92672">};</span>
+    <span style="color:#f92672">{</span>inputDims <span style="color:#f92672">=</span> 3<span style="color:#f92672">;</span> outputDims <span style="color:#f92672">=</span> 3<span style="color:#f92672">;</span> activation <span style="color:#f92672">=</span> Sigmoid<span style="color:#f92672">};</span>
+    <span style="color:#f92672">{</span>inputDims <span style="color:#f92672">=</span> 3<span style="color:#f92672">;</span> outputDims <span style="color:#f92672">=</span> 3<span style="color:#f92672">;</span> activation <span style="color:#f92672">=</span> Softmax<span style="color:#f92672">};</span>
+<span style="color:#f92672">]</span>
+</code></pre></div><p>To train and run the network, see the code snippets below:</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-fsharp" data-lang="fsharp"><span style="color:#66d9ef">let</span> x <span style="color:#f92672">=</span> trainNetwork networkArchitecture <span style="color:#f92672">[</span>0<span style="color:#f92672">.</span>0<span style="color:#f92672">;</span> 1<span style="color:#f92672">.</span>0<span style="color:#f92672">;</span> 0<span style="color:#f92672">.</span>0<span style="color:#f92672">]</span> <span style="color:#f92672">[</span>0<span style="color:#f92672">.</span>1<span style="color:#f92672">;</span> 0<span style="color:#f92672">.</span>2<span style="color:#f92672">;</span> 0<span style="color:#f92672">.</span>7<span style="color:#f92672">]</span> 0<span style="color:#f92672">.</span>005 CrossEntropy 10000
+
+<span style="color:#66d9ef">let</span> output<span style="color:#f92672">,</span> error <span style="color:#f92672">=</span> runNetwork x <span style="color:#f92672">[</span>0<span style="color:#f92672">.</span>1<span style="color:#f92672">;</span> 0<span style="color:#f92672">.</span>2<span style="color:#f92672">;</span> 0<span style="color:#f92672">.</span>7<span style="color:#f92672">]</span> networkArchitecture CrossEntropy <span style="color:#f92672">[</span>0<span style="color:#f92672">.</span>0<span style="color:#f92672">;</span> 1<span style="color:#f92672">.</span>0<span style="color:#f92672">;</span> 0<span style="color:#f92672">.</span>0<span style="color:#f92672">]</span>
+</code></pre></div><h2 id="features">Features</h2>
+<p>Choose from the following activation functions:</p>
+<ul>
+<li>Relu</li>
+<li>Sigmoid</li>
+<li>Tanh</li>
+<li>Softmax</li>
+<li>Leaky Relu</li>
+<li>Elu</li>
+<li>Selu</li>
+<li>Softsign</li>
+<li>Softplus</li>
+<li>Exponential</li>
+<li>Hard Sigmoid</li>
+<li>Linear</li>
+</ul>
+<p>Choose from the following loss functions:</p>
+<ul>
+<li>Mean Square Error</li>
+<li>Cross Entropy</li>
+<li>Mean Absolute Error</li>
+</ul>
+<h2 id="bugs">Bugs</h2>
+<p>The networks can die easily if the chosen parameters cause weigths to overflow and become NaN.</p>
+<h2 id="github-repository">GitHub Repository</h2>
+<p>The full project can be viewed on <a href="https://github.com/joshjennings98/fsharp-neural-network">GitHub.</a></p>
+</div>
+
+
+    </main>
+
+    
+      
+    
+  </body>
+</html>
