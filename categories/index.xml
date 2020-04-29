@@ -2,12 +2,12 @@
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
     <title>Categories on joshj.dev</title>
-    <link>http://joshjennings.co.uk/categories/</link>
+    <link>https://joshj.dev/categories/</link>
     <description>Recent content in Categories on joshj.dev</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en-gb</language>
     
-	<atom:link href="http://joshjennings.co.uk/categories/index.xml" rel="self" type="application/rss+xml" />
+	<atom:link href="https://joshj.dev/categories/index.xml" rel="self" type="application/rss+xml" />
     
     
   </channel>
