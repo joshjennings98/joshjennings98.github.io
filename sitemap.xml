@@ -3,17 +3,22 @@
   xmlns:xhtml="http://www.w3.org/1999/xhtml">
   
   <url>
-    <loc>https://joshj.dev/posts/fsharp-neural-network/</loc>
-    <lastmod>2019-04-25T14:22:37+01:00</lastmod>
+    <loc>https://joshj.dev/posts/chip-8-emulator/</loc>
+    <lastmod>2020-03-08T15:30:36+01:00</lastmod>
   </url>
   
   <url>
     <loc>https://joshj.dev/</loc>
-    <lastmod>2019-04-25T14:22:37+01:00</lastmod>
+    <lastmod>2020-03-08T15:30:36+01:00</lastmod>
   </url>
   
   <url>
     <loc>https://joshj.dev/posts/</loc>
+    <lastmod>2020-03-08T15:30:36+01:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>https://joshj.dev/posts/fsharp-neural-network/</loc>
     <lastmod>2019-04-25T14:22:37+01:00</lastmod>
   </url>
   
