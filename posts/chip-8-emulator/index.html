@@ -57,27 +57,106 @@
 <ul>
 <li><a href="">CHIP-8 Emulator</a>
 <ul>
-<li><a href="#prerequisites">Prerequisites</a></li>
-<li><a href="#installation">Installation</a></li>
-<li><a href="#usage">Usage</a></li>
-<li><a href="#acknowledgements">Acknowledgements</a></li>
-<li><a href="#github-repository">More Info</a></li>
+<li><a href="#introduction">Introduction</a></li>
+<li><a href="#implementation">Implementation</a></li>
+<li><a href="#installation-and-usage">Installation and Usage</a></li>
+<li><a href="#acknowledgements">Acknowledgements etc.</a></li>
 </ul>
 </li>
 </ul>
-<h2 id="prerequisites">Prerequisites</h2>
-<p>This emulator utilises SDL2 for graphics. If you are using Ubuntu this can be easily installed by running <code>sudo apt-get install libsdl2-dev</code> in the terminal.</p>
-<p>For other operating systems see <a href="https://wiki.libsdl.org/Installation">this page from the libsdl wiki</a>.</p>
-<h2 id="installation">Installation</h2>
-<p>Compile with <code>g++ main.cpp -o chip8 -l SDL2 </code></p>
-<h2 id="usage">Usage</h2>
-<p>Run with <code>./chip8 &lt;ROM&gt; &lt;width&gt; &lt;height&gt;</code></p>
-<p>Alternatively, run <code>./chip8 &lt;ROM&gt;</code> for a window with <code>width=1024</code>, and <code>height=512</code>.</p>
-<p><strong>ROMS</strong></p>
-<p>The <a href="https://github.com/joshjennings98/chip8">GitHub repository</a> includes a two player game of pong at <code>pong.ch8</code>.</p>
-<p>For some more roms to try out, see <a href="https://github.com/loktar00/chip8/tree/master/roms">this GitHub repo</a>.</p>
-<p><strong>Controls</strong></p>
-<p>The keys on the keypad have been mapped to the keyboard in the following mapping:</p>
+<h2 id="introduction">Introduction</h2>
+<p>CHIP-8 is an interpreted programming language that was developed for 8-bit microcomputers in the mid-1970s. CHIP-8 programs are run on a virtual machine to allows for video games to be more easily programmed for those computers.</p>
+<p>A CHIP-8 emulator is probably the simplest emulator project someone can make. It only has 35 instructions and each opcode is only 2 bytes long. The memory consists of 4096 bytes and there are 16 registers (V1-VF). Along with this, there are no interrupts, only two simple timer registers for delay and sound.</p>
+<p>The graphics consists of a 64 by 32 screen and drawing to the screen is done using XOR, and is initialised with a draw flag. If a pixel is turned off as a result of drawing, the VF register is set letting you know if there has been a collision. There is also a simple stack of depth 16.</p>
+<p>This all results in a very simple to implement emulator.</p>
+<h2 id="implementation">Implementation</h2>
+<p>My CHIP-8 emulator is written in C++.</p>
+<ul>
+<li>The opcodes and vaious pointers are represented as shorts:</li>
+</ul>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-c++" data-lang="c++"><span style="color:#66d9ef">short</span> opcode;
+<span style="color:#66d9ef">short</span> I; <span style="color:#75715e">// index register
+</span><span style="color:#75715e"></span><span style="color:#66d9ef">short</span> pc; <span style="color:#75715e">// program counter
+</span><span style="color:#75715e"></span><span style="color:#66d9ef">short</span> sp; <span style="color:#75715e">// stack pointer
+</span></code></pre></div><ul>
+<li>I break the the opcode into what it would represent under different circumstances (what the opcode means). This means that I only need to use bit-shifts once at the beginning of each execution loop. This is as follows:</li>
+</ul>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-c++" data-lang="c++"><span style="color:#66d9ef">uint16_t</span> addr;
+<span style="color:#66d9ef">uint8_t</span> byte;
+<span style="color:#66d9ef">short</span> x;
+<span style="color:#66d9ef">short</span> y;
+</code></pre></div><ul>
+<li>The draw flag is obviosuly represented as a boolean:</li>
+</ul>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-c++" data-lang="c++"><span style="color:#66d9ef">bool</span> drawFlag;
+</code></pre></div><ul>
+<li>Memory, registers, and the stack are implemented using arrays:</li>
+</ul>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-c++" data-lang="c++"><span style="color:#66d9ef">uint8_t</span> memory[<span style="color:#ae81ff">4096</span>];
+<span style="color:#66d9ef">uint8_t</span> v[<span style="color:#ae81ff">16</span>];
+<span style="color:#66d9ef">short</span> stack[<span style="color:#ae81ff">16</span>];
+</code></pre></div><ul>
+<li>The two timers are 8-bit unsigned variables:</li>
+</ul>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-c++" data-lang="c++"><span style="color:#66d9ef">uint8_t</span> delayTimer;
+<span style="color:#66d9ef">uint8_t</span> soundTimer;
+</code></pre></div><ul>
+<li>CHIP-8 code starts at address <code>0x200</code>. This would usually contain the interpreter itself. Since this is an emulator, we don&rsquo;t need that. Instead we use this space for the fontset that represents the numbers <code>0x0</code> to <code>0xF</code>:</li>
+</ul>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-c++" data-lang="c++"><span style="color:#66d9ef">uint8_t</span> fontset[<span style="color:#ae81ff">80</span>] <span style="color:#f92672">=</span> { 
+    <span style="color:#ae81ff">0xF0</span>, <span style="color:#ae81ff">0x90</span>, <span style="color:#ae81ff">0x90</span>, <span style="color:#ae81ff">0x90</span>, <span style="color:#ae81ff">0xF0</span>, <span style="color:#75715e">// 0
+</span><span style="color:#75715e"></span>    <span style="color:#ae81ff">0x20</span>, <span style="color:#ae81ff">0x60</span>, <span style="color:#ae81ff">0x20</span>, <span style="color:#ae81ff">0x20</span>, <span style="color:#ae81ff">0x70</span>, <span style="color:#75715e">// 1
+</span><span style="color:#75715e"></span>    <span style="color:#ae81ff">0xF0</span>, <span style="color:#ae81ff">0x10</span>, <span style="color:#ae81ff">0xF0</span>, <span style="color:#ae81ff">0x80</span>, <span style="color:#ae81ff">0xF0</span>, <span style="color:#75715e">// 2
+</span><span style="color:#75715e"></span>    <span style="color:#ae81ff">0xF0</span>, <span style="color:#ae81ff">0x10</span>, <span style="color:#ae81ff">0xF0</span>, <span style="color:#ae81ff">0x10</span>, <span style="color:#ae81ff">0xF0</span>, <span style="color:#75715e">// 3
+</span><span style="color:#75715e"></span>    <span style="color:#ae81ff">0x90</span>, <span style="color:#ae81ff">0x90</span>, <span style="color:#ae81ff">0xF0</span>, <span style="color:#ae81ff">0x10</span>, <span style="color:#ae81ff">0x10</span>, <span style="color:#75715e">// 4
+</span><span style="color:#75715e"></span>    <span style="color:#ae81ff">0xF0</span>, <span style="color:#ae81ff">0x80</span>, <span style="color:#ae81ff">0xF0</span>, <span style="color:#ae81ff">0x10</span>, <span style="color:#ae81ff">0xF0</span>, <span style="color:#75715e">// 5
+</span><span style="color:#75715e"></span>    <span style="color:#ae81ff">0xF0</span>, <span style="color:#ae81ff">0x80</span>, <span style="color:#ae81ff">0xF0</span>, <span style="color:#ae81ff">0x90</span>, <span style="color:#ae81ff">0xF0</span>, <span style="color:#75715e">// 6
+</span><span style="color:#75715e"></span>    <span style="color:#ae81ff">0xF0</span>, <span style="color:#ae81ff">0x10</span>, <span style="color:#ae81ff">0x20</span>, <span style="color:#ae81ff">0x40</span>, <span style="color:#ae81ff">0x40</span>, <span style="color:#75715e">// 7
+</span><span style="color:#75715e"></span>    <span style="color:#ae81ff">0xF0</span>, <span style="color:#ae81ff">0x90</span>, <span style="color:#ae81ff">0xF0</span>, <span style="color:#ae81ff">0x90</span>, <span style="color:#ae81ff">0xF0</span>, <span style="color:#75715e">// 8
+</span><span style="color:#75715e"></span>    <span style="color:#ae81ff">0xF0</span>, <span style="color:#ae81ff">0x90</span>, <span style="color:#ae81ff">0xF0</span>, <span style="color:#ae81ff">0x10</span>, <span style="color:#ae81ff">0xF0</span>, <span style="color:#75715e">// 9
+</span><span style="color:#75715e"></span>    <span style="color:#ae81ff">0xF0</span>, <span style="color:#ae81ff">0x90</span>, <span style="color:#ae81ff">0xF0</span>, <span style="color:#ae81ff">0x90</span>, <span style="color:#ae81ff">0x90</span>, <span style="color:#75715e">// A
+</span><span style="color:#75715e"></span>    <span style="color:#ae81ff">0xE0</span>, <span style="color:#ae81ff">0x90</span>, <span style="color:#ae81ff">0xE0</span>, <span style="color:#ae81ff">0x90</span>, <span style="color:#ae81ff">0xE0</span>, <span style="color:#75715e">// B
+</span><span style="color:#75715e"></span>    <span style="color:#ae81ff">0xF0</span>, <span style="color:#ae81ff">0x80</span>, <span style="color:#ae81ff">0x80</span>, <span style="color:#ae81ff">0x80</span>, <span style="color:#ae81ff">0xF0</span>, <span style="color:#75715e">// C
+</span><span style="color:#75715e"></span>    <span style="color:#ae81ff">0xE0</span>, <span style="color:#ae81ff">0x90</span>, <span style="color:#ae81ff">0x90</span>, <span style="color:#ae81ff">0x90</span>, <span style="color:#ae81ff">0xE0</span>, <span style="color:#75715e">// D
+</span><span style="color:#75715e"></span>    <span style="color:#ae81ff">0xF0</span>, <span style="color:#ae81ff">0x80</span>, <span style="color:#ae81ff">0xF0</span>, <span style="color:#ae81ff">0x80</span>, <span style="color:#ae81ff">0xF0</span>, <span style="color:#75715e">// E
+</span><span style="color:#75715e"></span>    <span style="color:#ae81ff">0xF0</span>, <span style="color:#ae81ff">0x80</span>, <span style="color:#ae81ff">0xF0</span>, <span style="color:#ae81ff">0x80</span>, <span style="color:#ae81ff">0x80</span>  <span style="color:#75715e">// F
+</span><span style="color:#75715e"></span>    };
+</code></pre></div><p>The emulator itself is very simple. On initialisation, the various arrays and variables are set to zero and the ROM is read to memory.</p>
+<p>When an instruction is read, the opcode is found first by looking at the two bytes at the program counter. These are merged to form the opcode. Next, we work out what the various parts of the opcode might mean. We work out what would be defined if the opcode was manipulating registers, memory, or bytes. This is done so that the case statements don&rsquo;t have right shifts in every case.</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-c++" data-lang="c++">opcode <span style="color:#f92672">=</span> memory[pc] <span style="color:#f92672">&lt;&lt;</span> <span style="color:#ae81ff">8</span> <span style="color:#f92672">|</span> memory[pc <span style="color:#f92672">+</span> <span style="color:#ae81ff">1</span>];
+
+addr <span style="color:#f92672">=</span> opcode <span style="color:#f92672">&amp;</span> <span style="color:#ae81ff">0x0FFF</span>; <span style="color:#75715e">// if it&#39;s an adress instruction
+</span><span style="color:#75715e"></span>byte <span style="color:#f92672">=</span> opcode <span style="color:#f92672">&amp;</span> <span style="color:#ae81ff">0x00FF</span>; <span style="color:#75715e">// if it&#39;s reading/writing a byte
+</span><span style="color:#75715e"></span>x <span style="color:#f92672">=</span> (opcode <span style="color:#f92672">&amp;</span> <span style="color:#ae81ff">0x0F00</span>) <span style="color:#f92672">&gt;&gt;</span> <span style="color:#ae81ff">8</span>; <span style="color:#75715e">// if it&#39;s accessing a register
+</span><span style="color:#75715e"></span>y <span style="color:#f92672">=</span> (opcode <span style="color:#f92672">&amp;</span> <span style="color:#ae81ff">0x00F0</span>) <span style="color:#f92672">&gt;&gt;</span> <span style="color:#ae81ff">4</span>; <span style="color:#75715e">// if it&#39;s checking two registers
+</span></code></pre></div><p>Every possible instruction has its own function which is called inside the opcode switch statement. For example, the opcode <code>0x2000</code> is <code>CALL addr</code>. The function for this would look like this:</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-c++" data-lang="c++"><span style="color:#66d9ef">void</span> Chip8<span style="color:#f92672">::</span>CALL_addr(<span style="color:#66d9ef">uint16_t</span> addr)
+{
+    stack[sp] <span style="color:#f92672">=</span> pc;
+    sp<span style="color:#f92672">++</span>;
+    pc <span style="color:#f92672">=</span> addr;
+}
+</code></pre></div><p>The switch statement for decoding the opcode first looks at the first part of the opcode by ANDing the opcode with <code>0xF000</code>. This means the main switch statement is easy to understand as only the first character of the opcode matters. If multiple opcodes have the same character, then another switch statement is called and the opcode is ANDed again with different 16 bit values depending on the opcode. Part of the main switch statement can be seen below:</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-c++" data-lang="c++"><span style="color:#66d9ef">switch</span>(opcode <span style="color:#f92672">&amp;</span> <span style="color:#ae81ff">0xF000</span>) {
+	<span style="color:#66d9ef">case</span> <span style="color:#ae81ff">0x1000</span><span style="color:#f92672">:</span>
+		JP_addr(addr);
+		<span style="color:#66d9ef">break</span>;
+	<span style="color:#66d9ef">case</span> <span style="color:#ae81ff">0x2000</span><span style="color:#f92672">:</span>
+		CALL_addr(addr);
+		<span style="color:#66d9ef">break</span>;
+	<span style="color:#66d9ef">case</span> <span style="color:#ae81ff">0x8000</span><span style="color:#f92672">:</span>
+		<span style="color:#66d9ef">switch</span> (opcode <span style="color:#f92672">&amp;</span> <span style="color:#ae81ff">0xF00F</span>) {
+			<span style="color:#66d9ef">case</span> <span style="color:#ae81ff">0x8000</span><span style="color:#f92672">:</span>
+				LD_Vx_Vy(x, y);
+				<span style="color:#66d9ef">break</span>; 
+			<span style="color:#66d9ef">case</span> <span style="color:#ae81ff">0x8001</span><span style="color:#f92672">:</span>
+				OR_Vx_Vy(x, y);
+				<span style="color:#66d9ef">break</span>;
+			<span style="color:#75715e">// more cases, this just a sample
+</span><span style="color:#75715e"></span>			}
+	}
+</code></pre></div><p>This is essentially the entire emulator. The execution code is called repeatedly and all the registers, memory, and display memory are updated accordingly. If the draw flag is set then the screen is drawn. It is as simple as that.</p>
+<p>The CHIP-8 emulator has its own keypad. In order to replicate this for normal computer keyboards, we use the mapping that everyone who makes a CHIP-8 emulator seems to use:</p>
 <pre><code>Keypad                   Keyboard
 +-+-+-+-+                +-+-+-+-+
 |1|2|3|C|                |1|2|3|4|
@@ -88,7 +167,48 @@
 +-+-+-+-+                +-+-+-+-+
 |A|0|B|F|                |Z|X|C|V|
 +-+-+-+-+                +-+-+-+-+
-</code></pre><h2 id="acknowledgements">Acknowledgements</h2>
+</code></pre><p>This input is handled using the SDL2 library. When the emulator is waiting for input we use the SDL events to determine which key is pressed. This is done by keeping the keys in an array and using a while loop to handle key press and release events. These are all done every cycle along with the opcode decoding and execution.</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-c++" data-lang="c++"><span style="color:#75715e">// Keypad array
+</span><span style="color:#75715e"></span><span style="color:#66d9ef">uint8_t</span> keys[<span style="color:#ae81ff">16</span>] <span style="color:#f92672">=</span> {SDLK_x, SDLK_1, SDLK_2, SDLK_3, SDLK_q, SDLK_w, SDLK_e, SDLK_a, SDLK_s, SDLK_d, SDLK_z, SDLK_c, SDLK_4, SDLK_r, SDLK_f, SDLK_v};
+
+<span style="color:#75715e">// Handle SDL events
+</span><span style="color:#75715e"></span><span style="color:#66d9ef">while</span> (SDL_PollEvent(<span style="color:#f92672">&amp;</span>e)) {
+	<span style="color:#75715e">// Handle key press events
+</span><span style="color:#75715e"></span>	<span style="color:#66d9ef">if</span> (e.type <span style="color:#f92672">==</span> SDL_KEYDOWN) {
+		<span style="color:#66d9ef">if</span> (e.key.keysym.sym <span style="color:#f92672">==</span> SDLK_ESCAPE) {
+			<span style="color:#66d9ef">return</span> <span style="color:#ae81ff">0</span>;
+		}
+
+		<span style="color:#66d9ef">for</span> (<span style="color:#66d9ef">int</span> i <span style="color:#f92672">=</span> <span style="color:#ae81ff">0</span>; i <span style="color:#f92672">&lt;</span> <span style="color:#ae81ff">16</span>; i<span style="color:#f92672">++</span>) {
+			<span style="color:#66d9ef">if</span> (e.key.keysym.sym <span style="color:#f92672">==</span> keys[i]) {
+				chip8.keypad[i] <span style="color:#f92672">=</span> <span style="color:#ae81ff">1</span>;
+			}
+		}
+	}
+
+	<span style="color:#75715e">// Handle key release events
+</span><span style="color:#75715e"></span>	<span style="color:#66d9ef">if</span> (e.type <span style="color:#f92672">==</span> SDL_KEYUP) {
+		<span style="color:#66d9ef">for</span> (<span style="color:#66d9ef">int</span> i <span style="color:#f92672">=</span> <span style="color:#ae81ff">0</span>; i <span style="color:#f92672">&lt;</span> <span style="color:#ae81ff">16</span>; i<span style="color:#f92672">++</span>) {
+			<span style="color:#66d9ef">if</span> (e.key.keysym.sym <span style="color:#f92672">==</span> keys[i]) {
+				chip8.keypad[i] <span style="color:#f92672">=</span> <span style="color:#ae81ff">0</span>;
+			}
+		}
+	}
+} 
+</code></pre></div><p>That&rsquo;s it. As stated at the beginning, a CHIP-8 emulator is very easy to write. Information on installation and usage can be seen below.</p>
+<h2 id="installation-and-usage">Installation and Usage</h2>
+<p><strong>Prerequisites</strong></p>
+<p>This emulator utilises SDL2 for graphics. If you are using Ubuntu this can be easily installed by running <code>sudo apt-get install libsdl2-dev</code> in the terminal.</p>
+<p>For other operating systems see <a href="https://wiki.libsdl.org/Installation">this page from the libsdl wiki</a>.</p>
+<p><strong>Installation</strong></p>
+<p>Compile with <code>g++ main.cpp -o chip8 -l SDL2 </code></p>
+<p>Run with <code>./chip8 &lt;ROM&gt; &lt;width&gt; &lt;height&gt;</code></p>
+<p>Alternatively, run <code>./chip8 &lt;ROM&gt;</code> for a window with <code>width=1024</code>, and <code>height=512</code>.</p>
+<p><strong>ROMS</strong></p>
+<p>The <a href="https://github.com/joshjennings98/chip8">GitHub repository</a> includes a two player game of pong at <code>pong.ch8</code>.</p>
+<p>For some more roms to try out, see <a href="https://github.com/loktar00/chip8/tree/master/roms">this GitHub repo</a>.</p>
+<p>To see the controls, read the implementation section.</p>
+<h2 id="acknowledgements">Acknowledgements</h2>
 <p>These resources were helpful when I programmed this:</p>
 <ul>
 <li><a href="http://devernay.free.fr/hacks/chip8/C8TECH10.HTM">http://devernay.free.fr/hacks/chip8/C8TECH10.HTM</a></li>
