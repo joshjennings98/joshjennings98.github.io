@@ -22,6 +22,16 @@
     </item>
     
     <item>
+      <title>Optimising Brainfuck Compiler</title>
+      <link>https://joshj.dev/posts/brainfuck-compiler/</link>
+      <pubDate>Mon, 16 Sep 2019 11:38:39 +0000</pubDate>
+      
+      <guid>https://joshj.dev/posts/brainfuck-compiler/</guid>
+      <description>&lt;p&gt;&lt;img src=&#34;https://joshj.dev/images/bf.jpg&#34; alt=&#34;Brainfuck&#34;&gt;&lt;/p&gt;
+&lt;p&gt;An optimising brainfuck to x86 assembly compiler written in F#.&lt;/p&gt;</description>
+    </item>
+    
+    <item>
       <title>F# Neural Network</title>
       <link>https://joshj.dev/posts/fsharp-neural-network/</link>
       <pubDate>Thu, 25 Apr 2019 14:22:37 +0100</pubDate>

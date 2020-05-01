@@ -1,0 +1,296 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en-gb" lang="en-gb">
+<head>
+  <link href="https://gmpg.org/xfn/11" rel="profile">
+  <meta http-equiv="content-type" content="text/html; charset=utf-8">
+  <meta name="generator" content="Hugo 0.69.2" />
+
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  <title>Optimising Brainfuck Compiler &middot; joshj.dev</title>
+  <meta name="description" content="" />
+
+  
+  <link type="text/css" rel="stylesheet" href="https://joshj.dev/css/print.css" media="print">
+  <link type="text/css" rel="stylesheet" href="https://joshj.dev/css/poole.css">
+  <link type="text/css" rel="stylesheet" href="https://joshj.dev/css/syntax.css">
+  <link type="text/css" rel="stylesheet" href="https://joshj.dev/css/hyde.css">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Abril+Fatface|PT+Sans:400,400i,700">
+
+
+  
+  <link rel="icon" href="https://joshj.dev/images/favicon.png" type="image/png"> 
+  <link rel="shortcut icon" href="https://joshj.dev/images/favicon.png" type="image/png"> 
+
+  
+  
+</head>
+
+  <body class="theme-base-08 ">
+  <aside class="sidebar">
+  <div class="container sidebar-sticky">
+    <div class="sidebar-about">
+      <a href="https://joshj.dev/"><h1>joshj.dev</h1></a>
+      <p class="lead">
+       My name is Josh Jennings and this is my website and portfolio. 
+      </p>
+    </div>
+
+    <nav>
+      <ul class="sidebar-nav">
+        <li><a href="https://joshj.dev/">Home</a> </li>
+        <li><a href="mailto:jenninjl01@gmail.com"> Email </a></li><li><a href="https://github.com/joshjennings98/"> Github </a></li><li><a href="https://www.linkedin.com/in/josh-jennings-41a17213a/"> LinkedIn </a></li><li><a href="https://nbviewer.jupyter.org/github/joshthepirate/joshthepirate.github.io/blob/master/CV-Josh-Jennings.pdf"> Online CV </a></li>
+      </ul>
+    </nav>
+
+    <p>&copy; 2020. All rights reserved. </p>
+  </div>
+</aside>
+
+    <main class="content container">
+    <div class="post">
+  <h1>Optimising Brainfuck Compiler</h1>
+  <time datetime=2019-09-16T11:38:39Z class="post-date">Mon, Sep 16, 2019</time>
+  <p><img src="/images/bf.jpg" alt="Brainfuck"></p>
+<p>An optimising brainfuck to x86 assembly compiler written in F#.</p>
+<ul>
+<li><a href="">Brainfuck Compiler</a>
+<ul>
+<li><a href="#introduction">Introduction</a></li>
+<li><a href="#implementation">Implementation</a></li>
+<li><a href="#installation-and-usage">Installation and Usage</a></li>
+<li><a href="#acknowledgements">Acknowledgements etc.</a></li>
+</ul>
+</li>
+</ul>
+<h2 id="introduction">Introduction</h2>
+<p>Brainfuck is a very simple programming language that consists of only 8 instructions (<code>&gt;</code>, <code>&lt;</code>, <code>+</code>, <code>-</code>, <code>.</code>, <code>,</code> <code>[</code>, and <code>]</code>) and a data pointer.</p>
+<p>Brainfuck works as follows:</p>
+<table>
+<thead>
+<tr>
+<th align="center">Character</th>
+<th align="center">Meaning</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td align="center"><code>&gt;</code></td>
+<td align="center">increment the data pointer.</td>
+</tr>
+<tr>
+<td align="center"><code>&lt;</code></td>
+<td align="center">decrement the data pointer.</td>
+</tr>
+<tr>
+<td align="center"><code>+</code></td>
+<td align="center">decrement the byte at the data pointer.</td>
+</tr>
+<tr>
+<td align="center"><code>-</code></td>
+<td align="center">increment the byte at the data pointer.</td>
+</tr>
+<tr>
+<td align="center"><code>.</code></td>
+<td align="center">output the byte at the data pointer.</td>
+</tr>
+<tr>
+<td align="center"><code>,</code></td>
+<td align="center">accept one byte of input, storing its value in the byte at the data pointer.</td>
+</tr>
+<tr>
+<td align="center"><code>[</code></td>
+<td align="center">if the byte at the data pointer is zero then jump the pointer to the command after the matching <code>]</code> command.</td>
+</tr>
+<tr>
+<td align="center"><code>]</code></td>
+<td align="center">if the byte at the data pointer is nonzero then jump the pointer back to the command after the matching <code>[</code> command.</td>
+</tr>
+</tbody>
+</table>
+<p>This program optimises the brainfuck program based on several simple optimisations, and compiles into x86 assembler code. Information on how the optimisations work can be seen in the <a href="#optimiserfs">optimiser part</a> of implementation section.</p>
+<h2 id="implementation">Implementation</h2>
+<p>The program is split up into different modules containing the functions for various parts of the compiler.</p>
+<h3 id="programfs">Program.fs</h3>
+<p>This module is the entrance to the program. This module interprets any input arguments. It then runs the tokeniser, if desired the optimiser,  and compiler. If there is an error then it will be returned here.  If the compilation was successful then the output is saved to a file.</p>
+<p>More information on how to use the program can be seen in the <a href="#installation-and-usage">installation and usage section.</a></p>
+<h3 id="typesfs">Types.fs</h3>
+<p>The types defined are the <code>Token</code> type and the <code>Instruction</code> types:</p>
+<ul>
+<li>The <code>Token</code> type is a tuple of an <code>Instruction</code> and an integer that represents how many times that instruction is called at once.</li>
+<li>The <code>Instruction</code> type contains representations for: pointer increment; pointer decrement; cell increment; cell decrement; loop start; loop end; input char; output char; addition; subtraction; and set. The final three are pseudo instructions that allow a simplified output when compiling.</li>
+</ul>
+<h3 id="tokeniserfs">Tokeniser.fs</h3>
+<p>This module generates a list of basic tokens from the input string. Brainfuck documentation says that all invalid characters are ignored and so part of the tokenisers job is to filter out all invalid characters.</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-fsharp" data-lang="fsharp"><span style="color:#66d9ef">let</span> validChars <span style="color:#f92672">=</span> <span style="color:#75715e">// Used to filter invalid characters
+</span><span style="color:#75715e"></span>        <span style="color:#f92672">[</span><span style="color:#e6db74">&#39;[&#39;</span><span style="color:#f92672">;</span> <span style="color:#e6db74">&#39;]&#39;</span><span style="color:#f92672">;</span><span style="color:#e6db74">&#39;&gt;&#39;</span><span style="color:#f92672">;</span> <span style="color:#e6db74">&#39;&lt;&#39;</span><span style="color:#f92672">;</span> <span style="color:#e6db74">&#39;+&#39;</span><span style="color:#f92672">;</span> <span style="color:#e6db74">&#39;-&#39;</span><span style="color:#f92672">;</span> <span style="color:#e6db74">&#39;.&#39;</span><span style="color:#f92672">;</span> <span style="color:#e6db74">&#39;,&#39;</span><span style="color:#f92672">]</span>
+
+<span style="color:#66d9ef">let</span> toInstruction <span style="color:#f92672">(</span>ch <span style="color:#f92672">:</span> <span style="color:#66d9ef">char</span><span style="color:#f92672">)</span> <span style="color:#f92672">:</span> Instruction <span style="color:#f92672">=</span>
+	<span style="color:#66d9ef">match</span> ch <span style="color:#66d9ef">with</span>
+	<span style="color:#f92672">|</span> <span style="color:#e6db74">&#39;[&#39;</span> <span style="color:#f92672">-&gt;</span> LB
+	<span style="color:#f92672">|</span> <span style="color:#e6db74">&#39;]&#39;</span> <span style="color:#f92672">-&gt;</span> RB
+	<span style="color:#f92672">|</span> <span style="color:#e6db74">&#39;&gt;&#39;</span> <span style="color:#f92672">-&gt;</span> IncPtr
+	<span style="color:#f92672">|</span> <span style="color:#e6db74">&#39;&lt;&#39;</span> <span style="color:#f92672">-&gt;</span> DecPtr
+	<span style="color:#f92672">|</span> <span style="color:#e6db74">&#39;+&#39;</span> <span style="color:#f92672">-&gt;</span> IncLoc
+	<span style="color:#f92672">|</span> <span style="color:#e6db74">&#39;-&#39;</span> <span style="color:#f92672">-&gt;</span> DecLoc
+	<span style="color:#f92672">|</span> <span style="color:#e6db74">&#39;.&#39;</span> <span style="color:#f92672">-&gt;</span> Write
+	<span style="color:#f92672">|</span> <span style="color:#e6db74">&#39;,&#39;</span> <span style="color:#f92672">-&gt;</span> Get
+	<span style="color:#f92672">|</span> <span style="color:#f92672">_</span> <span style="color:#f92672">-&gt;</span> failwithf <span style="color:#e6db74">&#34;Won&#39;t happen since all other characters are filtered out prior to this being evaluated.&#34;</span>
+</code></pre></div><h3 id="optimiserfs">Optimiser.fs</h3>
+<p>This module applies several optimisations to the tokenised list:</p>
+<ul>
+<li>Fusing cell increments and cell decrements. For example, <code>++++</code> can be transformed into <code>p[0] += 4</code> and <code>+++--</code> can be converted into <code>p[0] += 1</code>.</li>
+<li>Fusing pointer increments and pointer decrements. For example, <code>&gt;&gt;</code> can be transformed into <code>p += 2</code> and <code>&gt;&lt;&lt;&lt;</code> can be converted into <code>p-= 2</code>.</li>
+<li>Fusing movements into additions and subtractions. Some brainfuck strings can be interpretted as addition and subtraction since the overall pointer movement is zero. For example <code>&gt;&gt;---&lt;&lt;</code> results in the pointer ending up where it started, therefore it can become <code>p[2] -= 3</code>. The same can be done with addition.</li>
+<li>Postponing movements. If a string of brainfuck consists of only increments, decrements, inputs, and outputs, then the virtual movement of the pointer can be kept track of then performed in one shot at the end. For example <code>&gt;+&gt;-&gt;</code> becomes <code>p[1]+=1; p[2]-=1; p+=3;</code>.</li>
+<li>Setting values to zero. Due to number wrapping, <code>[-]</code> or any loop that only contains arithmetic will eventually go to zero.</li>
+</ul>
+<p>Sevaral more optimisations could be implemented:</p>
+<ul>
+<li>Simple loops. If the loop body has no subloops and no inputs or outputs and all the movements add up to 0 and all the increments/decrements at <code>p[0]</code> add up to −1, then loop body is being run <code>p[0]</code> times. So for all the increments/decrements outside of <code>p[0]</code>, some multiple of <code>p[0]</code> is being added to that location. For example, <code>[-&gt;+&gt;---&lt;&lt;]</code> becomes <code>p[1]+=p[0]; p[2]-=p[0]*3; p[0]=0;</code>.</li>
+<li>Complex loops. If a location other than the loop counter is used as the source for multiply-add and this location is cleared to 0 within the loop, then the loop can be turned into an if statement.</li>
+</ul>
+<h3 id="compilerfs">Compiler.fs</h3>
+<p>This module turns the token list into a list of assembly instructions and then outputs it as a string. It keeps track of loops using several mutable variables.</p>
+<p>The way that the assembly for each possible instruction was determined was using <a href="https://godbolt.org/">this online C decompiler.</a></p>
+<p>The 8 brainfuck instructions have direct C equivalents:</p>
+<table>
+<thead>
+<tr>
+<th align="center">Brainfuck</th>
+<th align="center">C equivalent</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td align="center"><code>&gt;</code></td>
+<td align="center"><code>ptr++;</code></td>
+</tr>
+<tr>
+<td align="center"><code>&lt;</code></td>
+<td align="center"><code>ptr--;</code></td>
+</tr>
+<tr>
+<td align="center"><code>+</code></td>
+<td align="center"><code>*ptr++;</code></td>
+</tr>
+<tr>
+<td align="center"><code>-</code></td>
+<td align="center"><code>*ptr--;</code></td>
+</tr>
+<tr>
+<td align="center"><code>.</code></td>
+<td align="center"><code>putchar(*ptr);</code></td>
+</tr>
+<tr>
+<td align="center"><code>,</code></td>
+<td align="center"><code>*ptr=getchar();</code></td>
+</tr>
+<tr>
+<td align="center"><code>[</code></td>
+<td align="center"><code>while (*ptr) {</code></td>
+</tr>
+<tr>
+<td align="center"><code>]</code></td>
+<td align="center"><code>}</code></td>
+</tr>
+</tbody>
+</table>
+<p>Using the online decompiler, I determined what each instruction corresponed to in x86 assembly and then used that in the code.</p>
+<ul>
+<li>The <code>&gt;</code> instruction becomes:</li>
+</ul>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-asm" data-lang="asm"><span style="color:#a6e22e">addq</span>    <span style="color:#66d9ef">$AMOUNT</span> <span style="color:#66d9ef">mod</span> <span style="color:#ae81ff">256</span>, -<span style="color:#ae81ff">8</span>(%rbp) <span style="color:#75715e">; modulo to act as byte wrapping
+</span></code></pre></div><ul>
+<li>The <code>&lt;</code> instruction becomes:</li>
+</ul>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-asm" data-lang="asm"><span style="color:#a6e22e">subq</span>    <span style="color:#66d9ef">$AMOUNT</span> <span style="color:#66d9ef">mod</span> <span style="color:#ae81ff">256</span>, -<span style="color:#ae81ff">8</span>(%rbp) <span style="color:#75715e">; modulo to act as byte wrapping
+</span></code></pre></div><ul>
+<li>The <code>+</code> instruction becomes:</li>
+</ul>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-asm" data-lang="asm"><span style="color:#a6e22e">movq</span>    -<span style="color:#ae81ff">8</span>(%rbp), %rax
+<span style="color:#a6e22e">movzbl</span>  (%rax), %eax
+<span style="color:#a6e22e">addl</span>    <span style="color:#66d9ef">$AMOUNT</span>, %eax <span style="color:#75715e">; the optimiser combines multiple +
+</span><span style="color:#75715e"></span><span style="color:#66d9ef">movl</span>    %eax, %edx
+<span style="color:#a6e22e">movq</span>    -<span style="color:#ae81ff">8</span>(%rbp), %rax
+<span style="color:#a6e22e">movb</span>    %dl, (%rax)
+</code></pre></div><ul>
+<li>The <code>-</code> instruction becomes:</li>
+</ul>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-asm" data-lang="asm"><span style="color:#a6e22e">movq</span>    -<span style="color:#ae81ff">8</span>(%rbp), %rax
+<span style="color:#a6e22e">movzbl</span>  (%rax), %eax
+<span style="color:#a6e22e">subl</span>    <span style="color:#66d9ef">$AMOUNT</span>, %eax <span style="color:#75715e">; the optimiser combines multiple -
+</span><span style="color:#75715e"></span><span style="color:#66d9ef">movl</span>    %eax, %edx
+<span style="color:#a6e22e">movq</span>    -<span style="color:#ae81ff">8</span>(%rbp), %rax
+<span style="color:#a6e22e">movb</span>    %dl, (%rax)
+</code></pre></div><ul>
+<li>The <code>.</code> instruction becomes:</li>
+</ul>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-asm" data-lang="asm"><span style="color:#a6e22e">movq</span>    -<span style="color:#ae81ff">8</span>(%rbp), %rax
+<span style="color:#a6e22e">movzbl</span>  (%rax), %eax
+<span style="color:#a6e22e">movsbl</span>  %al, %eax
+<span style="color:#a6e22e">movl</span>    %eax, %edi
+<span style="color:#a6e22e">call</span>    <span style="color:#66d9ef">putchar</span>
+</code></pre></div><ul>
+<li>The <code>,</code> instruction becomes:</li>
+</ul>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-asm" data-lang="asm"><span style="color:#a6e22e">call</span>    <span style="color:#66d9ef">getchar</span>
+<span style="color:#a6e22e">movl</span>    %eax, %edx
+<span style="color:#a6e22e">movq</span>    -<span style="color:#ae81ff">8</span>(%rbp), %rax
+<span style="color:#a6e22e">movb</span>    %dl, (%rax)
+</code></pre></div><ul>
+<li>The <code>[</code> instruction becomes:</li>
+</ul>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-asm" data-lang="asm"><span style="color:#a6e22e">.LA</span>
+<span style="color:#a6e22e">movq</span>    -<span style="color:#ae81ff">8</span>(%rbp), %rax
+<span style="color:#a6e22e">movzbl</span>  (%rax), %eax
+<span style="color:#a6e22e">testb</span>   %al, %al
+<span style="color:#a6e22e">je</span>      <span style="color:#66d9ef">.LB</span>
+</code></pre></div><ul>
+<li>The <code>]</code> instruction becomes:</li>
+</ul>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-asm" data-lang="asm"><span style="color:#a6e22e">jmp</span>     <span style="color:#66d9ef">.LA</span>
+<span style="color:#a6e22e">.LB</span>
+</code></pre></div><ul>
+<li>The optimiser gives the ability to add or subtract an <code>AMOUNT</code> to a tape location <code>OFFSET</code> away from the pointer <code>PTR</code>. This is implemented using:</li>
+</ul>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-asm" data-lang="asm"><span style="color:#a6e22e">movq</span>    -<span style="color:#ae81ff">8</span>(%rbp), %rax
+<span style="color:#a6e22e">addq</span>    <span style="color:#66d9ef">$PTRaddOFFSET</span>, %rax
+<span style="color:#a6e22e">movzbl</span>  (%rax), %eax
+<span style="color:#a6e22e">leal</span>    <span style="color:#66d9ef">AMMOUNT</span>(%rax), %edx <span style="color:#75715e">; negative amount for subtraction
+</span><span style="color:#75715e"></span><span style="color:#66d9ef">movq</span>    -<span style="color:#ae81ff">8</span>(%rbp), %rax
+<span style="color:#a6e22e">addq</span>    <span style="color:#66d9ef">$PTRaddOFFSET</span>, %rax
+<span style="color:#a6e22e">movb</span>    %dl, (%rax)
+</code></pre></div><p>The neccesary header and footer information for the assmbler to link the code correctly is also added in this function.</p>
+<h2 id="installation-and-usage">Installation and Usage</h2>
+<p><strong>Prerequisites</strong></p>
+<p>To run this code, you will require the .NET SDK version 2.1. Information on the installation of this can be found on <a href="https://dotnet.microsoft.com/download">this page.</a></p>
+<p><strong>Usage</strong></p>
+<p>The command to run the program is:</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">dotnet run fsharp-brainfuck-compiler.fsproj
+</code></pre></div><p>You can run this program with several command line arguments:</p>
+<ul>
+<li>If nothing is specified, then it will open in interactive mode where the output will be printed to the terminal instead of a file.</li>
+<li>If only a name is provided, then the program will be compiled to a <code>.s</code> file of the same name. The brainfuck will be optimised and the tape size will be set to 30000.</li>
+<li>A name can be provided along with either the tape size (an integer greater than 16) or whether to optimise (<code>no-optimise</code> argument).</li>
+<li>A name can be provided along with both the tape size and optimise argument. In this case, it doesn&rsquo;t matter what the order of the last two arguments is.</li>
+</ul>
+<p>To compile files, GCC is required. Once you have run the program and got an output file, to link, assemble, and run it:</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">gcc -no-pie &lt;file&gt;.s -o &lt;file&gt; <span style="color:#f92672">&amp;&amp;</span> ./&lt;file&gt;
+</code></pre></div><p>An example Brainfuck program is included in <code>helloworld.bf</code>. This is well commented and explains what is going on. As well as this, there is a script that will compile and run the included example file in <code>test.sh</code>. To run this script run</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">sh test.sh
+</code></pre></div><h2 id="acknowledgements">Acknowledgements</h2>
+<p>Ideas for optimisations came from <a href="https://www.nayuki.io/page/optimizing-brainfuck-compiler">https://www.nayuki.io/page/optimizing-brainfuck-compiler</a></p>
+<h2 id="github-repository">GitHub Repository</h2>
+<p>The full project can be viewed on <a href="https://github.com/joshjennings98/fsharp-brainfuck-compiler">GitHub.</a></p>
+</div>
+
+
+    </main>
+
+    
+      
+    
+  </body>
+</html>
