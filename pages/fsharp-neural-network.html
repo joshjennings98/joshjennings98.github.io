@@ -1,68 +1,34 @@
 <!DOCTYPE html>
-<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en-gb" lang="en-gb">
-<head>
-  <link href="https://gmpg.org/xfn/11" rel="profile">
-  <meta http-equiv="content-type" content="text/html; charset=utf-8">
-  <meta name="generator" content="Hugo 0.73.0" />
-
-  
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-
-  <title>F# Neural Network &middot; joshj.dev</title>
-  <meta name="description" content="" />
-
-  
-  <link type="text/css" rel="stylesheet" href="https://joshj.dev/css/print.css" media="print">
-  <link type="text/css" rel="stylesheet" href="https://joshj.dev/css/poole.css">
-  <link type="text/css" rel="stylesheet" href="https://joshj.dev/css/syntax.css">
-  <link type="text/css" rel="stylesheet" href="https://joshj.dev/css/hyde.css">
-    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Abril+Fatface|PT+Sans:400,400i,700">
-
-
-  
-  <link rel="icon" href="https://joshj.dev/images/favicon.png" type="image/png"> 
-  <link rel="shortcut icon" href="https://joshj.dev/images/favicon.png" type="image/png"> 
-
-  
-  
-</head>
-
-  <body class="theme-base-08 ">
-  <aside class="sidebar">
-  <div class="container sidebar-sticky">
-    <div class="sidebar-about">
-      <a href="https://joshj.dev/"><h1>joshj.dev</h1></a>
-      <p class="lead">
-       My name is Josh Jennings and this is my website and portfolio. 
-      </p>
-    </div>
-
-    <nav>
-      <ul class="sidebar-nav">
-        <li><a href="https://joshj.dev/">Home</a> </li>
-        <li><a href="mailto:jenninjl01@gmail.com"> Email </a></li><li><a href="https://github.com/joshjennings98/"> Github </a></li><li><a href="https://www.linkedin.com/in/josh-jennings-41a17213a/"> LinkedIn </a></li><li><a href="https://joshj.dev/CV-Josh-Jennings.pdf"> Online CV </a></li>
-      </ul>
-    </nav>
-
-    <p>&copy; 2020. All rights reserved. </p>
-  </div>
-</aside>
-
-    <main class="content container">
-    <div class="post">
-  <h1>F# Neural Network</h1>
-  <time datetime=2019-04-25T14:22:37&#43;0100 class="post-date">Thu, Apr 25, 2019</time>
-  <p><img src="/images/neuralnetwork.png" alt="Neural Network"></p>
-<p>A scalable fully-connected neural network maker developed for and built using F#.</p>
-<ul>
-<li><a href="">F# Neural Network</a>
+<html class="inverted" lang="en">
+   <head>
+      <meta http-equiv="content-type" content="text/html; charset=UTF-8">
+      <meta charset="utf-8">
+      <meta name="theme-color" content="#ffffff">
+      <title>F# Neural Network - joshj.dev</title>
+      <meta name="viewport" content="width=device-width, initial-scale=1.0">
+      <meta name="description" content="Josh's website and portfolio.">
+      <link rel="stylesheet" type="text/css" href="../files/main.css">
+      <!-- Icons-->
+      <link rel="apple-touch-icon" sizes="180x180" href="../files/icons/apple-touch-icon.png">
+      <link rel="icon" type="image/png" sizes="32x32" href="../files/icons/favicon-32x32.png">
+      <link rel="icon" type="image/png" sizes="16x16" href="../files/icons/favicon-16x16.png">
+   </head>
+   <body>
+    
+    <div class="fancyPositioning">
+		<h1>F# Neural Network</h1>
+      <div class="picture-left"><img src="../files/images/neuralnetwork.png"></div>
+      <div class="tleft">
+        
+        
+<p>A small F# library that allows for the creation of scalable fully-connected neural networks. It was developed for and built entirely using F#.</p>
 <ul>
 <li><a href="#usage">Usage</a></li>
 <li><a href="#how-it-works">How it works</a></li>
 <li><a href="#github-repository">More Info</a></li>
 </ul>
-</li>
-</ul>
+		</div>
+	</div>
 <h2 id="usage">Usage</h2>
 <h3 id="defining-a-network">Defining a network</h3>
 <p>Networks can be specified using the following format. Any number of layers are supported. Provided they align, the dimensions can be as large as desired.</p>
@@ -142,138 +108,142 @@ Output<span style="color:#f92672">:</span> <span style="color:#f92672">[</span>0
 <h3 id="forward-propagation">Forward Propagation</h3>
 <p>A single forward propagation though a layer just involves multiplying the inputs to the layer with the layer weights (their dot product). After this, they are summed and the bias added before having the activation layer for that function applied.</p>
 <div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-fsharp" data-lang="fsharp"><span style="color:#66d9ef">let</span> forwardSingleLayer <span style="color:#f92672">(</span>bias <span style="color:#f92672">:</span> <span style="color:#66d9ef">float</span><span style="color:#f92672">)</span> <span style="color:#f92672">(</span>weights <span style="color:#f92672">:</span> <span style="color:#66d9ef">float</span> <span style="color:#66d9ef">list</span> <span style="color:#66d9ef">list</span><span style="color:#f92672">)</span> <span style="color:#f92672">(</span>inputs <span style="color:#f92672">:</span> <span style="color:#66d9ef">float</span> <span style="color:#66d9ef">list</span><span style="color:#f92672">)</span> <span style="color:#f92672">(</span>activation <span style="color:#f92672">:</span> Activation<span style="color:#f92672">)</span> <span style="color:#f92672">:</span> <span style="color:#66d9ef">float</span> <span style="color:#66d9ef">list</span> <span style="color:#f92672">=</span>
-    weights
-    <span style="color:#f92672">|&gt;</span> List.map <span style="color:#f92672">(</span><span style="color:#66d9ef">fun</span> <span style="color:#66d9ef">list</span> <span style="color:#f92672">-&gt;</span> List.map2 <span style="color:#f92672">(*)</span> <span style="color:#66d9ef">list</span> inputs<span style="color:#f92672">)</span>
-    <span style="color:#f92672">|&gt;</span> List.map <span style="color:#f92672">(</span><span style="color:#66d9ef">fun</span> <span style="color:#66d9ef">list</span> <span style="color:#f92672">-&gt;</span> List.sum <span style="color:#66d9ef">list</span> <span style="color:#f92672">+</span> bias<span style="color:#f92672">)</span>
-    <span style="color:#f92672">|&gt;</span> activateLayer activation 
+	weights
+	<span style="color:#f92672">|&gt;</span> List.map <span style="color:#f92672">(</span><span style="color:#66d9ef">fun</span> <span style="color:#66d9ef">list</span> <span style="color:#f92672">-&gt;</span> List.map2 <span style="color:#f92672">(*)</span> <span style="color:#66d9ef">list</span> inputs<span style="color:#f92672">)</span>
+	<span style="color:#f92672">|&gt;</span> List.map <span style="color:#f92672">(</span><span style="color:#66d9ef">fun</span> <span style="color:#66d9ef">list</span> <span style="color:#f92672">-&gt;</span> List.sum <span style="color:#66d9ef">list</span> <span style="color:#f92672">+</span> bias<span style="color:#f92672">)</span>
+	<span style="color:#f92672">|&gt;</span> activateLayer activation 
 </code></pre></div><p>The <code>activateLayer</code> function takes an activation and maps the corresponding activation function across the list before returning it. A small part of this function can be see below:</p>
 <div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-fsharp" data-lang="fsharp"><span style="color:#66d9ef">let</span> activateLayer <span style="color:#f92672">(</span>activation <span style="color:#f92672">:</span> Activation<span style="color:#f92672">)</span> <span style="color:#f92672">(</span>input <span style="color:#f92672">:</span> <span style="color:#66d9ef">float</span> <span style="color:#66d9ef">list</span><span style="color:#f92672">)</span> <span style="color:#f92672">:</span> <span style="color:#66d9ef">float</span> <span style="color:#66d9ef">list</span> <span style="color:#f92672">=</span>
-    <span style="color:#66d9ef">match</span> activation <span style="color:#66d9ef">with</span>
-    <span style="color:#f92672">|</span> Sigmoid <span style="color:#f92672">-&gt;</span> 
-        List.map <span style="color:#f92672">(</span><span style="color:#66d9ef">fun</span> x <span style="color:#f92672">-&gt;</span> 1<span style="color:#f92672">.</span>0 <span style="color:#f92672">/</span> <span style="color:#f92672">(</span>1<span style="color:#f92672">.</span>0 <span style="color:#f92672">+</span> exp<span style="color:#f92672">(-</span>x<span style="color:#f92672">)))</span> input
-    <span style="color:#f92672">|</span> Relu <span style="color:#f92672">-&gt;</span> 
-        List.map <span style="color:#f92672">(</span><span style="color:#66d9ef">fun</span> x <span style="color:#f92672">-&gt;</span> max x 0<span style="color:#f92672">.</span>0<span style="color:#f92672">)</span> input
+	<span style="color:#66d9ef">match</span> activation <span style="color:#66d9ef">with</span>
+	<span style="color:#f92672">|</span> Sigmoid <span style="color:#f92672">-&gt;</span> 
+		List.map <span style="color:#f92672">(</span><span style="color:#66d9ef">fun</span> x <span style="color:#f92672">-&gt;</span> 1<span style="color:#f92672">.</span>0 <span style="color:#f92672">/</span> <span style="color:#f92672">(</span>1<span style="color:#f92672">.</span>0 <span style="color:#f92672">+</span> exp<span style="color:#f92672">(-</span>x<span style="color:#f92672">)))</span> input
+	<span style="color:#f92672">|</span> Relu <span style="color:#f92672">-&gt;</span> 
+		List.map <span style="color:#f92672">(</span><span style="color:#66d9ef">fun</span> x <span style="color:#f92672">-&gt;</span> max x 0<span style="color:#f92672">.</span>0<span style="color:#f92672">)</span> input
 </code></pre></div><p>The full forward propagation is slightly more complex. It first creates an empty list the size of the network. It folds though the epty list using the accumulator to store the intermediate activated and unactivated output of all layers. It then adds an extra layer containing only 1.0s to the end of the forward propagated output. This makes it easier when doing back propagation.</p>
 <div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-fsharp" data-lang="fsharp"><span style="color:#66d9ef">let</span> forwardFull <span style="color:#f92672">(</span>parameters <span style="color:#f92672">:</span> Parameters<span style="color:#f92672">)</span> <span style="color:#f92672">(</span>inputs <span style="color:#f92672">:</span> <span style="color:#66d9ef">float</span> <span style="color:#66d9ef">list</span><span style="color:#f92672">)</span> <span style="color:#f92672">(</span>layers <span style="color:#f92672">:</span> Layer <span style="color:#66d9ef">list</span><span style="color:#f92672">)</span> <span style="color:#f92672">:</span> <span style="color:#66d9ef">float</span> <span style="color:#66d9ef">list</span> <span style="color:#66d9ef">list</span> <span style="color:#f92672">=</span>
-    List.init layers<span style="color:#f92672">.</span>Length id
-    <span style="color:#f92672">|&gt;</span> List.fold <span style="color:#f92672">(</span><span style="color:#66d9ef">fun</span> <span style="color:#f92672">(</span>acc <span style="color:#f92672">:</span> <span style="color:#66d9ef">float</span> <span style="color:#66d9ef">list</span> <span style="color:#66d9ef">list</span><span style="color:#f92672">)</span> index <span style="color:#f92672">-&gt;</span>
-        <span style="color:#66d9ef">let</span> biases<span style="color:#f92672">,</span> weights<span style="color:#f92672">,</span> activation <span style="color:#f92672">=</span>
-            parameters<span style="color:#f92672">.</span>biases<span style="color:#f92672">.[</span>index<span style="color:#f92672">],</span> parameters<span style="color:#f92672">.</span>weights<span style="color:#f92672">.[</span>index<span style="color:#f92672">],</span> layers<span style="color:#f92672">.[</span>index<span style="color:#f92672">].</span>activation
-        <span style="color:#f92672">[</span>forwardSingleLayer biases weights acc<span style="color:#f92672">.[</span>0<span style="color:#f92672">]</span> activation<span style="color:#f92672">]</span> <span style="color:#f92672">@</span> acc<span style="color:#f92672">)</span> 
-            <span style="color:#f92672">[</span>inputs<span style="color:#f92672">]</span>
-    <span style="color:#f92672">|&gt;</span> List.append <span style="color:#f92672">[</span>List.init <span style="color:#f92672">(</span>List.last layers<span style="color:#f92672">).</span>outputDims <span style="color:#66d9ef">float</span><span style="color:#f92672">]</span>
+	List.init layers<span style="color:#f92672">.</span>Length id
+	<span style="color:#f92672">|&gt;</span> List.fold <span style="color:#f92672">(</span><span style="color:#66d9ef">fun</span> <span style="color:#f92672">(</span>acc <span style="color:#f92672">:</span> <span style="color:#66d9ef">float</span> <span style="color:#66d9ef">list</span> <span style="color:#66d9ef">list</span><span style="color:#f92672">)</span> index <span style="color:#f92672">-&gt;</span>
+		<span style="color:#66d9ef">let</span> biases<span style="color:#f92672">,</span> weights<span style="color:#f92672">,</span> activation <span style="color:#f92672">=</span>
+			parameters<span style="color:#f92672">.</span>biases<span style="color:#f92672">.[</span>index<span style="color:#f92672">],</span> parameters<span style="color:#f92672">.</span>weights<span style="color:#f92672">.[</span>index<span style="color:#f92672">],</span> layers<span style="color:#f92672">.[</span>index<span style="color:#f92672">].</span>activation
+		<span style="color:#f92672">[</span>forwardSingleLayer biases weights acc<span style="color:#f92672">.[</span>0<span style="color:#f92672">]</span> activation<span style="color:#f92672">]</span> <span style="color:#f92672">@</span> acc<span style="color:#f92672">)</span> 
+			<span style="color:#f92672">[</span>inputs<span style="color:#f92672">]</span>
+	<span style="color:#f92672">|&gt;</span> List.append <span style="color:#f92672">[</span>List.init <span style="color:#f92672">(</span>List.last layers<span style="color:#f92672">).</span>outputDims <span style="color:#66d9ef">float</span><span style="color:#f92672">]</span>
 </code></pre></div><h3 id="calculating-error">Calculating Error</h3>
 <p>To calculate the error in the output, the output of forward propagation and the target output are passed to a function that calculated the loss.</p>
 <div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-fsharp" data-lang="fsharp"><span style="color:#66d9ef">let</span> getOverallError <span style="color:#f92672">(</span>targetOutputs <span style="color:#f92672">:</span> <span style="color:#66d9ef">float</span> <span style="color:#66d9ef">list</span><span style="color:#f92672">)</span> <span style="color:#f92672">(</span>actualOutputs <span style="color:#f92672">:</span> <span style="color:#66d9ef">float</span> <span style="color:#66d9ef">list</span><span style="color:#f92672">)</span> <span style="color:#f92672">(</span>loss <span style="color:#f92672">:</span> Loss<span style="color:#f92672">)</span> <span style="color:#f92672">:</span> <span style="color:#66d9ef">float</span> <span style="color:#f92672">=</span>
-    actualOutputs
-    <span style="color:#f92672">|&gt;</span> List.map2 <span style="color:#f92672">(</span>lossFunction loss targetOutputs<span style="color:#f92672">.</span>Length<span style="color:#f92672">)</span> targetOutputs
-    <span style="color:#f92672">|&gt;</span> List.sum
+	actualOutputs
+	<span style="color:#f92672">|&gt;</span> List.map2 <span style="color:#f92672">(</span>lossFunction loss targetOutputs<span style="color:#f92672">.</span>Length<span style="color:#f92672">)</span> targetOutputs
+	<span style="color:#f92672">|&gt;</span> List.sum
 </code></pre></div><p>Similarly to the activation functions, the loss functions are supplied using pattern matching In this case however, they return a function that can be applied wherever the particular value required instead of taking an returning a list. Part of <code>lossFunction</code> can be seen below:</p>
 <div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-fsharp" data-lang="fsharp"><span style="color:#66d9ef">let</span> lossFunction <span style="color:#f92672">(</span>loss <span style="color:#f92672">:</span> Loss<span style="color:#f92672">)</span> <span style="color:#f92672">(</span>n <span style="color:#f92672">:</span> int<span style="color:#f92672">)</span> <span style="color:#f92672">:</span> <span style="color:#66d9ef">float</span> <span style="color:#f92672">-&gt;</span> <span style="color:#66d9ef">float</span> <span style="color:#f92672">-&gt;</span> <span style="color:#66d9ef">float</span> <span style="color:#f92672">=</span>
-    <span style="color:#66d9ef">match</span> loss <span style="color:#66d9ef">with</span>
-    <span style="color:#f92672">|</span> MSE <span style="color:#f92672">-&gt;</span> 
-        <span style="color:#66d9ef">fun</span> actual target <span style="color:#f92672">-&gt;</span> 
-            <span style="color:#f92672">(</span>1<span style="color:#f92672">.</span>0 <span style="color:#f92672">/</span> <span style="color:#f92672">(</span>n <span style="color:#f92672">|&gt;</span> <span style="color:#66d9ef">float</span><span style="color:#f92672">))</span> <span style="color:#f92672">*</span> <span style="color:#f92672">(</span>actual <span style="color:#f92672">-</span> target<span style="color:#f92672">)</span> <span style="color:#f92672">**</span> 2<span style="color:#f92672">.</span>0
-    <span style="color:#f92672">|</span> MAE <span style="color:#f92672">-&gt;</span> 
-        <span style="color:#66d9ef">fun</span> actual target <span style="color:#f92672">-&gt;</span> 
-            <span style="color:#f92672">(</span>1<span style="color:#f92672">.</span>0 <span style="color:#f92672">/</span> <span style="color:#f92672">(</span>n <span style="color:#f92672">|&gt;</span> <span style="color:#66d9ef">float</span><span style="color:#f92672">))</span> <span style="color:#f92672">*</span> <span style="color:#f92672">(</span>abs <span style="color:#f92672">(</span>actual <span style="color:#f92672">-</span> target<span style="color:#f92672">))</span>
+	<span style="color:#66d9ef">match</span> loss <span style="color:#66d9ef">with</span>
+	<span style="color:#f92672">|</span> MSE <span style="color:#f92672">-&gt;</span> 
+		<span style="color:#66d9ef">fun</span> actual target <span style="color:#f92672">-&gt;</span> 
+			<span style="color:#f92672">(</span>1<span style="color:#f92672">.</span>0 <span style="color:#f92672">/</span> <span style="color:#f92672">(</span>n <span style="color:#f92672">|&gt;</span> <span style="color:#66d9ef">float</span><span style="color:#f92672">))</span> <span style="color:#f92672">*</span> <span style="color:#f92672">(</span>actual <span style="color:#f92672">-</span> target<span style="color:#f92672">)</span> <span style="color:#f92672">**</span> 2<span style="color:#f92672">.</span>0
+	<span style="color:#f92672">|</span> MAE <span style="color:#f92672">-&gt;</span> 
+		<span style="color:#66d9ef">fun</span> actual target <span style="color:#f92672">-&gt;</span> 
+			<span style="color:#f92672">(</span>1<span style="color:#f92672">.</span>0 <span style="color:#f92672">/</span> <span style="color:#f92672">(</span>n <span style="color:#f92672">|&gt;</span> <span style="color:#66d9ef">float</span><span style="color:#f92672">))</span> <span style="color:#f92672">*</span> <span style="color:#f92672">(</span>abs <span style="color:#f92672">(</span>actual <span style="color:#f92672">-</span> target<span style="color:#f92672">))</span>
 </code></pre></div><h3 id="back-propagation">Back Propagation</h3>
 <p>Back propagation is more complex than the forward version. We first calculate the intermidate output sums.
 For the output layer, the only thing that needs to be done is for the derivatve of the loss function to applied to the outputs. For the hidden layers, the individual deltas for each node in the previous layer are found. Afterwards, the layer weights are taken and multiplied by their corresponding deltas. The values coming into each node are then summed.</p>
 <p>The new weights are then calculated. This is simpler. The derivative of the activation function is found and then multiplied by the corresponding output delta sum. This is then multipliued by the output od of the previous layer resulting in a value corresponding to <code>learningRate * delta * outPrev</code>. This value is then subtracted from the corresponding weight as back propagation is defined.</p>
 <p>The new weights and intermediate output deltas are then returned.</p>
 <div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-fsharp" data-lang="fsharp"><span style="color:#66d9ef">let</span> backPropSingleLayer <span style="color:#f92672">(</span>targetOutputs <span style="color:#f92672">:</span> <span style="color:#66d9ef">float</span> <span style="color:#66d9ef">list</span><span style="color:#f92672">)</span> <span style="color:#f92672">(</span>loss <span style="color:#f92672">:</span> Loss<span style="color:#f92672">)</span> <span style="color:#f92672">(</span>learningRate <span style="color:#f92672">:</span> <span style="color:#66d9ef">float</span><span style="color:#f92672">)</span> 
-    <span style="color:#f92672">(</span>backPropPart <span style="color:#f92672">:</span> <span style="color:#66d9ef">float</span> <span style="color:#66d9ef">list</span><span style="color:#f92672">)</span> <span style="color:#f92672">(</span>layerIndex <span style="color:#f92672">:</span> int<span style="color:#f92672">)</span> <span style="color:#f92672">(</span>forwardPropParts <span style="color:#f92672">:</span> <span style="color:#66d9ef">float</span> <span style="color:#66d9ef">list</span> <span style="color:#66d9ef">list</span><span style="color:#f92672">)</span> 
-    <span style="color:#f92672">(</span>allWeights <span style="color:#f92672">:</span> <span style="color:#66d9ef">float</span> <span style="color:#66d9ef">list</span> <span style="color:#66d9ef">list</span> <span style="color:#66d9ef">list</span><span style="color:#f92672">)</span> <span style="color:#f92672">(</span>layers <span style="color:#f92672">:</span> Layer <span style="color:#66d9ef">list</span><span style="color:#f92672">)</span> <span style="color:#f92672">:</span> <span style="color:#66d9ef">float</span> <span style="color:#66d9ef">list</span> <span style="color:#66d9ef">list</span> <span style="color:#f92672">*</span> <span style="color:#66d9ef">float</span> <span style="color:#66d9ef">list</span> <span style="color:#f92672">=</span>
-    
-    <span style="color:#66d9ef">let</span> intermediateOutputDeltaSum <span style="color:#f92672">=</span>
-        <span style="color:#66d9ef">if</span> layerIndex <span style="color:#f92672">=</span> 0
-        <span style="color:#66d9ef">then</span> <span style="color:#75715e">// Output layer
+	<span style="color:#f92672">(</span>backPropPart <span style="color:#f92672">:</span> <span style="color:#66d9ef">float</span> <span style="color:#66d9ef">list</span><span style="color:#f92672">)</span> <span style="color:#f92672">(</span>layerIndex <span style="color:#f92672">:</span> int<span style="color:#f92672">)</span> <span style="color:#f92672">(</span>forwardPropParts <span style="color:#f92672">:</span> <span style="color:#66d9ef">float</span> <span style="color:#66d9ef">list</span> <span style="color:#66d9ef">list</span><span style="color:#f92672">)</span> 
+	<span style="color:#f92672">(</span>allWeights <span style="color:#f92672">:</span> <span style="color:#66d9ef">float</span> <span style="color:#66d9ef">list</span> <span style="color:#66d9ef">list</span> <span style="color:#66d9ef">list</span><span style="color:#f92672">)</span> <span style="color:#f92672">(</span>layers <span style="color:#f92672">:</span> Layer <span style="color:#66d9ef">list</span><span style="color:#f92672">)</span> <span style="color:#f92672">:</span> <span style="color:#66d9ef">float</span> <span style="color:#66d9ef">list</span> <span style="color:#66d9ef">list</span> <span style="color:#f92672">*</span> <span style="color:#66d9ef">float</span> <span style="color:#66d9ef">list</span> <span style="color:#f92672">=</span>
+	
+	<span style="color:#66d9ef">let</span> intermediateOutputDeltaSum <span style="color:#f92672">=</span>
+		<span style="color:#66d9ef">if</span> layerIndex <span style="color:#f92672">=</span> 0
+		<span style="color:#66d9ef">then</span> <span style="color:#75715e">// Output layer
 </span><span style="color:#75715e"></span>            forwardPropParts<span style="color:#f92672">.[</span>layerIndex <span style="color:#f92672">+</span> 1<span style="color:#f92672">]</span>
-            <span style="color:#f92672">|&gt;</span> List.map2 <span style="color:#f92672">(</span>dLossFunction loss targetOutputs<span style="color:#f92672">.</span>Length<span style="color:#f92672">)</span> backPropPart 
-        <span style="color:#66d9ef">else</span> <span style="color:#75715e">// Hidden layers
+			<span style="color:#f92672">|&gt;</span> List.map2 <span style="color:#f92672">(</span>dLossFunction loss targetOutputs<span style="color:#f92672">.</span>Length<span style="color:#f92672">)</span> backPropPart 
+		<span style="color:#66d9ef">else</span> <span style="color:#75715e">// Hidden layers
 </span><span style="color:#75715e"></span>            List.init forwardPropParts<span style="color:#f92672">.[</span>layerIndex <span style="color:#f92672">+</span> 1<span style="color:#f92672">].</span>Length <span style="color:#f92672">(</span><span style="color:#66d9ef">fun</span> <span style="color:#f92672">_</span> <span style="color:#f92672">-&gt;</span>
-                forwardPropParts<span style="color:#f92672">.[</span>layerIndex<span style="color:#f92672">]</span> 
-                <span style="color:#f92672">|&gt;</span> dActivateLayer layers<span style="color:#f92672">.[</span>layerIndex <span style="color:#f92672">-</span> 1<span style="color:#f92672">].</span>activation 
-                <span style="color:#f92672">|&gt;</span> List.map2 <span style="color:#f92672">(*)</span> backPropPart<span style="color:#f92672">)</span> 
-            <span style="color:#f92672">|&gt;</span> List.mapi <span style="color:#f92672">(</span><span style="color:#66d9ef">fun</span> index1 deltas <span style="color:#f92672">-&gt;</span>
-                allWeights<span style="color:#f92672">.[</span>layerIndex<span style="color:#f92672">]</span>
-                <span style="color:#f92672">|&gt;</span> List.mapi <span style="color:#f92672">(</span><span style="color:#66d9ef">fun</span> index2 weights <span style="color:#f92672">-&gt;</span> weights<span style="color:#f92672">.[</span>index1<span style="color:#f92672">]</span> <span style="color:#f92672">*</span> deltas<span style="color:#f92672">.[</span>index2<span style="color:#f92672">]))</span> 
-            <span style="color:#f92672">|&gt;</span> List.map List.sum
-    
-    <span style="color:#66d9ef">let</span> newWeights <span style="color:#f92672">=</span>
-        forwardPropParts<span style="color:#f92672">.[</span>layerIndex <span style="color:#f92672">+</span> 1<span style="color:#f92672">]</span>
-        <span style="color:#f92672">|&gt;</span> dActivateLayer layers<span style="color:#f92672">.[</span>layerIndex<span style="color:#f92672">].</span>activation
-        <span style="color:#f92672">|&gt;</span> List.map2 <span style="color:#f92672">(*)</span> intermediateOutputDeltaSum
-        <span style="color:#f92672">|&gt;</span> List.map <span style="color:#f92672">(</span><span style="color:#66d9ef">fun</span> delta <span style="color:#f92672">-&gt;</span> 
-            forwardPropParts<span style="color:#f92672">.[</span>layerIndex <span style="color:#f92672">+</span> 2<span style="color:#f92672">]</span> 
-            <span style="color:#f92672">|&gt;</span> List.map <span style="color:#f92672">(</span><span style="color:#66d9ef">fun</span> out <span style="color:#f92672">-&gt;</span> learningRate <span style="color:#f92672">*</span> delta <span style="color:#f92672">*</span> out<span style="color:#f92672">))</span>
-        <span style="color:#f92672">|&gt;</span> List.map2 <span style="color:#f92672">(</span>List.map2 <span style="color:#f92672">(-))</span> allWeights<span style="color:#f92672">.[</span>layerIndex <span style="color:#f92672">+</span> 1<span style="color:#f92672">]</span>
-    
-    newWeights<span style="color:#f92672">,</span> intermediateOutputDeltaSum
+				forwardPropParts<span style="color:#f92672">.[</span>layerIndex<span style="color:#f92672">]</span> 
+				<span style="color:#f92672">|&gt;</span> dActivateLayer layers<span style="color:#f92672">.[</span>layerIndex <span style="color:#f92672">-</span> 1<span style="color:#f92672">].</span>activation 
+				<span style="color:#f92672">|&gt;</span> List.map2 <span style="color:#f92672">(*)</span> backPropPart<span style="color:#f92672">)</span> 
+			<span style="color:#f92672">|&gt;</span> List.mapi <span style="color:#f92672">(</span><span style="color:#66d9ef">fun</span> index1 deltas <span style="color:#f92672">-&gt;</span>
+				allWeights<span style="color:#f92672">.[</span>layerIndex<span style="color:#f92672">]</span>
+				<span style="color:#f92672">|&gt;</span> List.mapi <span style="color:#f92672">(</span><span style="color:#66d9ef">fun</span> index2 weights <span style="color:#f92672">-&gt;</span> weights<span style="color:#f92672">.[</span>index1<span style="color:#f92672">]</span> <span style="color:#f92672">*</span> deltas<span style="color:#f92672">.[</span>index2<span style="color:#f92672">]))</span> 
+			<span style="color:#f92672">|&gt;</span> List.map List.sum
+	
+	<span style="color:#66d9ef">let</span> newWeights <span style="color:#f92672">=</span>
+		forwardPropParts<span style="color:#f92672">.[</span>layerIndex <span style="color:#f92672">+</span> 1<span style="color:#f92672">]</span>
+		<span style="color:#f92672">|&gt;</span> dActivateLayer layers<span style="color:#f92672">.[</span>layerIndex<span style="color:#f92672">].</span>activation
+		<span style="color:#f92672">|&gt;</span> List.map2 <span style="color:#f92672">(*)</span> intermediateOutputDeltaSum
+		<span style="color:#f92672">|&gt;</span> List.map <span style="color:#f92672">(</span><span style="color:#66d9ef">fun</span> delta <span style="color:#f92672">-&gt;</span> 
+			forwardPropParts<span style="color:#f92672">.[</span>layerIndex <span style="color:#f92672">+</span> 2<span style="color:#f92672">]</span> 
+			<span style="color:#f92672">|&gt;</span> List.map <span style="color:#f92672">(</span><span style="color:#66d9ef">fun</span> out <span style="color:#f92672">-&gt;</span> learningRate <span style="color:#f92672">*</span> delta <span style="color:#f92672">*</span> out<span style="color:#f92672">))</span>
+		<span style="color:#f92672">|&gt;</span> List.map2 <span style="color:#f92672">(</span>List.map2 <span style="color:#f92672">(-))</span> allWeights<span style="color:#f92672">.[</span>layerIndex <span style="color:#f92672">+</span> 1<span style="color:#f92672">]</span>
+	
+	newWeights<span style="color:#f92672">,</span> intermediateOutputDeltaSum
 </code></pre></div><p>The full back propagation invloved first reversing the parameters. This makes it easier to work on as we start from the final layer and work towards the input.</p>
 <p>The next step is to fold through the network from the outer layer and calculate all the new values for each weight using <code>backPropSingleLayer</code>. This is then added to a list containing each layer and acts as the accumulator.</p>
 <div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-fsharp" data-lang="fsharp"><span style="color:#66d9ef">let</span> backPropFull <span style="color:#f92672">(</span>layers <span style="color:#f92672">:</span> Layer <span style="color:#66d9ef">list</span><span style="color:#f92672">)</span> <span style="color:#f92672">(</span>parameters <span style="color:#f92672">:</span> Parameters<span style="color:#f92672">)</span> <span style="color:#f92672">(</span>targetOutputs <span style="color:#f92672">:</span> <span style="color:#66d9ef">float</span> <span style="color:#66d9ef">list</span> <span style="color:#66d9ef">list</span><span style="color:#f92672">)</span> 
-    <span style="color:#f92672">(</span>learningRate <span style="color:#f92672">:</span> <span style="color:#66d9ef">float</span><span style="color:#f92672">)</span> <span style="color:#f92672">(</span>loss <span style="color:#f92672">:</span> Loss<span style="color:#f92672">)</span> <span style="color:#f92672">(</span>forwardPropParts <span style="color:#f92672">:</span> <span style="color:#66d9ef">float</span> <span style="color:#66d9ef">list</span> <span style="color:#66d9ef">list</span><span style="color:#f92672">)</span> <span style="color:#f92672">:</span> <span style="color:#f92672">(</span><span style="color:#66d9ef">float</span> <span style="color:#66d9ef">list</span> <span style="color:#66d9ef">list</span> <span style="color:#f92672">*</span> <span style="color:#66d9ef">float</span> <span style="color:#66d9ef">list</span><span style="color:#f92672">)</span> <span style="color:#66d9ef">list</span> <span style="color:#f92672">=</span>  
-    
-    <span style="color:#66d9ef">let</span> weights <span style="color:#f92672">=</span> 
-        List.rev parameters<span style="color:#f92672">.</span>weights
+	<span style="color:#f92672">(</span>learningRate <span style="color:#f92672">:</span> <span style="color:#66d9ef">float</span><span style="color:#f92672">)</span> <span style="color:#f92672">(</span>loss <span style="color:#f92672">:</span> Loss<span style="color:#f92672">)</span> <span style="color:#f92672">(</span>forwardPropParts <span style="color:#f92672">:</span> <span style="color:#66d9ef">float</span> <span style="color:#66d9ef">list</span> <span style="color:#66d9ef">list</span><span style="color:#f92672">)</span> <span style="color:#f92672">:</span> <span style="color:#f92672">(</span><span style="color:#66d9ef">float</span> <span style="color:#66d9ef">list</span> <span style="color:#66d9ef">list</span> <span style="color:#f92672">*</span> <span style="color:#66d9ef">float</span> <span style="color:#66d9ef">list</span><span style="color:#f92672">)</span> <span style="color:#66d9ef">list</span> <span style="color:#f92672">=</span>  
+	
+	<span style="color:#66d9ef">let</span> weights <span style="color:#f92672">=</span> 
+		List.rev parameters<span style="color:#f92672">.</span>weights
 
-    List.init <span style="color:#f92672">(</span>layers<span style="color:#f92672">.</span>Length<span style="color:#f92672">)</span> id
-    <span style="color:#f92672">|&gt;</span> List.fold <span style="color:#f92672">(</span><span style="color:#66d9ef">fun</span> acc index <span style="color:#f92672">-&gt;</span>
-        <span style="color:#66d9ef">let</span> targetOutputs <span style="color:#f92672">=</span>
-            acc<span style="color:#f92672">.[</span>0<span style="color:#f92672">]</span> 
-            <span style="color:#f92672">|&gt;</span> fst 
-            <span style="color:#f92672">|&gt;</span> List.map List.sum
-        
-        <span style="color:#66d9ef">let</span> backPropPart <span style="color:#f92672">=</span> snd acc<span style="color:#f92672">.[</span>0<span style="color:#f92672">]</span>
+	List.init <span style="color:#f92672">(</span>layers<span style="color:#f92672">.</span>Length<span style="color:#f92672">)</span> id
+	<span style="color:#f92672">|&gt;</span> List.fold <span style="color:#f92672">(</span><span style="color:#66d9ef">fun</span> acc index <span style="color:#f92672">-&gt;</span>
+		<span style="color:#66d9ef">let</span> targetOutputs <span style="color:#f92672">=</span>
+			acc<span style="color:#f92672">.[</span>0<span style="color:#f92672">]</span> 
+			<span style="color:#f92672">|&gt;</span> fst 
+			<span style="color:#f92672">|&gt;</span> List.map List.sum
+		
+		<span style="color:#66d9ef">let</span> backPropPart <span style="color:#f92672">=</span> snd acc<span style="color:#f92672">.[</span>0<span style="color:#f92672">]</span>
 
-        <span style="color:#66d9ef">let</span> backPropOutput <span style="color:#f92672">=</span> 
-            backPropSingleLayer targetOutputs loss learningRate backPropPart index forwardPropParts weights layers
-        
-        <span style="color:#f92672">[</span>backPropOutput<span style="color:#f92672">]</span> <span style="color:#f92672">@</span> acc<span style="color:#f92672">)</span> 
-            <span style="color:#f92672">[</span>targetOutputs<span style="color:#f92672">,</span> <span style="color:#f92672">(</span>List.concat targetOutputs<span style="color:#f92672">)]</span>
+		<span style="color:#66d9ef">let</span> backPropOutput <span style="color:#f92672">=</span> 
+			backPropSingleLayer targetOutputs loss learningRate backPropPart index forwardPropParts weights layers
+		
+		<span style="color:#f92672">[</span>backPropOutput<span style="color:#f92672">]</span> <span style="color:#f92672">@</span> acc<span style="color:#f92672">)</span> 
+			<span style="color:#f92672">[</span>targetOutputs<span style="color:#f92672">,</span> <span style="color:#f92672">(</span>List.concat targetOutputs<span style="color:#f92672">)]</span>
 </code></pre></div><p>The derivatives of the activations and loss functions are very similar to the normal counter parts. Parts of the <code>dActivateLayer</code> and <code>dLossFunction</code> can be seen below:</p>
 <div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-fsharp" data-lang="fsharp"><span style="color:#66d9ef">let</span> dActivateLayer <span style="color:#f92672">(</span>activation <span style="color:#f92672">:</span> Activation<span style="color:#f92672">)</span> <span style="color:#f92672">(</span>input <span style="color:#f92672">:</span> <span style="color:#66d9ef">float</span> <span style="color:#66d9ef">list</span><span style="color:#f92672">)</span> <span style="color:#f92672">:</span> <span style="color:#66d9ef">float</span> <span style="color:#66d9ef">list</span> <span style="color:#f92672">=</span>
-    <span style="color:#66d9ef">match</span> activation <span style="color:#66d9ef">with</span>
-    <span style="color:#f92672">|</span> Sigmoid <span style="color:#f92672">-&gt;</span> 
-        List.map <span style="color:#f92672">(</span><span style="color:#66d9ef">fun</span> x <span style="color:#f92672">-&gt;</span> x <span style="color:#f92672">*</span> <span style="color:#f92672">(</span>1<span style="color:#f92672">.</span>0 <span style="color:#f92672">-</span> x<span style="color:#f92672">))</span> input
-    <span style="color:#f92672">|</span> Relu <span style="color:#f92672">-&gt;</span> 
-        List.map <span style="color:#f92672">(</span><span style="color:#66d9ef">fun</span> x <span style="color:#f92672">-&gt;</span> <span style="color:#66d9ef">if</span> x <span style="color:#f92672">&gt;</span> 0<span style="color:#f92672">.</span>0 <span style="color:#66d9ef">then</span> 1<span style="color:#f92672">.</span>0 <span style="color:#66d9ef">else</span> 0<span style="color:#f92672">.</span>0<span style="color:#f92672">)</span> input
+	<span style="color:#66d9ef">match</span> activation <span style="color:#66d9ef">with</span>
+	<span style="color:#f92672">|</span> Sigmoid <span style="color:#f92672">-&gt;</span> 
+		List.map <span style="color:#f92672">(</span><span style="color:#66d9ef">fun</span> x <span style="color:#f92672">-&gt;</span> x <span style="color:#f92672">*</span> <span style="color:#f92672">(</span>1<span style="color:#f92672">.</span>0 <span style="color:#f92672">-</span> x<span style="color:#f92672">))</span> input
+	<span style="color:#f92672">|</span> Relu <span style="color:#f92672">-&gt;</span> 
+		List.map <span style="color:#f92672">(</span><span style="color:#66d9ef">fun</span> x <span style="color:#f92672">-&gt;</span> <span style="color:#66d9ef">if</span> x <span style="color:#f92672">&gt;</span> 0<span style="color:#f92672">.</span>0 <span style="color:#66d9ef">then</span> 1<span style="color:#f92672">.</span>0 <span style="color:#66d9ef">else</span> 0<span style="color:#f92672">.</span>0<span style="color:#f92672">)</span> input
 
 <span style="color:#66d9ef">let</span> dLossFunction <span style="color:#f92672">(</span>loss <span style="color:#f92672">:</span> Loss<span style="color:#f92672">)</span> <span style="color:#f92672">(</span>n <span style="color:#f92672">:</span> int<span style="color:#f92672">)</span> <span style="color:#f92672">:</span> <span style="color:#66d9ef">float</span> <span style="color:#f92672">-&gt;</span> <span style="color:#66d9ef">float</span> <span style="color:#f92672">-&gt;</span> <span style="color:#66d9ef">float</span> <span style="color:#f92672">=</span>
-    <span style="color:#66d9ef">match</span> loss <span style="color:#66d9ef">with</span>
-    <span style="color:#f92672">|</span> MSE <span style="color:#f92672">-&gt;</span> 
+	<span style="color:#66d9ef">match</span> loss <span style="color:#66d9ef">with</span>
+	<span style="color:#f92672">|</span> MSE <span style="color:#f92672">-&gt;</span> 
 	<span style="color:#66d9ef">fun</span> actual target <span style="color:#f92672">-&gt;</span> 
 	<span style="color:#f92672">(</span>2<span style="color:#f92672">.</span>0 <span style="color:#f92672">/</span> <span style="color:#f92672">(</span>n <span style="color:#f92672">|&gt;</span> <span style="color:#66d9ef">float</span><span style="color:#f92672">))</span> <span style="color:#f92672">*</span> <span style="color:#f92672">(</span>actual <span style="color:#f92672">-</span> target<span style="color:#f92672">)</span> <span style="color:#f92672">*</span> <span style="color:#f92672">-</span>1<span style="color:#f92672">.</span>0
-    <span style="color:#f92672">|</span> MAE <span style="color:#f92672">-&gt;</span> 
+	<span style="color:#f92672">|</span> MAE <span style="color:#f92672">-&gt;</span> 
 	<span style="color:#66d9ef">fun</span> target actual <span style="color:#f92672">-&gt;</span> 
 		<span style="color:#66d9ef">if</span> actual <span style="color:#f92672">&gt;</span> target <span style="color:#66d9ef">then</span> 1<span style="color:#f92672">.</span>0 <span style="color:#66d9ef">else</span> <span style="color:#f92672">-</span>1<span style="color:#f92672">.</span>0
 </code></pre></div><h3 id="training">Training</h3>
 <p>Training the network is a fairly simple recursive function that continually picks a random sample of the data set and carries out forwards and backwards propagation using the sample for any number of iterations. A simplified version of the function (initialisation and printing etc. removed) can be seen below:</p>
 <div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-fsharp" data-lang="fsharp"><span style="color:#66d9ef">let</span> rec train <span style="color:#f92672">(</span>parameters <span style="color:#f92672">:</span> Parameters<span style="color:#f92672">)</span> <span style="color:#f92672">(</span>model <span style="color:#f92672">:</span> Layer <span style="color:#66d9ef">list</span><span style="color:#f92672">)</span> <span style="color:#f92672">(</span>maxIterations <span style="color:#f92672">:</span> int<span style="color:#f92672">)</span> <span style="color:#f92672">(</span>iterations <span style="color:#f92672">:</span> int<span style="color:#f92672">)</span> <span style="color:#f92672">=</span>
-    <span style="color:#66d9ef">let</span> idx <span style="color:#f92672">=</span> System.Random()<span style="color:#f92672">.</span>Next<span style="color:#f92672">(</span>0<span style="color:#f92672">,</span> List.length targetOutputs<span style="color:#f92672">)</span>
+	<span style="color:#66d9ef">let</span> idx <span style="color:#f92672">=</span> System.Random()<span style="color:#f92672">.</span>Next<span style="color:#f92672">(</span>0<span style="color:#f92672">,</span> List.length targetOutputs<span style="color:#f92672">)</span>
 
-    <span style="color:#66d9ef">let</span> fullSingle <span style="color:#f92672">=</span> 
-        forwardFull parameters inputs<span style="color:#f92672">.[</span>idx<span style="color:#f92672">]</span> architecture
-        <span style="color:#f92672">|&gt;</span> backPropFull architecture parameters targets<span style="color:#f92672">.[</span>idx<span style="color:#f92672">]</span> learningRate loss
-        <span style="color:#f92672">|&gt;</span> weightUpdate parameters
-    
-    train fullSingle model maxIterations <span style="color:#f92672">(</span>iterations <span style="color:#f92672">+</span> 1<span style="color:#f92672">)</span>
-    
+	<span style="color:#66d9ef">let</span> fullSingle <span style="color:#f92672">=</span> 
+		forwardFull parameters inputs<span style="color:#f92672">.[</span>idx<span style="color:#f92672">]</span> architecture
+		<span style="color:#f92672">|&gt;</span> backPropFull architecture parameters targets<span style="color:#f92672">.[</span>idx<span style="color:#f92672">]</span> learningRate loss
+		<span style="color:#f92672">|&gt;</span> weightUpdate parameters
+	
+	train fullSingle model maxIterations <span style="color:#f92672">(</span>iterations <span style="color:#f92672">+</span> 1<span style="color:#f92672">)</span>
+	
 <span style="color:#75715e">// This is called like below
 </span><span style="color:#75715e"></span>train initial architecture iterations 0
 </code></pre></div><h2 id="bugs">Bugs</h2>
 <p>Be careful with the chosen parameters. The networks can die easily if the chosen parameters cause weigths to overflow and become NaN, alternatively the network won&rsquo;t learn the data set correctly.</p>
 <h2 id="github-repository">GitHub Repository</h2>
 <p>The full project can be viewed on <a href="https://github.com/joshjennings98/fsharp-neural-network">GitHub.</a></p>
-</div>
 
+<a id=title href="../index.html"><div id="test">Go to homepage</div></a>
+      <div id="invmode">Dark mode</div>
 
-    </main>
+      <script src="files/invert.js" type="text/javascript"></script>
 
-    
-      
-    
-  </body>
+      <footer><a href=#top>Back to top</a></footer>
+  
+    </body>
+
+  
+
 </html>
+

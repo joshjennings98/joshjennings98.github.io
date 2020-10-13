@@ -1,69 +1,35 @@
 <!DOCTYPE html>
-<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en-gb" lang="en-gb">
-<head>
-  <link href="https://gmpg.org/xfn/11" rel="profile">
-  <meta http-equiv="content-type" content="text/html; charset=utf-8">
-  <meta name="generator" content="Hugo 0.73.0" />
-
-  
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-
-  <title>CHIP-8 Emulator &middot; joshj.dev</title>
-  <meta name="description" content="" />
-
-  
-  <link type="text/css" rel="stylesheet" href="https://joshj.dev/css/print.css" media="print">
-  <link type="text/css" rel="stylesheet" href="https://joshj.dev/css/poole.css">
-  <link type="text/css" rel="stylesheet" href="https://joshj.dev/css/syntax.css">
-  <link type="text/css" rel="stylesheet" href="https://joshj.dev/css/hyde.css">
-    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Abril+Fatface|PT+Sans:400,400i,700">
-
-
-  
-  <link rel="icon" href="https://joshj.dev/images/favicon.png" type="image/png"> 
-  <link rel="shortcut icon" href="https://joshj.dev/images/favicon.png" type="image/png"> 
-
-  
-  
-</head>
-
-  <body class="theme-base-08 ">
-  <aside class="sidebar">
-  <div class="container sidebar-sticky">
-    <div class="sidebar-about">
-      <a href="https://joshj.dev/"><h1>joshj.dev</h1></a>
-      <p class="lead">
-       My name is Josh Jennings and this is my website and portfolio. 
-      </p>
-    </div>
-
-    <nav>
-      <ul class="sidebar-nav">
-        <li><a href="https://joshj.dev/">Home</a> </li>
-        <li><a href="mailto:jenninjl01@gmail.com"> Email </a></li><li><a href="https://github.com/joshjennings98/"> Github </a></li><li><a href="https://www.linkedin.com/in/josh-jennings-41a17213a/"> LinkedIn </a></li><li><a href="https://joshj.dev/CV-Josh-Jennings.pdf"> Online CV </a></li>
-      </ul>
-    </nav>
-
-    <p>&copy; 2020. All rights reserved. </p>
-  </div>
-</aside>
-
-    <main class="content container">
-    <div class="post">
-  <h1>CHIP-8 Emulator</h1>
-  <time datetime=2020-03-08T15:30:36&#43;0100 class="post-date">Sun, Mar 8, 2020</time>
-  <p><img src="/images/chip8.png" alt="Chip-8"></p>
-<p>A simple CHIP-8 emulator written in C++.</p>
-<ul>
-<li><a href="">CHIP-8 Emulator</a>
+<html class="inverted" lang="en">
+   <head>
+      <meta http-equiv="content-type" content="text/html; charset=UTF-8">
+      <meta charset="utf-8">
+      <meta name="theme-color" content="#ffffff">
+      <title>CHIP-8 Emulator - joshj.dev</title>
+      <meta name="viewport" content="width=device-width, initial-scale=1.0">
+      <meta name="description" content="Josh's website and portfolio.">
+      <link rel="stylesheet" type="text/css" href="../files/main.css">
+      <!-- Icons-->
+      <link rel="apple-touch-icon" sizes="180x180" href="../files/icons/apple-touch-icon.png">
+      <link rel="icon" type="image/png" sizes="32x32" href="../files/icons/favicon-32x32.png">
+      <link rel="icon" type="image/png" sizes="16x16" href="../files/icons/favicon-16x16.png">
+   </head>
+   <body>
+    
+    <div class="fancyPositioning">
+      <h1>CHIP-8 Emulator</h1>
+      <div class="picture-left"><img src="../files/images/chip8.png"></div>
+      <div class="tleft">
+        
+        <p>CHIP-8 is an interpreted programming language that was developed for 8-bit microcomputers in the mid-1970s. This is a very simple CHIP-8 interpreter written in C++ and SDL2.</p>
 <ul>
 <li><a href="#introduction">Introduction</a></li>
 <li><a href="#implementation">Implementation</a></li>
 <li><a href="#installation-and-usage">Installation and Usage</a></li>
 <li><a href="#acknowledgements">Acknowledgements etc.</a></li>
 </ul>
-</li>
-</ul>
+      </div>
+    </div>
+
 <h2 id="introduction">Introduction</h2>
 <p>CHIP-8 is an interpreted programming language that was developed for 8-bit microcomputers in the mid-1970s. CHIP-8 programs are run on a virtual machine to allows for video games to be more easily programmed for those computers.</p>
 <p>A CHIP-8 emulator is probably the simplest emulator project someone can make. It only has 35 instructions and each opcode is only 2 bytes long. The memory consists of 4096 bytes and there are 16 registers (V1-VF). Along with this, there are no interrupts, only two simple timer registers for delay and sound.</p>
@@ -219,13 +185,17 @@ addr <span style="color:#f92672">=</span> opcode <span style="color:#f92672">&am
 </ul>
 <h2 id="github-repository">GitHub Repository</h2>
 <p>The full project can be viewed on <a href="https://github.com/joshjennings98/chip8">GitHub.</a></p>
-</div>
 
+<a id=title href="../index.html"><div id="test">Go to homepage</div></a>
+      <div id="invmode">Dark mode</div>
 
-    </main>
+      <script src="files/invert.js" type="text/javascript"></script>
 
-    
-      
-    
-  </body>
+      <footer><a href=#top>Back to top</a></footer>
+  
+    </body>
+
+  
+
 </html>
+
