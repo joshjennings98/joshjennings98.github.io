@@ -154,14 +154,6 @@ div#test {
 	font-size: small;
 }
 
-
-
-html:not(.inverted) a:visited {
-	color:#ca1a70;
-}
-
-/* Tables */
-
 table {
 	margin-bottom: 1rem;
 	width: 100%;
