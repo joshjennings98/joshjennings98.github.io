@@ -2,6 +2,8 @@
 
 if (window.matchMedia('(prefers-color-scheme)').media !== 'not all') {
 
+  document.body.style.margin="2em auto";
+
   var textArr = ["Inverted mode", "Normal mode"];
   var classMethods = ["remove", "add"];
 
