@@ -1,6 +1,17 @@
 "use strict";
 
-if (window.matchMedia('(prefers-color-scheme)').media !== 'not all') {
+function localStorageAvailable(){ 
+  var test = 'test';
+  try {
+    localStorage.setItem(test, test);
+    localStorage.removeItem(test);
+    return true;
+  } catch(e) {
+    return false;
+  }
+}
+
+if (window.matchMedia('(prefers-color-scheme)').media !== 'not all' && localStorageAvailable() === true) { // using localStorage because it's not a variable that needs to be secure or anything
 
   document.body.style.margin="2em auto";
 
@@ -16,7 +27,7 @@ if (window.matchMedia('(prefers-color-scheme)').media !== 'not all') {
   var el = document.getElementsByTagName("html")[0];
   var acbox = document.getElementById("invmode"),
     textNode = acbox.firstChild,
-    toggled = sessionStorage.getItem("inverted") == 'true';
+    toggled = localStorage.getItem("inverted") == 'true';
     var selector = Number(toggled);
     textNode.data = textArr[selector];
     el.classList[classMethods[selector]]("inverted");
@@ -27,7 +38,7 @@ if (window.matchMedia('(prefers-color-scheme)').media !== 'not all') {
       var selector = Number((toggled = !toggled));
       textNode.data = textArr[selector];
       el.classList[classMethods[selector]]("inverted");
-      sessionStorage.setItem("inverted", toggled);
+      localStorage.setItem("inverted", toggled);
     },
     false
   );
