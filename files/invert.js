@@ -1,7 +1,13 @@
 "use strict";
 
-var textArr = ["Normal mode", "Inverted mode"];
+var textArr = ["Inverted mode", "Normal mode"];
 var classMethods = ["remove", "add"];
+
+var nightmodeDiv = document.createElement('div');
+    nightmodeDiv.id = "invmode";
+    nightmodeDiv.innerText = textArr[0];
+  
+  document.body.appendChild(nightmodeDiv);
 
 var el = document.getElementsByTagName("html")[0];
 var acbox = document.getElementById("invmode"),
