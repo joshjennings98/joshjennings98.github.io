@@ -1,6 +1,6 @@
 "use strict";
 
-var textArr = ["Light mode", "Dark mode"];
+var textArr = ["Normal mode", "Inverted mode"];
 var classMethods = ["remove", "add"];
 
 var el = document.getElementsByTagName("html")[0];
