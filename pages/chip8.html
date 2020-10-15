@@ -90,46 +90,44 @@ code > span.in { color: #7f9f7f; font-weight: bold; } /* Information */
 <p>This all results in a very simple to implement emulator.</p>
 <h2 id="implementation">Implementation</h2>
 <p>My CHIP-8 emulator is written in C++.</p>
-<ul>
-<li><p>The opcodes and vaious pointers are represented as shorts:</p>
+<p>The opcodes and vaious pointers are represented as shorts:</p>
 <div class="sourceCode"><pre class="sourceCode cpp"><code class="sourceCode cpp"><span class="dt">short</span> opcode;
 <span class="dt">short</span> I; <span class="co">// index register</span>
 <span class="dt">short</span> pc; <span class="co">// program counter</span>
-<span class="dt">short</span> sp; <span class="co">// stack pointer</span></code></pre></div></li>
-<li><p>I break the the opcode into what it would represent under different circumstances (what the opcode means). This means that I only need to use bit-shifts once at the beginning of each execution loop. This is as follows:</p>
+<span class="dt">short</span> sp; <span class="co">// stack pointer</span></code></pre></div>
+<p>I break the the opcode into what it would represent under different circumstances (what the opcode means). This means that I only need to use bit-shifts once at the beginning of each execution loop. This is as follows:</p>
 <div class="sourceCode"><pre class="sourceCode cpp"><code class="sourceCode cpp"><span class="dt">uint16_t</span> addr;
 <span class="dt">uint8_t</span> byte;
 <span class="dt">short</span> x;
-<span class="dt">short</span> y;</code></pre></div></li>
-<li><p>The draw flag is obviosuly represented as a boolean:</p>
-<div class="sourceCode"><pre class="sourceCode cpp"><code class="sourceCode cpp"><span class="dt">bool</span> drawFlag;</code></pre></div></li>
-<li><p>Memory, registers, and the stack are implemented using arrays:</p>
+<span class="dt">short</span> y;</code></pre></div>
+<p>The draw flag is obviosuly represented as a boolean:</p>
+<div class="sourceCode"><pre class="sourceCode cpp"><code class="sourceCode cpp"><span class="dt">bool</span> drawFlag;</code></pre></div>
+<p>Memory, registers, and the stack are implemented using arrays:</p>
 <div class="sourceCode"><pre class="sourceCode cpp"><code class="sourceCode cpp"><span class="dt">uint8_t</span> memory[<span class="dv">4096</span>];
 <span class="dt">uint8_t</span> v[<span class="dv">16</span>];
-<span class="dt">short</span> stack[<span class="dv">16</span>];</code></pre></div></li>
-<li><p>The two timers are 8-bit unsigned variables:</p>
+<span class="dt">short</span> stack[<span class="dv">16</span>];</code></pre></div>
+<p>The two timers are 8-bit unsigned variables:</p>
 <div class="sourceCode"><pre class="sourceCode cpp"><code class="sourceCode cpp"><span class="dt">uint8_t</span> delayTimer;
-<span class="dt">uint8_t</span> soundTimer;</code></pre></div></li>
-<li><p>CHIP-8 code starts at address <code>0x200</code>. This would usually contain the interpreter itself. Since this is an emulator, we don't need that. Instead we use this space for the fontset that represents the numbers <code>0x0</code> to <code>0xF</code>:</p>
+<span class="dt">uint8_t</span> soundTimer;</code></pre></div>
+<p>CHIP-8 code starts at address <code>0x200</code>. This would usually contain the interpreter itself. Since this is an emulator, we don't need that. Instead we use this space for the fontset that represents the numbers <code>0x0</code> to <code>0xF</code>:</p>
 <div class="sourceCode"><pre class="sourceCode cpp"><code class="sourceCode cpp"><span class="dt">uint8_t</span> fontset[<span class="dv">80</span>] = { 
-    <span class="bn">0xF0</span>, <span class="bn">0x90</span>, <span class="bn">0x90</span>, <span class="bn">0x90</span>, <span class="bn">0xF0</span>, <span class="co">// 0</span>
-    <span class="bn">0x20</span>, <span class="bn">0x60</span>, <span class="bn">0x20</span>, <span class="bn">0x20</span>, <span class="bn">0x70</span>, <span class="co">// 1</span>
-    <span class="bn">0xF0</span>, <span class="bn">0x10</span>, <span class="bn">0xF0</span>, <span class="bn">0x80</span>, <span class="bn">0xF0</span>, <span class="co">// 2</span>
-    <span class="bn">0xF0</span>, <span class="bn">0x10</span>, <span class="bn">0xF0</span>, <span class="bn">0x10</span>, <span class="bn">0xF0</span>, <span class="co">// 3</span>
-    <span class="bn">0x90</span>, <span class="bn">0x90</span>, <span class="bn">0xF0</span>, <span class="bn">0x10</span>, <span class="bn">0x10</span>, <span class="co">// 4</span>
-    <span class="bn">0xF0</span>, <span class="bn">0x80</span>, <span class="bn">0xF0</span>, <span class="bn">0x10</span>, <span class="bn">0xF0</span>, <span class="co">// 5</span>
-    <span class="bn">0xF0</span>, <span class="bn">0x80</span>, <span class="bn">0xF0</span>, <span class="bn">0x90</span>, <span class="bn">0xF0</span>, <span class="co">// 6</span>
-    <span class="bn">0xF0</span>, <span class="bn">0x10</span>, <span class="bn">0x20</span>, <span class="bn">0x40</span>, <span class="bn">0x40</span>, <span class="co">// 7</span>
-    <span class="bn">0xF0</span>, <span class="bn">0x90</span>, <span class="bn">0xF0</span>, <span class="bn">0x90</span>, <span class="bn">0xF0</span>, <span class="co">// 8</span>
-    <span class="bn">0xF0</span>, <span class="bn">0x90</span>, <span class="bn">0xF0</span>, <span class="bn">0x10</span>, <span class="bn">0xF0</span>, <span class="co">// 9</span>
-    <span class="bn">0xF0</span>, <span class="bn">0x90</span>, <span class="bn">0xF0</span>, <span class="bn">0x90</span>, <span class="bn">0x90</span>, <span class="co">// A</span>
-    <span class="bn">0xE0</span>, <span class="bn">0x90</span>, <span class="bn">0xE0</span>, <span class="bn">0x90</span>, <span class="bn">0xE0</span>, <span class="co">// B</span>
-    <span class="bn">0xF0</span>, <span class="bn">0x80</span>, <span class="bn">0x80</span>, <span class="bn">0x80</span>, <span class="bn">0xF0</span>, <span class="co">// C</span>
-    <span class="bn">0xE0</span>, <span class="bn">0x90</span>, <span class="bn">0x90</span>, <span class="bn">0x90</span>, <span class="bn">0xE0</span>, <span class="co">// D</span>
-    <span class="bn">0xF0</span>, <span class="bn">0x80</span>, <span class="bn">0xF0</span>, <span class="bn">0x80</span>, <span class="bn">0xF0</span>, <span class="co">// E</span>
-    <span class="bn">0xF0</span>, <span class="bn">0x80</span>, <span class="bn">0xF0</span>, <span class="bn">0x80</span>, <span class="bn">0x80</span>  <span class="co">// F</span>
-};</code></pre></div></li>
-</ul>
+        <span class="bn">0xF0</span>, <span class="bn">0x90</span>, <span class="bn">0x90</span>, <span class="bn">0x90</span>, <span class="bn">0xF0</span>, <span class="co">// 0</span>
+        <span class="bn">0x20</span>, <span class="bn">0x60</span>, <span class="bn">0x20</span>, <span class="bn">0x20</span>, <span class="bn">0x70</span>, <span class="co">// 1</span>
+        <span class="bn">0xF0</span>, <span class="bn">0x10</span>, <span class="bn">0xF0</span>, <span class="bn">0x80</span>, <span class="bn">0xF0</span>, <span class="co">// 2</span>
+        <span class="bn">0xF0</span>, <span class="bn">0x10</span>, <span class="bn">0xF0</span>, <span class="bn">0x10</span>, <span class="bn">0xF0</span>, <span class="co">// 3</span>
+        <span class="bn">0x90</span>, <span class="bn">0x90</span>, <span class="bn">0xF0</span>, <span class="bn">0x10</span>, <span class="bn">0x10</span>, <span class="co">// 4</span>
+        <span class="bn">0xF0</span>, <span class="bn">0x80</span>, <span class="bn">0xF0</span>, <span class="bn">0x10</span>, <span class="bn">0xF0</span>, <span class="co">// 5</span>
+        <span class="bn">0xF0</span>, <span class="bn">0x80</span>, <span class="bn">0xF0</span>, <span class="bn">0x90</span>, <span class="bn">0xF0</span>, <span class="co">// 6</span>
+        <span class="bn">0xF0</span>, <span class="bn">0x10</span>, <span class="bn">0x20</span>, <span class="bn">0x40</span>, <span class="bn">0x40</span>, <span class="co">// 7</span>
+        <span class="bn">0xF0</span>, <span class="bn">0x90</span>, <span class="bn">0xF0</span>, <span class="bn">0x90</span>, <span class="bn">0xF0</span>, <span class="co">// 8</span>
+        <span class="bn">0xF0</span>, <span class="bn">0x90</span>, <span class="bn">0xF0</span>, <span class="bn">0x10</span>, <span class="bn">0xF0</span>, <span class="co">// 9</span>
+        <span class="bn">0xF0</span>, <span class="bn">0x90</span>, <span class="bn">0xF0</span>, <span class="bn">0x90</span>, <span class="bn">0x90</span>, <span class="co">// A</span>
+        <span class="bn">0xE0</span>, <span class="bn">0x90</span>, <span class="bn">0xE0</span>, <span class="bn">0x90</span>, <span class="bn">0xE0</span>, <span class="co">// B</span>
+        <span class="bn">0xF0</span>, <span class="bn">0x80</span>, <span class="bn">0x80</span>, <span class="bn">0x80</span>, <span class="bn">0xF0</span>, <span class="co">// C</span>
+        <span class="bn">0xE0</span>, <span class="bn">0x90</span>, <span class="bn">0x90</span>, <span class="bn">0x90</span>, <span class="bn">0xE0</span>, <span class="co">// D</span>
+        <span class="bn">0xF0</span>, <span class="bn">0x80</span>, <span class="bn">0xF0</span>, <span class="bn">0x80</span>, <span class="bn">0xF0</span>, <span class="co">// E</span>
+        <span class="bn">0xF0</span>, <span class="bn">0x80</span>, <span class="bn">0xF0</span>, <span class="bn">0x80</span>, <span class="bn">0x80</span>  <span class="co">// F</span>
+    };</code></pre></div>
 <p>The emulator itself is very simple. On initialisation, the various arrays and variables are set to zero and the ROM is read to memory.</p>
 <p>When an instruction is read, the opcode is found first by looking at the two bytes at the program counter. These are merged to form the opcode. Next, we work out what the various parts of the opcode might mean. We work out what would be defined if the opcode was manipulating registers, memory, or bytes. This is done so that the case statements don't have right shifts in every case.</p>
 <div class="sourceCode"><pre class="sourceCode cpp"><code class="sourceCode cpp">opcode = memory[pc] &lt;&lt; <span class="dv">8</span> | memory[pc + <span class="dv">1</span>];

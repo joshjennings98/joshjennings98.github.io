@@ -31,36 +31,36 @@ This all results in a very simple to implement emulator.
 
 My CHIP-8 emulator is written in C++.
 
-* The opcodes and vaious pointers are represented as shorts: 
+The opcodes and vaious pointers are represented as shorts: 
 ```c++
 short opcode;
 short I; // index register
 short pc; // program counter
 short sp; // stack pointer
 ```
-* I break the the opcode into what it would represent under different circumstances (what the opcode means). This means that I only need to use bit-shifts once at the beginning of each execution loop. This is as follows:
+I break the the opcode into what it would represent under different circumstances (what the opcode means). This means that I only need to use bit-shifts once at the beginning of each execution loop. This is as follows:
 ```c++
 uint16_t addr;
 uint8_t byte;
 short x;
 short y;
 ```
-* The draw flag is obviosuly represented as a boolean:
+The draw flag is obviosuly represented as a boolean:
 ```c++
 bool drawFlag;
 ```
-* Memory, registers, and the stack are implemented using arrays:
+Memory, registers, and the stack are implemented using arrays:
 ```c++
 uint8_t memory[4096];
 uint8_t v[16];
 short stack[16];
 ```
-* The two timers are 8-bit unsigned variables:
+The two timers are 8-bit unsigned variables:
 ```c++
 uint8_t delayTimer;
 uint8_t soundTimer;
 ```
-* CHIP-8 code starts at address `0x200`. This would usually contain the interpreter itself. Since this is an emulator, we don't need that. Instead we use this space for the fontset that represents the numbers `0x0` to `0xF`:
+CHIP-8 code starts at address `0x200`. This would usually contain the interpreter itself. Since this is an emulator, we don't need that. Instead we use this space for the fontset that represents the numbers `0x0` to `0xF`:
 ```c++
 uint8_t fontset[80] = { 
 		0xF0, 0x90, 0x90, 0x90, 0xF0, // 0

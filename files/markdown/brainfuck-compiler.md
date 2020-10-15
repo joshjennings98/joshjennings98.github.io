@@ -110,15 +110,15 @@ The 8 brainfuck instructions have direct C equivalents:
 
 Using the online decompiler, I determined what each instruction corresponed to in x86 assembly and then used that in the code.
 
-* The `>` instruction becomes:
+The `>` instruction becomes:
 ```asm
 addq    $AMOUNT mod 256, -8(%rbp) ; modulo to act as byte wrapping
 ```
-* The `<` instruction becomes:
+The `<` instruction becomes:
 ```asm
 subq    $AMOUNT mod 256, -8(%rbp) ; modulo to act as byte wrapping
 ```
-* The `+` instruction becomes:
+The `+` instruction becomes:
 ```asm
 movq    -8(%rbp), %rax
 movzbl  (%rax), %eax
@@ -127,7 +127,7 @@ movl    %eax, %edx
 movq    -8(%rbp), %rax
 movb    %dl, (%rax)
 ```
-* The `-` instruction becomes:
+The `-` instruction becomes:
 ```asm
 movq    -8(%rbp), %rax
 movzbl  (%rax), %eax
@@ -136,7 +136,7 @@ movl    %eax, %edx
 movq    -8(%rbp), %rax
 movb    %dl, (%rax)
 ```
-* The `.` instruction becomes:
+The `.` instruction becomes: 
 ```asm
 movq    -8(%rbp), %rax
 movzbl  (%rax), %eax
@@ -144,14 +144,14 @@ movsbl  %al, %eax
 movl    %eax, %edi
 call    putchar
 ```
-* The `,` instruction becomes:
+The `,` instruction becomes:
 ```asm
 call    getchar
 movl    %eax, %edx
 movq    -8(%rbp), %rax
 movb    %dl, (%rax)
 ```
-* The `[` instruction becomes:
+The `[` instruction becomes:
 ```asm
 .LA
 movq    -8(%rbp), %rax
@@ -159,12 +159,12 @@ movzbl  (%rax), %eax
 testb   %al, %al
 je      .LB
 ```
-* The `]` instruction becomes:
+The `]` instruction becomes:
 ```asm
 jmp     .LA
 .LB
 ```
-* The optimiser gives the ability to add or subtract an `AMOUNT` to a tape location `OFFSET` away from the pointer `PTR`. This is implemented using:
+The optimiser gives the ability to add or subtract an `AMOUNT` to a tape location `OFFSET` away from the pointer `PTR`. This is implemented using:
 ```asm
 movq    -8(%rbp), %rax
 addq    $PTRaddOFFSET, %rax

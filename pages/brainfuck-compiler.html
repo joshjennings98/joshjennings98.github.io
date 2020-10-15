@@ -217,54 +217,52 @@ code > span.in { color: #7f9f7f; font-weight: bold; } /* Information */
 </tbody>
 </table>
 <p>Using the online decompiler, I determined what each instruction corresponed to in x86 assembly and then used that in the code.</p>
-<ul>
-<li><p>The <code>&gt;</code> instruction becomes:</p>
-<div class="sourceCode"><pre class="sourceCode asm"><code class="sourceCode fasm">addq    <span class="dv">$</span>AMOUNT mod <span class="dv">256</span>, <span class="dv">-8</span>(%<span class="kw">rbp</span>) <span class="co">; modulo to act as byte wrapping</span></code></pre></div></li>
-<li><p>The <code>&lt;</code> instruction becomes:</p>
-<div class="sourceCode"><pre class="sourceCode asm"><code class="sourceCode fasm">subq    <span class="dv">$</span>AMOUNT mod <span class="dv">256</span>, <span class="dv">-8</span>(%<span class="kw">rbp</span>) <span class="co">; modulo to act as byte wrapping</span></code></pre></div></li>
-<li><p>The <code>+</code> instruction becomes:</p>
+<p>The <code>&gt;</code> instruction becomes:</p>
+<div class="sourceCode"><pre class="sourceCode asm"><code class="sourceCode fasm">addq    <span class="dv">$</span>AMOUNT mod <span class="dv">256</span>, <span class="dv">-8</span>(%<span class="kw">rbp</span>) <span class="co">; modulo to act as byte wrapping</span></code></pre></div>
+<p>The <code>&lt;</code> instruction becomes:</p>
+<div class="sourceCode"><pre class="sourceCode asm"><code class="sourceCode fasm">subq    <span class="dv">$</span>AMOUNT mod <span class="dv">256</span>, <span class="dv">-8</span>(%<span class="kw">rbp</span>) <span class="co">; modulo to act as byte wrapping</span></code></pre></div>
+<p>The <code>+</code> instruction becomes:</p>
 <div class="sourceCode"><pre class="sourceCode asm"><code class="sourceCode fasm"><span class="bu">movq</span>    <span class="dv">-8</span>(%<span class="kw">rbp</span>), %<span class="kw">rax</span>
 movzbl  (%<span class="kw">rax</span>), %<span class="kw">eax</span>
 addl    <span class="dv">$</span>AMOUNT, %<span class="kw">eax</span> <span class="co">; the optimiser combines multiple +</span>
 movl    %<span class="kw">eax</span>, %<span class="kw">edx</span>
 <span class="bu">movq</span>    <span class="dv">-8</span>(%<span class="kw">rbp</span>), %<span class="kw">rax</span>
-movb    %<span class="kw">dl</span>, (%<span class="kw">rax</span>)</code></pre></div></li>
-<li><p>The <code>-</code> instruction becomes:</p>
+movb    %<span class="kw">dl</span>, (%<span class="kw">rax</span>)</code></pre></div>
+<p>The <code>-</code> instruction becomes:</p>
 <div class="sourceCode"><pre class="sourceCode asm"><code class="sourceCode fasm"><span class="bu">movq</span>    <span class="dv">-8</span>(%<span class="kw">rbp</span>), %<span class="kw">rax</span>
 movzbl  (%<span class="kw">rax</span>), %<span class="kw">eax</span>
 subl    <span class="dv">$</span>AMOUNT, %<span class="kw">eax</span> <span class="co">; the optimiser combines multiple -</span>
 movl    %<span class="kw">eax</span>, %<span class="kw">edx</span>
 <span class="bu">movq</span>    <span class="dv">-8</span>(%<span class="kw">rbp</span>), %<span class="kw">rax</span>
-movb    %<span class="kw">dl</span>, (%<span class="kw">rax</span>)</code></pre></div></li>
-<li><p>The <code>.</code> instruction becomes:</p>
+movb    %<span class="kw">dl</span>, (%<span class="kw">rax</span>)</code></pre></div>
+<p>The <code>.</code> instruction becomes:</p>
 <div class="sourceCode"><pre class="sourceCode asm"><code class="sourceCode fasm"><span class="bu">movq</span>    <span class="dv">-8</span>(%<span class="kw">rbp</span>), %<span class="kw">rax</span>
 movzbl  (%<span class="kw">rax</span>), %<span class="kw">eax</span>
 movsbl  %<span class="kw">al</span>, %<span class="kw">eax</span>
 movl    %<span class="kw">eax</span>, %<span class="kw">edi</span>
-<span class="bu">call</span>    putchar</code></pre></div></li>
-<li><p>The <code>,</code> instruction becomes:</p>
+<span class="bu">call</span>    putchar</code></pre></div>
+<p>The <code>,</code> instruction becomes:</p>
 <div class="sourceCode"><pre class="sourceCode asm"><code class="sourceCode fasm"><span class="bu">call</span>    getchar
 movl    %<span class="kw">eax</span>, %<span class="kw">edx</span>
 <span class="bu">movq</span>    <span class="dv">-8</span>(%<span class="kw">rbp</span>), %<span class="kw">rax</span>
-movb    %<span class="kw">dl</span>, (%<span class="kw">rax</span>)</code></pre></div></li>
-<li><p>The <code>[</code> instruction becomes:</p>
+movb    %<span class="kw">dl</span>, (%<span class="kw">rax</span>)</code></pre></div>
+<p>The <code>[</code> instruction becomes:</p>
 <div class="sourceCode"><pre class="sourceCode asm"><code class="sourceCode fasm">.LA
 <span class="bu">movq</span>    <span class="dv">-8</span>(%<span class="kw">rbp</span>), %<span class="kw">rax</span>
 movzbl  (%<span class="kw">rax</span>), %<span class="kw">eax</span>
 testb   %<span class="kw">al</span>, %<span class="kw">al</span>
-<span class="bu">je</span>      .LB</code></pre></div></li>
-<li><p>The <code>]</code> instruction becomes:</p>
+<span class="bu">je</span>      .LB</code></pre></div>
+<p>The <code>]</code> instruction becomes:</p>
 <div class="sourceCode"><pre class="sourceCode asm"><code class="sourceCode fasm"><span class="bu">jmp</span>     .LA
-.LB</code></pre></div></li>
-<li><p>The optimiser gives the ability to add or subtract an <code>AMOUNT</code> to a tape location <code>OFFSET</code> away from the pointer <code>PTR</code>. This is implemented using:</p>
+.LB</code></pre></div>
+<p>The optimiser gives the ability to add or subtract an <code>AMOUNT</code> to a tape location <code>OFFSET</code> away from the pointer <code>PTR</code>. This is implemented using:</p>
 <div class="sourceCode"><pre class="sourceCode asm"><code class="sourceCode fasm"><span class="bu">movq</span>    <span class="dv">-8</span>(%<span class="kw">rbp</span>), %<span class="kw">rax</span>
 addq    <span class="dv">$</span>PTRaddOFFSET, %<span class="kw">rax</span>
 movzbl  (%<span class="kw">rax</span>), %<span class="kw">eax</span>
 leal    AMMOUNT(%<span class="kw">rax</span>), %<span class="kw">edx</span> <span class="co">; negative amount for subtraction</span>
 <span class="bu">movq</span>    <span class="dv">-8</span>(%<span class="kw">rbp</span>), %<span class="kw">rax</span>
 addq    <span class="dv">$</span>PTRaddOFFSET, %<span class="kw">rax</span>
-movb    %<span class="kw">dl</span>, (%<span class="kw">rax</span>)</code></pre></div></li>
-</ul>
+movb    %<span class="kw">dl</span>, (%<span class="kw">rax</span>)</code></pre></div>
 <p>The neccesary header and footer information for the assmbler to link the code correctly is also added in this function.</p>
 <h2 id="installation-and-usage">Installation and Usage</h2>
 <p><strong>Prerequisites</strong></p>
