@@ -176,7 +176,9 @@ y = (opcode &amp; <span class="bn">0x00F0</span>) &gt;&gt; <span class="dv">4</s
 +-+-+-+-+                +-+-+-+-+</code></pre>
 <p>This input is handled using the SDL2 library. When the emulator is waiting for input we use the SDL events to determine which key is pressed. This is done by keeping the keys in an array and using a while loop to handle key press and release events. These are all done every cycle along with the opcode decoding and execution.</p>
 <div class="sourceCode"><pre class="sourceCode cpp"><code class="sourceCode cpp"><span class="co">// Keypad array</span>
-<span class="dt">uint8_t</span> keys[<span class="dv">16</span>] = {SDLK_x, SDLK_1, SDLK_2, SDLK_3, SDLK_q, SDLK_w, SDLK_e, SDLK_a, SDLK_s, SDLK_d, SDLK_z, SDLK_c, SDLK_4, SDLK_r, SDLK_f, SDLK_v};
+<span class="dt">uint8_t</span> keys[<span class="dv">16</span>] = {SDLK_x, SDLK_1, SDLK_2, SDLK_3, 
+    SDLK_q, SDLK_w, SDLK_e, SDLK_a, SDLK_s, SDLK_d, 
+    SDLK_z, SDLK_c, SDLK_4, SDLK_r, SDLK_f, SDLK_v};
 
 <span class="co">// Handle SDL events</span>
 <span class="cf">while</span> (SDL_PollEvent(&amp;e)) {
