@@ -119,6 +119,9 @@ div.fancyPositioning:after {
 		float:none;
 		width:inherit;
 	}
+	pre {
+		font-size: 14px;
+	}
 }
 
 div#test {
