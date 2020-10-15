@@ -119,13 +119,17 @@ div.fancyPositioning:after {
 		float:none;
 		width:inherit;
 	}
-}
 
-@media (hover: none) {
 	pre {
 		font-size: 14px;
 	}
-}  
+}
+
+@media screen and (max-height:500px) { 
+	pre {
+		font-size: 14px;
+	}
+}    
 
 div#test {
 	color:#000;
