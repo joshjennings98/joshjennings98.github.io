@@ -123,7 +123,7 @@ def markdownToHTML(inputFile : str, outputFile : str = "") -> str:
     content = content.replace("</figure>", "</figure></div>\n<div class=\"tleft\">")
     content = content.replace("<picture>", "<div class=\"fancyPositioning\">")
     content = content.replace("</picture>", "</div>\n</div>")
-    content = content.replace("<style type=\"text/css\">code{white-space: pre;}</style>", "")
+    #content = content.replace("<style type=\"text/css\">code{white-space: pre;}</style>", "")
 
     webpage = f"""<!DOCTYPE html>
         <html class="inverted" lang="en">
