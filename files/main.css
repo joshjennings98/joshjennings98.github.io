@@ -17,6 +17,18 @@ pre {
 	word-wrap: break-word;
 }
 
+div.fancyPositioning div.picture-left img {
+	width: 100%;
+}
+
+div.fancyPositioning div.picture-left figure {
+	margin: 0px;
+}
+
+div.fancyPositioning div.picture-left figure figcaption {
+	font-size: .7em;
+}
+
 html.test body {
 	color:#050505;
 }
