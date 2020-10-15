@@ -184,17 +184,29 @@ That's it. As stated at the beginning, a CHIP-8 emulator is very easy to write. 
 
 **Prerequisites**
 
-This emulator utilises SDL2 for graphics. If you are using Ubuntu this can be easily installed by running `sudo apt-get install libsdl2-dev` in the terminal.
+This emulator utilises SDL2 for graphics. If you are using Ubuntu this can be easily installed by running:
+```bash
+sudo apt-get install libsdl2-dev
+```
 
 For other operating systems see [this page from the libsdl wiki](https://wiki.libsdl.org/Installation).
 
 **Installation**
 
-Compile with `g++ main.cpp -o chip8 -l SDL2 `
+Compile with 
+```bash
+g++ main.cpp -o chip8 -l SDL2
+```
 
-Run with `./chip8 <ROM> <width> <height>`
+Run with:
+```bash
+./chip8 <ROM> <width> <height>
+```
 
-Alternatively, run `./chip8 <ROM>` for a window with `width=1024`, and `height=512`.
+Alternatively, run:
+```bash
+./chip8 <ROM> # will create a window with width=1024, and height=512
+```
 
 **ROMS**
 

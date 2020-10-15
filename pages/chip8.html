@@ -205,12 +205,16 @@ y = (opcode &amp; <span class="bn">0x00F0</span>) &gt;&gt; <span class="dv">4</s
 <p>That's it. As stated at the beginning, a CHIP-8 emulator is very easy to write. Information on installation and usage can be seen below.</p>
 <h2 id="installation-and-usage">Installation and Usage</h2>
 <p><strong>Prerequisites</strong></p>
-<p>This emulator utilises SDL2 for graphics. If you are using Ubuntu this can be easily installed by running <code>sudo apt-get install libsdl2-dev</code> in the terminal.</p>
+<p>This emulator utilises SDL2 for graphics. If you are using Ubuntu this can be easily installed by running:</p>
+<div class="sourceCode"><pre class="sourceCode bash"><code class="sourceCode bash"><span class="fu">sudo</span> apt-get install libsdl2-dev</code></pre></div>
 <p>For other operating systems see <a href="https://wiki.libsdl.org/Installation">this page from the libsdl wiki</a>.</p>
 <p><strong>Installation</strong></p>
-<p>Compile with <code>g++ main.cpp -o chip8 -l SDL2</code></p>
-<p>Run with <code>./chip8 &lt;ROM&gt; &lt;width&gt; &lt;height&gt;</code></p>
-<p>Alternatively, run <code>./chip8 &lt;ROM&gt;</code> for a window with <code>width=1024</code>, and <code>height=512</code>.</p>
+<p>Compile with</p>
+<div class="sourceCode"><pre class="sourceCode bash"><code class="sourceCode bash"><span class="ex">g++</span> main.cpp -o chip8 -l SDL2</code></pre></div>
+<p>Run with:</p>
+<div class="sourceCode"><pre class="sourceCode bash"><code class="sourceCode bash"><span class="ex">./chip8</span> <span class="op">&lt;</span>ROM<span class="op">&gt;</span> <span class="op">&lt;</span>width<span class="op">&gt;</span> <span class="op">&lt;</span>height<span class="op">&gt;</span></code></pre></div>
+<p>Alternatively, run:</p>
+<div class="sourceCode"><pre class="sourceCode bash"><code class="sourceCode bash"><span class="ex">./chip8</span> <span class="op">&lt;</span>ROM<span class="op">&gt;</span> <span class="co"># will create a window with width=1024, and height=512</span></code></pre></div>
 <p><strong>ROMS</strong></p>
 <p>The <a href="https://github.com/joshjennings98/chip8">GitHub repository</a> includes a two player game of pong at <code>pong.ch8</code>.</p>
 <p>For some more roms to try out, see <a href="https://github.com/loktar00/chip8/tree/master/roms">this GitHub repo</a>.</p>
