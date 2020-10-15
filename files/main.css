@@ -15,7 +15,6 @@ pre {
 	overflow-x: auto;
 	white-space: pre-wrap;
 	word-wrap: break-word;
-	font-size: 14px;
 }
 
 div.fancyPositioning div.picture-left img {
@@ -119,6 +118,10 @@ div.fancyPositioning:after {
 	div.fancyPositioning div.picture-left, div.fancyPositioning div.tleft {
 		float:none;
 		width:inherit;
+	}
+
+	pre {
+		font-size: 14px;
 	}
 }
 
