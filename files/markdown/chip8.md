@@ -193,7 +193,7 @@ For other operating systems see [this page from the libsdl wiki](https://wiki.li
 
 **Installation**
 
-Compile with 
+Compile with:
 ```bash
 g++ main.cpp -o chip8 -l SDL2
 ```
@@ -203,9 +203,9 @@ Run with:
 ./chip8 <ROM> <width> <height>
 ```
 
-Alternatively, run:
+Alternatively, you can specify only the rom file for a window of `width=1024`, and `height=512`:
 ```bash
-./chip8 <ROM> # will create a window with width=1024, and height=512
+./chip8 <ROM>
 ```
 
 **ROMS**
