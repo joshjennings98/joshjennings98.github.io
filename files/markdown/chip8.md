@@ -208,7 +208,7 @@ To see the controls, read the implementation section.
 
 These resources were helpful when I programmed this:
 
-* [http://devernay.free.fr/hacks/chip8/C8TECH10.HTM](http://devernay.free.fr/hacks/chip8/C8TECH10.HTM)
+* [http://devernay.free.fr/hacks/chip8](http://devernay.free.fr/hacks/chip8/C8TECH10.HTM)
 * [http://www.multigesture.net/articles/how-to-write-an-emulator-chip-8-interpreter/](http://www.multigesture.net/articles/how-to-write-an-emulator-chip-8-interpreter/)
 * [https://en.wikipedia.org/wiki/CHIP-8](https://en.wikipedia.org/wiki/CHIP-8)
 * [https://mir3z.github.io/chip8-emu/](https://mir3z.github.io/chip8-emu/)
