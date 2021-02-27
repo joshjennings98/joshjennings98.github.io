@@ -30,7 +30,7 @@ div.fancyPositioning div.picture-left figure figcaption {
 }
 
 html.test body {
-	color:#050505;
+	color:#0d1117;
 }
 
 html.inverted a:link {
@@ -59,7 +59,7 @@ html:not(.inverted) a#title:visited, a#title:link {
 
 @media screen and (prefers-color-scheme:light) {
 	html.inverted{ 
-		background-color:#050505;
+		background-color:#0d1117;
 	}
 
 	html.inverted body {
@@ -68,13 +68,13 @@ html:not(.inverted) a#title:visited, a#title:link {
 
 	html.inverted div#test, html.inverted div#invmode {
 		color:#eee; 
-		background-color:#050505;
+		background-color:#0d1117;
 	}
 }
 
 @media (prefers-color-scheme:dark) {
 	html:not(.inverted) {
-		background-color:#050505;
+		background-color:#0d1117;
 	}
 
 	html:not(.inverted) body {
@@ -83,7 +83,7 @@ html:not(.inverted) a#title:visited, a#title:link {
 
 	html:not(.inverted) div#test, html:not(.inverted) div#invmode {
 		color:#eee;  
-		background-color:#050505;
+		background-color:#0d1117;
 	}
 }
 
