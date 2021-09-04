@@ -20,26 +20,38 @@ jobs:
         python-version: 3.8
     - name: Install dependencies
       run: |
-        pip3 install -r build_scripts/requirements.txt
-        if [ "$RUNNER_OS" == "Linux" ]; then
-          sudo apt install pandoc
-        elif [ "$RUNNER_OS" == "Windows" ]; then
-          python setup.py download_pandoc
+        if [[ $(git diff HEAD^ files/src/) ]] ; then
+          pip3 install -r build_scripts/requirements.txt
+          if [[ $(git diff HEAD^ files/src/**.md) ]] ; then
+            sudo apt install pandoc
+          fi
         else
-          sudo brew install pandoc
+          echo "Nothing to rebuild so skipping dependency install."
         fi
     - name: Generate webpages from markdown files
       run: |
-        python3 build_scripts/generate_webpages.py -m files/src/ -t files/templates/ -s /files/website.css -o pages/ -f /files
+        if [[ $(git diff HEAD^ files/src/**.md) ]] ; then
+          python3 build_scripts/generate_webpages.py -m files/src/ -t files/templates/ -s /files/website.css -o pages/ -f /files
+        else
+          echo "Skipping stage as no markdown files were modified."
+        fi
     - name: Generate CV from YAML
       run: |
-        python3 build_scripts/generate_cv.py -c files/src/cv.yaml -t files/templates/cv.html.template -o pages/CV-Josh-Jennings.html
+        if [[ $(git diff HEAD^ files/src/cv.yaml) ]] ; then
+          python3 build_scripts/generate_cv.py -c files/src/cv.yaml -t files/templates/cv.html.template -o pages/CV-Josh-Jennings.html
+        else
+          echo "Skipping stage as CV wasn't modified."
+        fi
     - name: Commit changes
       run: |
         git config --local user.email "41898282+github-actions[bot]@users.noreply.github.com"
         git config --local user.name "github-actions[bot]"
         git add .
-        git commit -m "Build website - $(date)." --allow-empty
+        if [[ $(git diff --cached files/src/) ]] ; then
+          git commit -m "Build website - $(date)."
+        else
+          echo "No changes to src directory. Aborting deploy."
+        fi
     - name: Push changes ready for Github Pages to deploy
       uses: ad-m/github-push-action@master
       with:
