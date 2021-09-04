@@ -1,68 +1,94 @@
 <!DOCTYPE html>
-        <html class="inverted" lang="en">
-        <head>
-        <meta http-equiv="content-type" content="text/html; charset=UTF-8">
-        <meta charset="utf-8">
-        <meta name="theme-color" content="#ffffff">
-        <title>Brainfuck Compiler - joshj.dev</title>
-        <meta name="viewport" content="width=device-width, initial-scale=1.0">
-        <meta name="description" content="Josh's website and portfolio.">
-        <link rel="stylesheet" type="text/css" href="../files/main.css">
-        <!-- Icons-->
-        <link rel="apple-touch-icon" sizes="180x180" href="../files/icons/apple-touch-icon.png">
-        <link rel="icon" type="image/png" sizes="32x32" href="../files/icons/favicon-32x32.png">
-        <link rel="icon" type="image/png" sizes="16x16" href="../files/icons/favicon-16x16.png">
-        </head>
-        <body>
-        <!DOCTYPE html>
-<html>
+<html class="inverted" lang="en">
 <head>
-  <meta charset="utf-8">
-  <meta name="generator" content="pandoc">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
-  <title></title>
-  <style type="text/css">code{white-space: pre;}</style>
+<meta http-equiv="content-type" content="text/html; charset=UTF-8">
+<meta charset="utf-8">
+<meta name="theme-color" content="#ffffff">
+<title>Brainfuck Compiler - joshj.dev</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="description" content="Josh's website and portfolio.">
+<link rel="stylesheet" type="text/css" href="/files/website.css">
+<!-- Icons-->
+<link rel="apple-touch-icon" sizes="180x180" href="/files/icons/apple-touch-icon.png">
+<link rel="icon" type="image/png" sizes="32x32" href="/files/icons/favicon-32x32.png">
+<link rel="icon" type="image/png" sizes="16x16" href="/files/icons/favicon-16x16.png">
+</head>
+<body>
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="" xml:lang="">
+<head>
+  <meta charset="utf-8" />
+  <meta name="generator" content="pandoc" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes" />
+  <title>Untitled</title>
   <style type="text/css">
-div.sourceCode { overflow-x: auto; }
-table.sourceCode, tr.sourceCode, td.lineNumbers, td.sourceCode {
-  margin: 0; padding: 0; vertical-align: baseline; border: none; }
-table.sourceCode { width: 100%; line-height: 100%; background-color: #303030; color: #cccccc; }
-td.lineNumbers { text-align: right; padding-right: 4px; padding-left: 4px; }
-td.sourceCode { padding-left: 5px; }
-pre { color: #cccccc; background-color: #303030; }
-code > span.kw { color: #f0dfaf; } /* Keyword */
-code > span.dt { color: #dfdfbf; } /* DataType */
-code > span.dv { color: #dcdccc; } /* DecVal */
-code > span.bn { color: #dca3a3; } /* BaseN */
-code > span.fl { color: #c0bed1; } /* Float */
-code > span.ch { color: #dca3a3; } /* Char */
-code > span.st { color: #cc9393; } /* String */
-code > span.co { color: #7f9f7f; } /* Comment */
-code > span.ot { color: #efef8f; } /* Other */
-code > span.al { color: #ffcfaf; } /* Alert */
-code > span.fu { color: #efef8f; } /* Function */
-code > span.er { color: #c3bf9f; } /* Error */
-code > span.wa { color: #7f9f7f; font-weight: bold; } /* Warning */
-code > span.cn { color: #dca3a3; font-weight: bold; } /* Constant */
-code > span.sc { color: #dca3a3; } /* SpecialChar */
-code > span.vs { color: #cc9393; } /* VerbatimString */
-code > span.ss { color: #cc9393; } /* SpecialString */
-code > span.im { } /* Import */
-code > span.va { } /* Variable */
-code > span.cf { color: #f0dfaf; } /* ControlFlow */
-code > span.op { color: #f0efd0; } /* Operator */
-code > span.bu { } /* BuiltIn */
-code > span.ex { } /* Extension */
-code > span.pp { color: #ffcfaf; font-weight: bold; } /* Preprocessor */
-code > span.at { } /* Attribute */
-code > span.do { color: #7f9f7f; } /* Documentation */
-code > span.an { color: #7f9f7f; font-weight: bold; } /* Annotation */
-code > span.cv { color: #7f9f7f; font-weight: bold; } /* CommentVar */
-code > span.in { color: #7f9f7f; font-weight: bold; } /* Information */
+      code{white-space: pre-wrap;}
+      span.smallcaps{font-variant: small-caps;}
+      span.underline{text-decoration: underline;}
+      div.column{display: inline-block; vertical-align: top; width: 50%;}
   </style>
-  <!--[if lt IE 9]>
-    <script src="//cdnjs.cloudflare.com/ajax/libs/html5shiv/3.7.3/html5shiv-printshiv.min.js"></script>
-  <![endif]-->
+  <style type="text/css">
+a.sourceLine { display: inline-block; line-height: 1.25; }
+a.sourceLine { pointer-events: none; color: inherit; text-decoration: inherit; }
+a.sourceLine:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode { white-space: pre; position: relative; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+code.sourceCode { white-space: pre-wrap; }
+a.sourceLine { text-indent: -1em; padding-left: 1em; }
+}
+pre.numberSource a.sourceLine
+  { position: relative; left: -4em; }
+pre.numberSource a.sourceLine::before
+  { content: attr(title);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; pointer-events: all; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+  }
+pre.numberSource { margin-left: 3em;  padding-left: 4px; }
+div.sourceCode
+  { color: #cccccc; background-color: #303030; }
+@media screen {
+a.sourceLine::before { text-decoration: underline; }
+}
+code span.al { color: #ffcfaf; } /* Alert */
+code span.an { color: #7f9f7f; font-weight: bold; } /* Annotation */
+code span.at { } /* Attribute */
+code span.bn { color: #dca3a3; } /* BaseN */
+code span.bu { } /* BuiltIn */
+code span.cf { color: #f0dfaf; } /* ControlFlow */
+code span.ch { color: #dca3a3; } /* Char */
+code span.cn { color: #dca3a3; font-weight: bold; } /* Constant */
+code span.co { color: #7f9f7f; } /* Comment */
+code span.cv { color: #7f9f7f; font-weight: bold; } /* CommentVar */
+code span.do { color: #7f9f7f; } /* Documentation */
+code span.dt { color: #dfdfbf; } /* DataType */
+code span.dv { color: #dcdccc; } /* DecVal */
+code span.er { color: #c3bf9f; } /* Error */
+code span.ex { } /* Extension */
+code span.fl { color: #c0bed1; } /* Float */
+code span.fu { color: #efef8f; } /* Function */
+code span.im { } /* Import */
+code span.in { color: #7f9f7f; font-weight: bold; } /* Information */
+code span.kw { color: #f0dfaf; } /* Keyword */
+code span.op { color: #f0efd0; } /* Operator */
+code span.ot { color: #efef8f; } /* Other */
+code span.pp { color: #ffcfaf; font-weight: bold; } /* Preprocessor */
+code span.sc { color: #dca3a3; } /* SpecialChar */
+code span.ss { color: #cc9393; } /* SpecialString */
+code span.st { color: #cc9393; } /* String */
+code span.va { } /* Variable */
+code span.vs { color: #cc9393; } /* VerbatimString */
+code span.wa { color: #7f9f7f; font-weight: bold; } /* Warning */
+  </style>
 </head>
 <body>
 <h1 id="brainfuck-compiler">Brainfuck Compiler</h1>
@@ -70,7 +96,7 @@ code > span.in { color: #7f9f7f; font-weight: bold; } /* Information */
 <p><intro date="16/09/2019"></p>
 <div class="picture-left">
 <figure>
-<img src="../files/images/bf_hello_world.png" alt="Simple &#39;Hello World&#39; program in Brainfuck" /><figcaption>Simple 'Hello World' program in Brainfuck</figcaption>
+<img src="/files../files/images/bf_hello_world.png" alt="Simple ‘Hello World’ program in Brainfuck" /><figcaption>Simple ‘Hello World’ program in Brainfuck</figcaption>
 </figure></div>
 <div class="tleft">
 <p>Brainfuck is an very simple programming language that consists of only eight instructions. This is an optimising brainfuck to x86 assembly compiler written in F#.</p>
@@ -142,20 +168,20 @@ code > span.in { color: #7f9f7f; font-weight: bold; } /* Information */
 </ul>
 <h3 id="tokeniser.fs">Tokeniser.fs</h3>
 <p>This module generates a list of basic tokens from the input string. Brainfuck documentation says that all invalid characters are ignored and so part of the tokenisers job is to filter out all invalid characters.</p>
-<div class="sourceCode"><pre class="sourceCode fsharp"><code class="sourceCode fsharp"><span class="kw">let</span> validChars = <span class="co">(* Used to filter invalid characters *)</span>
-    [<span class="ch">&#39;[&#39;</span>; <span class="ch">&#39;]&#39;</span>;<span class="ch">&#39;&gt;&#39;</span>; <span class="ch">&#39;&lt;&#39;</span>; <span class="ch">&#39;+&#39;</span>; <span class="ch">&#39;-&#39;</span>; <span class="ch">&#39;.&#39;</span>; <span class="ch">&#39;,&#39;</span>]
-
-<span class="kw">let</span> toInstruction (ch : <span class="dt">char</span>) : Instruction =
-    <span class="kw">match</span> ch <span class="kw">with</span>
-    | <span class="ch">&#39;[&#39;</span> -&gt; LB
-    | <span class="ch">&#39;]&#39;</span> -&gt; RB
-    | <span class="ch">&#39;&gt;&#39;</span> -&gt; IncPtr
-    | <span class="ch">&#39;&lt;&#39;</span> -&gt; DecPtr
-    | <span class="ch">&#39;+&#39;</span> -&gt; IncLoc
-    | <span class="ch">&#39;-&#39;</span> -&gt; DecLoc
-    | <span class="ch">&#39;.&#39;</span> -&gt; Write
-    | <span class="ch">&#39;,&#39;</span> -&gt; Get
-    | _ -&gt; failwithf <span class="st">&quot;Won&#39;t happen since all other characters are filtered out prior to this being evaluated.&quot;</span></code></pre></div>
+<div class="sourceCode" id="cb1"><pre class="sourceCode fsharp"><code class="sourceCode fsharp"><a class="sourceLine" id="cb1-1" title="1"><span class="kw">let</span> validChars = <span class="co">(* Used to filter invalid characters *)</span></a>
+<a class="sourceLine" id="cb1-2" title="2">    [<span class="ch">&#39;[&#39;</span>; <span class="ch">&#39;]&#39;</span>;<span class="ch">&#39;&gt;&#39;</span>; <span class="ch">&#39;&lt;&#39;</span>; <span class="ch">&#39;+&#39;</span>; <span class="ch">&#39;-&#39;</span>; <span class="ch">&#39;.&#39;</span>; <span class="ch">&#39;,&#39;</span>]</a>
+<a class="sourceLine" id="cb1-3" title="3"></a>
+<a class="sourceLine" id="cb1-4" title="4"><span class="kw">let</span> toInstruction (ch : <span class="dt">char</span>) : Instruction =</a>
+<a class="sourceLine" id="cb1-5" title="5">    <span class="kw">match</span> ch <span class="kw">with</span></a>
+<a class="sourceLine" id="cb1-6" title="6">    | <span class="ch">&#39;[&#39;</span> -&gt; LB</a>
+<a class="sourceLine" id="cb1-7" title="7">    | <span class="ch">&#39;]&#39;</span> -&gt; RB</a>
+<a class="sourceLine" id="cb1-8" title="8">    | <span class="ch">&#39;&gt;&#39;</span> -&gt; IncPtr</a>
+<a class="sourceLine" id="cb1-9" title="9">    | <span class="ch">&#39;&lt;&#39;</span> -&gt; DecPtr</a>
+<a class="sourceLine" id="cb1-10" title="10">    | <span class="ch">&#39;+&#39;</span> -&gt; IncLoc</a>
+<a class="sourceLine" id="cb1-11" title="11">    | <span class="ch">&#39;-&#39;</span> -&gt; DecLoc</a>
+<a class="sourceLine" id="cb1-12" title="12">    | <span class="ch">&#39;.&#39;</span> -&gt; Write</a>
+<a class="sourceLine" id="cb1-13" title="13">    | <span class="ch">&#39;,&#39;</span> -&gt; Get</a>
+<a class="sourceLine" id="cb1-14" title="14">    | _ -&gt; failwithf <span class="st">&quot;Won&#39;t happen since all other characters are filtered out prior to this being evaluated.&quot;</span></a></code></pre></div>
 <h3 id="optimiser.fs">Optimiser.fs</h3>
 <p>This module applies several optimisations to the tokenised list:</p>
 <ul>
@@ -218,78 +244,78 @@ code > span.in { color: #7f9f7f; font-weight: bold; } /* Information */
 </table>
 <p>Using the online decompiler, I determined what each instruction corresponed to in x86 assembly and then used that in the code.</p>
 <p>The <code>&gt;</code> instruction becomes:</p>
-<div class="sourceCode"><pre class="sourceCode asm"><code class="sourceCode fasm">addq    <span class="dv">$</span>AMOUNT mod <span class="dv">256</span>, <span class="dv">-8</span>(%<span class="kw">rbp</span>) <span class="co">; modulo to act as byte wrapping</span></code></pre></div>
+<div class="sourceCode" id="cb2"><pre class="sourceCode asm"><code class="sourceCode fasm"><a class="sourceLine" id="cb2-1" title="1">addq    <span class="dv">$</span>AMOUNT mod <span class="dv">256</span>, <span class="dv">-8</span>(%<span class="kw">rbp</span>) <span class="co">; modulo to act as byte wrapping</span></a></code></pre></div>
 <p>The <code>&lt;</code> instruction becomes:</p>
-<div class="sourceCode"><pre class="sourceCode asm"><code class="sourceCode fasm">subq    <span class="dv">$</span>AMOUNT mod <span class="dv">256</span>, <span class="dv">-8</span>(%<span class="kw">rbp</span>) <span class="co">; modulo to act as byte wrapping</span></code></pre></div>
+<div class="sourceCode" id="cb3"><pre class="sourceCode asm"><code class="sourceCode fasm"><a class="sourceLine" id="cb3-1" title="1">subq    <span class="dv">$</span>AMOUNT mod <span class="dv">256</span>, <span class="dv">-8</span>(%<span class="kw">rbp</span>) <span class="co">; modulo to act as byte wrapping</span></a></code></pre></div>
 <p>The <code>+</code> instruction becomes:</p>
-<div class="sourceCode"><pre class="sourceCode asm"><code class="sourceCode fasm"><span class="bu">movq</span>    <span class="dv">-8</span>(%<span class="kw">rbp</span>), %<span class="kw">rax</span>
-movzbl  (%<span class="kw">rax</span>), %<span class="kw">eax</span>
-addl    <span class="dv">$</span>AMOUNT, %<span class="kw">eax</span> <span class="co">; the optimiser combines multiple +</span>
-movl    %<span class="kw">eax</span>, %<span class="kw">edx</span>
-<span class="bu">movq</span>    <span class="dv">-8</span>(%<span class="kw">rbp</span>), %<span class="kw">rax</span>
-movb    %<span class="kw">dl</span>, (%<span class="kw">rax</span>)</code></pre></div>
+<div class="sourceCode" id="cb4"><pre class="sourceCode asm"><code class="sourceCode fasm"><a class="sourceLine" id="cb4-1" title="1"><span class="bu">movq</span>    <span class="dv">-8</span>(%<span class="kw">rbp</span>), %<span class="kw">rax</span></a>
+<a class="sourceLine" id="cb4-2" title="2">movzbl  (%<span class="kw">rax</span>), %<span class="kw">eax</span></a>
+<a class="sourceLine" id="cb4-3" title="3">addl    <span class="dv">$</span>AMOUNT, %<span class="kw">eax</span> <span class="co">; the optimiser combines multiple +</span></a>
+<a class="sourceLine" id="cb4-4" title="4">movl    %<span class="kw">eax</span>, %<span class="kw">edx</span></a>
+<a class="sourceLine" id="cb4-5" title="5"><span class="bu">movq</span>    <span class="dv">-8</span>(%<span class="kw">rbp</span>), %<span class="kw">rax</span></a>
+<a class="sourceLine" id="cb4-6" title="6">movb    %<span class="kw">dl</span>, (%<span class="kw">rax</span>)</a></code></pre></div>
 <p>The <code>-</code> instruction becomes:</p>
-<div class="sourceCode"><pre class="sourceCode asm"><code class="sourceCode fasm"><span class="bu">movq</span>    <span class="dv">-8</span>(%<span class="kw">rbp</span>), %<span class="kw">rax</span>
-movzbl  (%<span class="kw">rax</span>), %<span class="kw">eax</span>
-subl    <span class="dv">$</span>AMOUNT, %<span class="kw">eax</span> <span class="co">; the optimiser combines multiple -</span>
-movl    %<span class="kw">eax</span>, %<span class="kw">edx</span>
-<span class="bu">movq</span>    <span class="dv">-8</span>(%<span class="kw">rbp</span>), %<span class="kw">rax</span>
-movb    %<span class="kw">dl</span>, (%<span class="kw">rax</span>)</code></pre></div>
+<div class="sourceCode" id="cb5"><pre class="sourceCode asm"><code class="sourceCode fasm"><a class="sourceLine" id="cb5-1" title="1"><span class="bu">movq</span>    <span class="dv">-8</span>(%<span class="kw">rbp</span>), %<span class="kw">rax</span></a>
+<a class="sourceLine" id="cb5-2" title="2">movzbl  (%<span class="kw">rax</span>), %<span class="kw">eax</span></a>
+<a class="sourceLine" id="cb5-3" title="3">subl    <span class="dv">$</span>AMOUNT, %<span class="kw">eax</span> <span class="co">; the optimiser combines multiple -</span></a>
+<a class="sourceLine" id="cb5-4" title="4">movl    %<span class="kw">eax</span>, %<span class="kw">edx</span></a>
+<a class="sourceLine" id="cb5-5" title="5"><span class="bu">movq</span>    <span class="dv">-8</span>(%<span class="kw">rbp</span>), %<span class="kw">rax</span></a>
+<a class="sourceLine" id="cb5-6" title="6">movb    %<span class="kw">dl</span>, (%<span class="kw">rax</span>)</a></code></pre></div>
 <p>The <code>.</code> instruction becomes:</p>
-<div class="sourceCode"><pre class="sourceCode asm"><code class="sourceCode fasm"><span class="bu">movq</span>    <span class="dv">-8</span>(%<span class="kw">rbp</span>), %<span class="kw">rax</span>
-movzbl  (%<span class="kw">rax</span>), %<span class="kw">eax</span>
-movsbl  %<span class="kw">al</span>, %<span class="kw">eax</span>
-movl    %<span class="kw">eax</span>, %<span class="kw">edi</span>
-<span class="bu">call</span>    putchar</code></pre></div>
+<div class="sourceCode" id="cb6"><pre class="sourceCode asm"><code class="sourceCode fasm"><a class="sourceLine" id="cb6-1" title="1"><span class="bu">movq</span>    <span class="dv">-8</span>(%<span class="kw">rbp</span>), %<span class="kw">rax</span></a>
+<a class="sourceLine" id="cb6-2" title="2">movzbl  (%<span class="kw">rax</span>), %<span class="kw">eax</span></a>
+<a class="sourceLine" id="cb6-3" title="3">movsbl  %<span class="kw">al</span>, %<span class="kw">eax</span></a>
+<a class="sourceLine" id="cb6-4" title="4">movl    %<span class="kw">eax</span>, %<span class="kw">edi</span></a>
+<a class="sourceLine" id="cb6-5" title="5"><span class="bu">call</span>    putchar</a></code></pre></div>
 <p>The <code>,</code> instruction becomes:</p>
-<div class="sourceCode"><pre class="sourceCode asm"><code class="sourceCode fasm"><span class="bu">call</span>    getchar
-movl    %<span class="kw">eax</span>, %<span class="kw">edx</span>
-<span class="bu">movq</span>    <span class="dv">-8</span>(%<span class="kw">rbp</span>), %<span class="kw">rax</span>
-movb    %<span class="kw">dl</span>, (%<span class="kw">rax</span>)</code></pre></div>
+<div class="sourceCode" id="cb7"><pre class="sourceCode asm"><code class="sourceCode fasm"><a class="sourceLine" id="cb7-1" title="1"><span class="bu">call</span>    getchar</a>
+<a class="sourceLine" id="cb7-2" title="2">movl    %<span class="kw">eax</span>, %<span class="kw">edx</span></a>
+<a class="sourceLine" id="cb7-3" title="3"><span class="bu">movq</span>    <span class="dv">-8</span>(%<span class="kw">rbp</span>), %<span class="kw">rax</span></a>
+<a class="sourceLine" id="cb7-4" title="4">movb    %<span class="kw">dl</span>, (%<span class="kw">rax</span>)</a></code></pre></div>
 <p>The <code>[</code> instruction becomes:</p>
-<div class="sourceCode"><pre class="sourceCode asm"><code class="sourceCode fasm">.LA
-<span class="bu">movq</span>    <span class="dv">-8</span>(%<span class="kw">rbp</span>), %<span class="kw">rax</span>
-movzbl  (%<span class="kw">rax</span>), %<span class="kw">eax</span>
-testb   %<span class="kw">al</span>, %<span class="kw">al</span>
-<span class="bu">je</span>      .LB</code></pre></div>
+<div class="sourceCode" id="cb8"><pre class="sourceCode asm"><code class="sourceCode fasm"><a class="sourceLine" id="cb8-1" title="1">.LA</a>
+<a class="sourceLine" id="cb8-2" title="2"><span class="bu">movq</span>    <span class="dv">-8</span>(%<span class="kw">rbp</span>), %<span class="kw">rax</span></a>
+<a class="sourceLine" id="cb8-3" title="3">movzbl  (%<span class="kw">rax</span>), %<span class="kw">eax</span></a>
+<a class="sourceLine" id="cb8-4" title="4">testb   %<span class="kw">al</span>, %<span class="kw">al</span></a>
+<a class="sourceLine" id="cb8-5" title="5"><span class="bu">je</span>      .LB</a></code></pre></div>
 <p>The <code>]</code> instruction becomes:</p>
-<div class="sourceCode"><pre class="sourceCode asm"><code class="sourceCode fasm"><span class="bu">jmp</span>     .LA
-.LB</code></pre></div>
+<div class="sourceCode" id="cb9"><pre class="sourceCode asm"><code class="sourceCode fasm"><a class="sourceLine" id="cb9-1" title="1"><span class="bu">jmp</span>     .LA</a>
+<a class="sourceLine" id="cb9-2" title="2">.LB</a></code></pre></div>
 <p>The optimiser gives the ability to add or subtract an <code>AMOUNT</code> to a tape location <code>OFFSET</code> away from the pointer <code>PTR</code>. This is implemented using:</p>
-<div class="sourceCode"><pre class="sourceCode asm"><code class="sourceCode fasm"><span class="bu">movq</span>    <span class="dv">-8</span>(%<span class="kw">rbp</span>), %<span class="kw">rax</span>
-addq    <span class="dv">$</span>PTRaddOFFSET, %<span class="kw">rax</span>
-movzbl  (%<span class="kw">rax</span>), %<span class="kw">eax</span>
-leal    AMMOUNT(%<span class="kw">rax</span>), %<span class="kw">edx</span> <span class="co">; negative amount for subtraction</span>
-<span class="bu">movq</span>    <span class="dv">-8</span>(%<span class="kw">rbp</span>), %<span class="kw">rax</span>
-addq    <span class="dv">$</span>PTRaddOFFSET, %<span class="kw">rax</span>
-movb    %<span class="kw">dl</span>, (%<span class="kw">rax</span>)</code></pre></div>
+<div class="sourceCode" id="cb10"><pre class="sourceCode asm"><code class="sourceCode fasm"><a class="sourceLine" id="cb10-1" title="1"><span class="bu">movq</span>    <span class="dv">-8</span>(%<span class="kw">rbp</span>), %<span class="kw">rax</span></a>
+<a class="sourceLine" id="cb10-2" title="2">addq    <span class="dv">$</span>PTRaddOFFSET, %<span class="kw">rax</span></a>
+<a class="sourceLine" id="cb10-3" title="3">movzbl  (%<span class="kw">rax</span>), %<span class="kw">eax</span></a>
+<a class="sourceLine" id="cb10-4" title="4">leal    AMMOUNT(%<span class="kw">rax</span>), %<span class="kw">edx</span> <span class="co">; negative amount for subtraction</span></a>
+<a class="sourceLine" id="cb10-5" title="5"><span class="bu">movq</span>    <span class="dv">-8</span>(%<span class="kw">rbp</span>), %<span class="kw">rax</span></a>
+<a class="sourceLine" id="cb10-6" title="6">addq    <span class="dv">$</span>PTRaddOFFSET, %<span class="kw">rax</span></a>
+<a class="sourceLine" id="cb10-7" title="7">movb    %<span class="kw">dl</span>, (%<span class="kw">rax</span>)</a></code></pre></div>
 <p>The neccesary header and footer information for the assmbler to link the code correctly is also added in this function.</p>
 <h2 id="installation-and-usage">Installation and Usage</h2>
 <p><strong>Prerequisites</strong></p>
 <p>To run this code, you will require the .NET SDK version 2.1. Information on the installation of this can be found on <a href="https://dotnet.microsoft.com/download">this page.</a></p>
 <p><strong>Usage</strong></p>
 <p>The command to run the program is:</p>
-<div class="sourceCode"><pre class="sourceCode bash"><code class="sourceCode bash"><span class="ex">dotnet</span> run fsharp-brainfuck-compiler.fsproj</code></pre></div>
+<div class="sourceCode" id="cb11"><pre class="sourceCode bash"><code class="sourceCode bash"><a class="sourceLine" id="cb11-1" title="1"><span class="ex">dotnet</span> run fsharp-brainfuck-compiler.fsproj</a></code></pre></div>
 <p>You can run this program with several command line arguments:</p>
 <ul>
 <li>If nothing is specified, then it will open in interactive mode where the output will be printed to the terminal instead of a file.</li>
 <li>If only a name is provided, then the program will be compiled to a <code>.s</code> file of the same name. The brainfuck will be optimised and the tape size will be set to 30000.</li>
 <li>A name can be provided along with either the tape size (an integer greater than 16) or whether to optimise (<code>no-optimise</code> argument).</li>
-<li>A name can be provided along with both the tape size and optimise argument. In this case, it doesn't matter what the order of the last two arguments is.</li>
+<li>A name can be provided along with both the tape size and optimise argument. In this case, it doesn’t matter what the order of the last two arguments is.</li>
 </ul>
 <p>To compile files, GCC is required. Once you have run the program and got an output file, to link, assemble, and run it:</p>
-<div class="sourceCode"><pre class="sourceCode bash"><code class="sourceCode bash"><span class="fu">gcc</span> -no-pie <span class="op">&lt;</span>file<span class="op">&gt;</span>.s -o <span class="op">&lt;</span>file<span class="op">&gt;</span> <span class="kw">&amp;&amp;</span> <span class="ex">.</span>/<span class="op">&lt;</span><span class="fu">file</span><span class="op">&gt;</span></code></pre></div>
+<div class="sourceCode" id="cb12"><pre class="sourceCode bash"><code class="sourceCode bash"><a class="sourceLine" id="cb12-1" title="1"><span class="fu">gcc</span> -no-pie <span class="op">&lt;</span>file<span class="op">&gt;</span>.s -o <span class="op">&lt;</span>file<span class="op">&gt;</span> <span class="kw">&amp;&amp;</span> <span class="ex">.</span>/<span class="op">&lt;</span><span class="fu">file</span><span class="op">&gt;</span></a></code></pre></div>
 <p>An example Brainfuck program is included in <code>helloworld.bf</code>. This is well commented and explains what is going on. As well as this, there is a script that will compile and run the included example file in <code>test.sh</code>. To run this script run</p>
-<div class="sourceCode"><pre class="sourceCode bash"><code class="sourceCode bash"><span class="fu">sh</span> test.sh</code></pre></div>
+<div class="sourceCode" id="cb13"><pre class="sourceCode bash"><code class="sourceCode bash"><a class="sourceLine" id="cb13-1" title="1"><span class="fu">sh</span> test.sh</a></code></pre></div>
 <h2 id="acknowledgements">Acknowledgements</h2>
-<p>Ideas for optimisations came from <a href="https://www.nayuki.io/page/optimizing-brainfuck-compiler" class="uri">https://www.nayuki.io/page/optimizing-brainfuck-compiler</a></p>
+<p>Ideas for optimisations came from <a href="https://www.nayuki.io/page/optimizing-brainfuck-compiler">https://www.nayuki.io/page/optimizing-brainfuck-compiler</a></p>
 <h2 id="github-repository">GitHub Repository</h2>
 <p>The full project can be viewed on <a href="https://github.com/joshjennings98/fsharp-brainfuck-compiler">GitHub.</a></p>
 </body>
 </html>
 
-        <a id=title href="/"><div id="test">Go to homepage</div></a>
-        <script src="../files/invert.js" type="text/javascript"></script>
-        <footer><a href=#top>Back to top</a></footer>
-        </body>  
-        </html>
+<a id=title href="/"><div id="test">Go to homepage</div></a>
+<script src="/files/invert.js" type="text/javascript"></script>
+<footer><a href=#top>Back to top</a></footer>
+</body>
+</html>
