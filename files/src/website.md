@@ -48,7 +48,7 @@ This was tested using a HTC Wildfire using Android 2.2 (Froyo). This phone is so
 
 The GitHub actions is a simple workflow and it will be explained below.
 
-We set the workflow to only run when the GitHub actions workflow is updated, or when the markdown files (or CV) are updated.
+We set the workflow to only run when the GitHub actions workflow is updated, or when the markdown/CV files (or the templates themselves) are updated.
 
 ```yaml
 on:
@@ -56,6 +56,7 @@ on:
     paths:
       - 'files/src/**'
       - '.github/workflows/build.yml'
+      - 'files/templates/**'
 ```
 
 We run using Ubuntu image as I have experience with Linux.
