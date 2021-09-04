@@ -31,14 +31,22 @@ jobs:
         fi
     - name: Build website and CV
       run: |
-        python3 build_scripts/generate_webpages.py -m files/src/ -t files/templates/ -s /files/website.css -o pages/ -f /files
-        python3 build_scripts/generate_cv.py -c files/src/cv.yaml -t files/templates/cv.html.template -o pages/CV-Josh-Jennings.html
+        if [[ $(git diff HEAD^ files/src/) ]]; then
+          python3 build_scripts/generate_webpages.py -m files/src/ -t files/templates/ -s /files/website.css -o pages/ -f /files
+          python3 build_scripts/generate_cv.py -c files/src/cv.yaml -t files/templates/cv.html.template -o pages/CV-Josh-Jennings.html
+        else
+          echo "No changes to src directory, not building website."
+        fi
     - name: Commit files
       run: |
-        git config --local user.email "41898282+github-actions[bot]@users.noreply.github.com"
-        git config --local user.name "github-actions[bot]"
-        git add .
-        git commit -m "Build website - $(date)." --allow-empty
+        if [[ $(git diff HEAD^ files/src/) ]]; then
+          git config --local user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git config --local user.name "github-actions[bot]"
+          git add .
+          git commit -m "Build website - $(date)." --allow-empty
+        else
+          echo "No changes to src directory, not pushing changes."
+        fi
     - name: Push changes
       uses: ad-m/github-push-action@master
       with:

@@ -126,19 +126,20 @@ if __name__ == "__main__":
 
     intros = []
     for file in os.listdir(args.markdown):
-        inputFile = os.path.join(args.markdown, file)
-        content = loadMarkdown(inputFile, args.media)
-        outputFile = os.path.join(args.output, os.path.splitext(file)[0] + '.html')
-        intros.append(
-            markdownToHTML(
-                content,
-                os.path.join(args.templates, "page.html.template"),
-                os.path.join(args.templates, "intro.html.template"),
-                args.style,
-                outputFile,
-                args.media,
+        if os.path.splitext(file)[1] == ".md":
+            inputFile = os.path.join(args.markdown, file)
+            content = loadMarkdown(inputFile, args.media)
+            outputFile = os.path.join(args.output, os.path.splitext(file)[0] + '.html')
+            intros.append(
+                markdownToHTML(
+                    content,
+                    os.path.join(args.templates, "page.html.template"),
+                    os.path.join(args.templates, "intro.html.template"),
+                    args.style,
+                    outputFile,
+                    args.media,
+                )
             )
-        )
 
     generateIndexFile(
         intros,
