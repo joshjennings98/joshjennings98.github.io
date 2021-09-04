@@ -31,8 +31,8 @@ jobs:
         fi
     - name: Build website and CV
       run: |
-        python3 build_scripts/generate_webpages.py -m files/markdown/ -t templates/ -s /files/website.css -o pages/ -f /files
-        python3 build_scripts/generate_cv.py -c templates/cv.yaml -t templates/cv.html.template -o pages/CV-Josh-Jennings.html
+        python3 build_scripts/generate_webpages.py -m files/src/ -t files/templates/ -s /files/website.css -o pages/ -f /files
+        python3 build_scripts/generate_cv.py -c files/src/cv.yaml -t files/templates/cv.html.template -o pages/CV-Josh-Jennings.html
     - name: Commit files
       run: |
         git config --local user.email "41898282+github-actions[bot]@users.noreply.github.com"
