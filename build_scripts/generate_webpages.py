@@ -154,4 +154,4 @@ if __name__ == "__main__":
         os.path.join(args.notfound, "404.html"),
         args.style,
         args.media,
-        )
+    )
