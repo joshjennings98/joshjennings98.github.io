@@ -14,7 +14,7 @@ def loadMarkdown(inputFile : str, mediaDirectory : str) -> str:
         return re.sub(r'!\[(.*)\]\((.*)\)', r'![\1](%s%s\2)' % (mediaDirectory, os.path.sep), file.read())
 
 
-def generateIntro(content : str, introTemplateFile : str, outputFile : str, mediaDirectory : str) -> Tuple[str, datetime]:
+def generateIntro(content : str, introTemplateFile : str, outputFile : str) -> Tuple[str, datetime]:
     """
     For an input file `inputFile` create an introduction paragraph for the homepage
     based on the <intro date=X></intro> tags and add a read more link to `outputFile`. Return
@@ -48,7 +48,7 @@ def generateIndexFile(intros : List[Tuple[str, str]], indexTemplateFile : str, o
     of intros linking to the relevant articles.
     """
     print("Generating 'index.html' ... ", end="")
-    intros.sort(key=lambda el: el[1], reverse=True)
+    intros.sort(key=lambda el: datetime.strptime(el[1], "%a %d %b %Y"), reverse=True)
 
     with open(indexTemplateFile) as file:
         template = Template(file.read())
@@ -84,7 +84,7 @@ def markdownToHTML(content : str, pageTemplateFile : str, introTemplateFile : st
     for use on the homepage.
     """
     print(f"Generating '{outputFile}' ... ", end="")
-    intro = generateIntro(content, introTemplateFile, outputFile, mediaDirectory)
+    intro = generateIntro(content, introTemplateFile, outputFile)
 
     title = content.splitlines()[0].strip(" #\n")
 
