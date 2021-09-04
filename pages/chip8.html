@@ -96,7 +96,7 @@ code span.wa { color: #7f9f7f; font-weight: bold; } /* Warning */
 <p><intro date="08/03/2020"></p>
 <div class="picture-left">
 <figure>
-<img src="/files../files/images/chip8.png" alt="CHIP-8 emulator displaying the CHIP-8 logo." /><figcaption>CHIP-8 emulator displaying the CHIP-8 logo.</figcaption>
+<img src="/files/images/chip8.png" alt="CHIP-8 emulator displaying the CHIP-8 logo." /><figcaption>CHIP-8 emulator displaying the CHIP-8 logo.</figcaption>
 </figure></div>
 <div class="tleft">
 <p>CHIP-8 is an interpreted programming language that was developed for 8-bit microcomputers in the mid-1970s. This is a very simple CHIP-8 interpreter written in C++.</p>
@@ -136,7 +136,7 @@ code span.wa { color: #7f9f7f; font-weight: bold; } /* Warning */
 <div class="sourceCode" id="cb5"><pre class="sourceCode cpp"><code class="sourceCode cpp"><a class="sourceLine" id="cb5-1" title="1"><span class="dt">uint8_t</span> delayTimer;</a>
 <a class="sourceLine" id="cb5-2" title="2"><span class="dt">uint8_t</span> soundTimer;</a></code></pre></div>
 <p>CHIP-8 code starts at address <code>0x200</code>. This would usually contain the interpreter itself. Since this is an emulator, we don’t need that. Instead we use this space for the fontset that represents the numbers <code>0x0</code> to <code>0xF</code>:</p>
-<div class="sourceCode" id="cb6"><pre class="sourceCode cpp"><code class="sourceCode cpp"><a class="sourceLine" id="cb6-1" title="1"><span class="dt">uint8_t</span> fontset[<span class="dv">80</span>] = { </a>
+<div class="sourceCode" id="cb6"><pre class="sourceCode cpp"><code class="sourceCode cpp"><a class="sourceLine" id="cb6-1" title="1"><span class="dt">uint8_t</span> fontset[<span class="dv">80</span>] = {</a>
 <a class="sourceLine" id="cb6-2" title="2">    <span class="bn">0xF0</span>, <span class="bn">0x90</span>, <span class="bn">0x90</span>, <span class="bn">0x90</span>, <span class="bn">0xF0</span>, <span class="co">// 0</span></a>
 <a class="sourceLine" id="cb6-3" title="3">    <span class="bn">0x20</span>, <span class="bn">0x60</span>, <span class="bn">0x20</span>, <span class="bn">0x20</span>, <span class="bn">0x70</span>, <span class="co">// 1</span></a>
 <a class="sourceLine" id="cb6-4" title="4">    <span class="bn">0xF0</span>, <span class="bn">0x10</span>, <span class="bn">0xF0</span>, <span class="bn">0x80</span>, <span class="bn">0xF0</span>, <span class="co">// 2</span></a>
@@ -181,7 +181,7 @@ code span.wa { color: #7f9f7f; font-weight: bold; } /* Warning */
 <a class="sourceLine" id="cb9-9" title="9">        <span class="cf">switch</span> (opcode &amp; <span class="bn">0xF00F</span>) {</a>
 <a class="sourceLine" id="cb9-10" title="10">            <span class="cf">case</span> <span class="bn">0x8000</span>:</a>
 <a class="sourceLine" id="cb9-11" title="11">                LD_Vx_Vy(x, y);</a>
-<a class="sourceLine" id="cb9-12" title="12">                <span class="cf">break</span>; </a>
+<a class="sourceLine" id="cb9-12" title="12">                <span class="cf">break</span>;</a>
 <a class="sourceLine" id="cb9-13" title="13">            <span class="cf">case</span> <span class="bn">0x8001</span>:</a>
 <a class="sourceLine" id="cb9-14" title="14">                OR_Vx_Vy(x, y);</a>
 <a class="sourceLine" id="cb9-15" title="15">                <span class="cf">break</span>;</a>
@@ -202,8 +202,8 @@ code span.wa { color: #7f9f7f; font-weight: bold; } /* Warning */
 +-+-+-+-+                +-+-+-+-+</code></pre>
 <p>This input is handled using the SDL2 library. When the emulator is waiting for input we use the SDL events to determine which key is pressed. This is done by keeping the keys in an array and using a while loop to handle key press and release events. These are all done every cycle along with the opcode decoding and execution.</p>
 <div class="sourceCode" id="cb11"><pre class="sourceCode cpp"><code class="sourceCode cpp"><a class="sourceLine" id="cb11-1" title="1"><span class="co">// Keypad array</span></a>
-<a class="sourceLine" id="cb11-2" title="2"><span class="dt">uint8_t</span> keys[<span class="dv">16</span>] = {SDLK_x, SDLK_1, SDLK_2, SDLK_3, </a>
-<a class="sourceLine" id="cb11-3" title="3">    SDLK_q, SDLK_w, SDLK_e, SDLK_a, SDLK_s, SDLK_d, </a>
+<a class="sourceLine" id="cb11-2" title="2"><span class="dt">uint8_t</span> keys[<span class="dv">16</span>] = {SDLK_x, SDLK_1, SDLK_2, SDLK_3,</a>
+<a class="sourceLine" id="cb11-3" title="3">    SDLK_q, SDLK_w, SDLK_e, SDLK_a, SDLK_s, SDLK_d,</a>
 <a class="sourceLine" id="cb11-4" title="4">    SDLK_z, SDLK_c, SDLK_4, SDLK_r, SDLK_f, SDLK_v};</a>
 <a class="sourceLine" id="cb11-5" title="5"></a>
 <a class="sourceLine" id="cb11-6" title="6"><span class="co">// Handle SDL events</span></a>
@@ -229,7 +229,7 @@ code span.wa { color: #7f9f7f; font-weight: bold; } /* Warning */
 <a class="sourceLine" id="cb11-26" title="26">            }</a>
 <a class="sourceLine" id="cb11-27" title="27">        }</a>
 <a class="sourceLine" id="cb11-28" title="28">    }</a>
-<a class="sourceLine" id="cb11-29" title="29">} </a></code></pre></div>
+<a class="sourceLine" id="cb11-29" title="29">}</a></code></pre></div>
 <p>That’s it. As stated at the beginning, a CHIP-8 emulator is very easy to write. Information on installation and usage can be seen below.</p>
 <h2 id="installation-and-usage">Installation and Usage</h2>
 <p><strong>Prerequisites</strong></p>

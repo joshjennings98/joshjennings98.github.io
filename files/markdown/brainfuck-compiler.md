@@ -4,9 +4,9 @@
 
 <intro date="16/09/2019">
 
-![Simple 'Hello World' program in Brainfuck](../files/images/bf_hello_world.png)
+![Simple 'Hello World' program in Brainfuck](images/bf_hello_world.png)
 
-Brainfuck is an very simple programming language that consists of only eight instructions. This is an optimising brainfuck to x86 assembly compiler written in F#. 
+Brainfuck is an very simple programming language that consists of only eight instructions. This is an optimising brainfuck to x86 assembly compiler written in F#.
 
 </intro>
 
@@ -42,7 +42,7 @@ The program is split up into different modules containing the functions for vari
 
 ### Program.fs
 
-This module is the entrance to the program. This module interprets any input arguments. It then runs the tokeniser, if desired the optimiser, and compiler. If there is an error then it will be returned here.  If the compilation was successful then the output is saved to a file. 
+This module is the entrance to the program. This module interprets any input arguments. It then runs the tokeniser, if desired the optimiser, and compiler. If there is an error then it will be returned here.  If the compilation was successful then the output is saved to a file.
 
 More information on how to use the program can be seen in the [installation and usage section.](#installation-and-usage)
 
@@ -136,7 +136,7 @@ movl    %eax, %edx
 movq    -8(%rbp), %rax
 movb    %dl, (%rax)
 ```
-The `.` instruction becomes: 
+The `.` instruction becomes:
 ```asm
 movq    -8(%rbp), %rax
 movzbl  (%rax), %eax

@@ -4,9 +4,9 @@
 
 <intro date="25/04/2019">
 
-![A neural network attempts to immitate a brain.](../files/images/neuralnetwork.png)
+![A neural network attempts to immitate a brain.](images/neuralnetwork.png)
 
-A small F# library that allows for the creation of scalable fully-connected neural networks. It was developed for and built entirely using F#. 
+A small F# library that allows for the creation of scalable fully-connected neural networks. It was developed for and built entirely using F#.
 
 </intro>
 
@@ -79,7 +79,7 @@ let model = trainNetwork network labels data 0.05 MSE 100000
 Currently, the following loss functions are avaliable:
 
 * Mean Square Error
-* Cross Entropy 
+* Cross Entropy
 * Mean Absolute Error
 
 
@@ -116,7 +116,7 @@ Input: [0.0; 0.34; 0.8]
 Output: [0.9681691113; 0.03517992806]
 
 Input: [0.6; 0.1; 0.3]
-Output: [0.003145187104; 0.9791424116] 
+Output: [0.003145187104; 0.9791424116]
 ```
 
 These match up with the labels specified earlier.
@@ -132,7 +132,7 @@ let forwardSingleLayer (bias : float) (weights : float list list) (inputs : floa
     weights
     |> List.map (fun list -> List.map2 ( * ) list inputs)
     |> List.map (fun list -> List.sum list + bias)
-    |> activateLayer activation 
+    |> activateLayer activation
 ```
 
 The `activateLayer` function takes an activation and maps the corresponding activation function across the list before returning it. A small part of this function can be see below:
@@ -140,9 +140,9 @@ The `activateLayer` function takes an activation and maps the corresponding acti
 ```fsharp
 let activateLayer (activation : Activation) (input : float list) : float list =
     match activation with
-    | Sigmoid -> 
+    | Sigmoid ->
         List.map (fun x -> 1.0 / (1.0 + exp(-x))) input
-    | Relu -> 
+    | Relu ->
         List.map (fun x -> max x 0.0) input
 ```
 
@@ -154,7 +154,7 @@ let forwardFull (parameters : Parameters) (inputs : float list) (layers : Layer 
     |> List.fold (fun (acc : float list list) index ->
         let biases, weights, activation =
             parameters.biases.[index], parameters.weights.[index], layers.[index].activation
-        [forwardSingleLayer biases weights acc.[0] activation] @ acc) 
+        [forwardSingleLayer biases weights acc.[0] activation] @ acc)
             [inputs]
     |> List.append [List.init (List.last layers).outputDims float]
 ```
@@ -175,17 +175,17 @@ Similarly to the activation functions, the loss functions are supplied using pat
 ```fsharp
 let lossFunction (loss : Loss) (n : int) : float -> float -> float =
     match loss with
-    | MSE -> 
-        fun actual target -> 
+    | MSE ->
+        fun actual target ->
             (1.0 / (n |> float)) * (actual - target) ** 2.0
-    | MAE -> 
-        fun actual target -> 
+    | MAE ->
+        fun actual target ->
             (1.0 / (n |> float)) * (abs (actual - target))
 ```
 
 ### Back Propagation
 
-Back propagation is more complex than the forward version. We first calculate the intermidate output sums. 
+Back propagation is more complex than the forward version. We first calculate the intermidate output sums.
 For the output layer, the only thing that needs to be done is for the derivatve of the loss function to applied to the outputs. For the hidden layers, the individual deltas for each node in the previous layer are found. Afterwards, the layer weights are taken and multiplied by their corresponding deltas. The values coming into each node are then summed.
 
 The new weights are then calculated. This is simpler. The derivative of the activation function is found and then multiplied by the corresponding output delta sum. This is then multipliued by the output od of the previous layer resulting in a value corresponding to `learningRate * delta * outPrev`. This value is then subtracted from the corresponding weight as back propagation is defined.
@@ -194,31 +194,31 @@ The new weights and intermediate output deltas are then returned.
 
 ```fsharp
 let backPropSingleLayer (targetOutputs : float list) (loss : Loss) (learningRate : float) (backPropPart : float list) (layerIndex : int) (forwardPropParts : float list list) (allWeights : float list list list) (layers : Layer list) : float list list * float list =
-    
+
     let intermediateOutputDeltaSum =
         if layerIndex = 0
         then (* Output layer *)
             forwardPropParts.[layerIndex + 1]
-            |> List.map2 (dLossFunction loss targetOutputs.Length) backPropPart 
+            |> List.map2 (dLossFunction loss targetOutputs.Length) backPropPart
         else (* Hidden layers *)
             List.init forwardPropParts.[layerIndex + 1].Length (fun _ ->
-                forwardPropParts.[layerIndex] 
-                |> dActivateLayer layers.[layerIndex - 1].activation 
-                |> List.map2 ( * ) backPropPart) 
+                forwardPropParts.[layerIndex]
+                |> dActivateLayer layers.[layerIndex - 1].activation
+                |> List.map2 ( * ) backPropPart)
             |> List.mapi (fun index1 deltas ->
                 allWeights.[layerIndex]
-                |> List.mapi (fun index2 weights -> weights.[index1] * deltas.[index2])) 
+                |> List.mapi (fun index2 weights -> weights.[index1] * deltas.[index2]))
             |> List.map List.sum
-    
+
     let newWeights =
         forwardPropParts.[layerIndex + 1]
         |> dActivateLayer layers.[layerIndex].activation
         |> List.map2 ( * ) intermediateOutputDeltaSum
-        |> List.map (fun delta -> 
-            forwardPropParts.[layerIndex + 2] 
+        |> List.map (fun delta ->
+            forwardPropParts.[layerIndex + 2]
             |> List.map (fun out -> learningRate * delta * out))
         |> List.map2 (List.map2 (-)) allWeights.[layerIndex + 1]
-    
+
     newWeights, intermediateOutputDeltaSum
 ```
 
@@ -227,24 +227,24 @@ The full back propagation invloved first reversing the parameters. This makes it
 The next step is to fold through the network from the outer layer and calculate all the new values for each weight using `backPropSingleLayer`. This is then added to a list containing each layer and acts as the accumulator.
 
 ```fsharp
-let backPropFull (layers : Layer list) (parameters : Parameters) (targetOutputs : float list list) (learningRate : float) (loss : Loss) (forwardPropParts : float list list) : (float list list * float list) list =  
-    
-    let weights = 
+let backPropFull (layers : Layer list) (parameters : Parameters) (targetOutputs : float list list) (learningRate : float) (loss : Loss) (forwardPropParts : float list list) : (float list list * float list) list =
+
+    let weights =
         List.rev parameters.weights
 
     List.init (layers.Length) id
     |> List.fold (fun acc index ->
         let targetOutputs =
-            acc.[0] 
-            |> fst 
+            acc.[0]
+            |> fst
             |> List.map List.sum
-        
+
         let backPropPart = snd acc.[0]
 
-        let backPropOutput = 
+        let backPropOutput =
             backPropSingleLayer targetOutputs loss learningRate backPropPart index forwardPropParts weights layers
-        
-        [backPropOutput] @ acc) 
+
+        [backPropOutput] @ acc)
             [targetOutputs, (List.concat targetOutputs)]
 ```
 
@@ -253,18 +253,18 @@ The derivatives of the activations and loss functions are very similar to the no
 ```fsharp
 let dActivateLayer (activation : Activation) (input : float list) : float list =
     match activation with
-    | Sigmoid -> 
+    | Sigmoid ->
         List.map (fun x -> x * (1.0 - x)) input
-    | Relu -> 
+    | Relu ->
         List.map (fun x -> if x > 0.0 then 1.0 else 0.0) input
 
 let dLossFunction (loss : Loss) (n : int) : float -> float -> float =
     match loss with
-    | MSE -> 
-	fun actual target -> 
+    | MSE ->
+	fun actual target ->
 	(2.0 / (n |> float)) * (actual - target) * -1.0
-    | MAE -> 
-	fun target actual -> 
+    | MAE ->
+	fun target actual ->
 		if actual > target then 1.0 else -1.0
 ```
 
@@ -276,13 +276,13 @@ Training the network is a fairly simple recursive function that continually pick
 let rec train (parameters : Parameters) (model : Layer list) (maxIterations : int) (iterations : int) =
     let idx = System.Random().Next(0, List.length targetOutputs)
 
-    let fullSingle = 
+    let fullSingle =
         forwardFull parameters inputs.[idx] architecture
         |> backPropFull architecture parameters targets.[idx] learningRate loss
         |> weightUpdate parameters
-    
+
     train fullSingle model maxIterations (iterations + 1)
-    
+
 (* This is called like below *)
 train initial architecture iterations 0
 ```

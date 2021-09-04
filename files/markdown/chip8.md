@@ -4,9 +4,9 @@
 
 <intro date="08/03/2020">
 
-![CHIP-8 emulator displaying the CHIP-8 logo.](../files/images/chip8.png)
+![CHIP-8 emulator displaying the CHIP-8 logo.](images/chip8.png)
 
-CHIP-8 is an interpreted programming language that was developed for 8-bit microcomputers in the mid-1970s. This is a very simple CHIP-8 interpreter written in C++. 
+CHIP-8 is an interpreted programming language that was developed for 8-bit microcomputers in the mid-1970s. This is a very simple CHIP-8 interpreter written in C++.
 
 </intro>
 
@@ -19,7 +19,7 @@ CHIP-8 is an interpreted programming language that was developed for 8-bit micro
 
 ## Introduction
 
-CHIP-8 is an interpreted programming language that was developed for 8-bit microcomputers in the mid-1970s. CHIP-8 programs are run on a virtual machine to allows for video games to be more easily programmed for those computers. 
+CHIP-8 is an interpreted programming language that was developed for 8-bit microcomputers in the mid-1970s. CHIP-8 programs are run on a virtual machine to allows for video games to be more easily programmed for those computers.
 
 A CHIP-8 emulator is probably the simplest emulator project someone can make. It only has 35 instructions and each opcode is only 2 bytes long. The memory consists of 4096 bytes and there are 16 registers (V1-VF). Along with this, there are no interrupts, only two simple timer registers for delay and sound.
 
@@ -31,7 +31,7 @@ This all results in a very simple to implement emulator.
 
 My CHIP-8 emulator is written in C++.
 
-The opcodes and vaious pointers are represented as shorts: 
+The opcodes and vaious pointers are represented as shorts:
 ```c++
 short opcode;
 short I; // index register
@@ -62,7 +62,7 @@ uint8_t soundTimer;
 ```
 CHIP-8 code starts at address `0x200`. This would usually contain the interpreter itself. Since this is an emulator, we don't need that. Instead we use this space for the fontset that represents the numbers `0x0` to `0xF`:
 ```c++
-uint8_t fontset[80] = { 
+uint8_t fontset[80] = {
 	0xF0, 0x90, 0x90, 0x90, 0xF0, // 0
 	0x20, 0x60, 0x20, 0x20, 0x70, // 1
 	0xF0, 0x10, 0xF0, 0x80, 0xF0, // 2
@@ -82,7 +82,7 @@ uint8_t fontset[80] = {
     };
 ```
 
-The emulator itself is very simple. On initialisation, the various arrays and variables are set to zero and the ROM is read to memory. 
+The emulator itself is very simple. On initialisation, the various arrays and variables are set to zero and the ROM is read to memory.
 
 When an instruction is read, the opcode is found first by looking at the two bytes at the program counter. These are merged to form the opcode. Next, we work out what the various parts of the opcode might mean. We work out what would be defined if the opcode was manipulating registers, memory, or bytes. This is done so that the case statements don't have right shifts in every case.
 
@@ -119,7 +119,7 @@ switch(opcode & 0xF000) {
 		switch (opcode & 0xF00F) {
 			case 0x8000:
 				LD_Vx_Vy(x, y);
-				break; 
+				break;
 			case 0x8001:
 				OR_Vx_Vy(x, y);
 				break;
@@ -150,8 +150,8 @@ This input is handled using the SDL2 library. When the emulator is waiting for i
 
 ```c++
 // Keypad array
-uint8_t keys[16] = {SDLK_x, SDLK_1, SDLK_2, SDLK_3, 
-	SDLK_q, SDLK_w, SDLK_e, SDLK_a, SDLK_s, SDLK_d, 
+uint8_t keys[16] = {SDLK_x, SDLK_1, SDLK_2, SDLK_3,
+	SDLK_q, SDLK_w, SDLK_e, SDLK_a, SDLK_s, SDLK_d,
 	SDLK_z, SDLK_c, SDLK_4, SDLK_r, SDLK_f, SDLK_v};
 
 // Handle SDL events
@@ -177,7 +177,7 @@ while (SDL_PollEvent(&e)) {
 			}
 		}
 	}
-} 
+}
 ```
 
 That's it. As stated at the beginning, a CHIP-8 emulator is very easy to write. Information on installation and usage can be seen below.
@@ -212,7 +212,7 @@ Alternatively, you can specify only the rom file for a window of `width=1024`, a
 
 **ROMS**
 
-The [GitHub repository](https://github.com/joshjennings98/chip8) includes a two player game of pong at `pong.ch8`. 
+The [GitHub repository](https://github.com/joshjennings98/chip8) includes a two player game of pong at `pong.ch8`.
 
 For some more roms to try out, see [this GitHub repo](https://github.com/loktar00/chip8/tree/master/roms).
 

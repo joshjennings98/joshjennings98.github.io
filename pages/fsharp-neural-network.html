@@ -96,7 +96,7 @@ code span.wa { color: #7f9f7f; font-weight: bold; } /* Warning */
 <p><intro date="25/04/2019"></p>
 <div class="picture-left">
 <figure>
-<img src="/files../files/images/neuralnetwork.png" alt="A neural network attempts to immitate a brain." /><figcaption>A neural network attempts to immitate a brain.</figcaption>
+<img src="/files/images/neuralnetwork.png" alt="A neural network attempts to immitate a brain." /><figcaption>A neural network attempts to immitate a brain.</figcaption>
 </figure></div>
 <div class="tleft">
 <p>A small F# library that allows for the creation of scalable fully-connected neural networks. It was developed for and built entirely using F#.</p>
@@ -181,7 +181,7 @@ code span.wa { color: #7f9f7f; font-weight: bold; } /* Warning */
 <a class="sourceLine" id="cb6-11" title="11">Output: [<span class="fl">0.9681691113</span>; <span class="fl">0.03517992806</span>]</a>
 <a class="sourceLine" id="cb6-12" title="12"></a>
 <a class="sourceLine" id="cb6-13" title="13">Input: [<span class="fl">0.6</span>; <span class="fl">0.1</span>; <span class="fl">0.3</span>]</a>
-<a class="sourceLine" id="cb6-14" title="14">Output: [<span class="fl">0.003145187104</span>; <span class="fl">0.9791424116</span>] </a></code></pre></div>
+<a class="sourceLine" id="cb6-14" title="14">Output: [<span class="fl">0.003145187104</span>; <span class="fl">0.9791424116</span>]</a></code></pre></div>
 <p>These match up with the labels specified earlier.</p>
 <h2 id="how-it-works">How it works</h2>
 <h3 id="forward-propagation">Forward Propagation</h3>
@@ -190,13 +190,13 @@ code span.wa { color: #7f9f7f; font-weight: bold; } /* Warning */
 <a class="sourceLine" id="cb7-2" title="2">    weights</a>
 <a class="sourceLine" id="cb7-3" title="3">    |&gt; List<span class="kw">.</span>map (<span class="kw">fun</span> list -&gt; List<span class="kw">.</span>map2 ( * ) list inputs)</a>
 <a class="sourceLine" id="cb7-4" title="4">    |&gt; List<span class="kw">.</span>map (<span class="kw">fun</span> list -&gt; List<span class="kw">.</span>sum list + bias)</a>
-<a class="sourceLine" id="cb7-5" title="5">    |&gt; activateLayer activation </a></code></pre></div>
+<a class="sourceLine" id="cb7-5" title="5">    |&gt; activateLayer activation</a></code></pre></div>
 <p>The <code>activateLayer</code> function takes an activation and maps the corresponding activation function across the list before returning it. A small part of this function can be see below:</p>
 <div class="sourceCode" id="cb8"><pre class="sourceCode fsharp"><code class="sourceCode fsharp"><a class="sourceLine" id="cb8-1" title="1"><span class="kw">let</span> activateLayer (activation : Activation) (input : <span class="dt">float</span> list) : <span class="dt">float</span> list =</a>
 <a class="sourceLine" id="cb8-2" title="2">    <span class="kw">match</span> activation <span class="kw">with</span></a>
-<a class="sourceLine" id="cb8-3" title="3">    | Sigmoid -&gt; </a>
+<a class="sourceLine" id="cb8-3" title="3">    | Sigmoid -&gt;</a>
 <a class="sourceLine" id="cb8-4" title="4">        List<span class="kw">.</span>map (<span class="kw">fun</span> x -&gt; <span class="fl">1.0</span> / (<span class="fl">1.0</span> + exp(-x))) input</a>
-<a class="sourceLine" id="cb8-5" title="5">    | Relu -&gt; </a>
+<a class="sourceLine" id="cb8-5" title="5">    | Relu -&gt;</a>
 <a class="sourceLine" id="cb8-6" title="6">        List<span class="kw">.</span>map (<span class="kw">fun</span> x -&gt; max x <span class="fl">0.0</span>) input</a></code></pre></div>
 <p>The full forward propagation is slightly more complex. It first creates an empty list the size of the network. It folds though the epty list using the accumulator to store the intermediate activated and unactivated output of all layers. It then adds an extra layer containing only 1.0s to the end of the forward propagated output. This makes it easier when doing back propagation.</p>
 <div class="sourceCode" id="cb9"><pre class="sourceCode fsharp"><code class="sourceCode fsharp"><a class="sourceLine" id="cb9-1" title="1"><span class="kw">let</span> forwardFull (parameters : Parameters) (inputs : <span class="dt">float</span> list) (layers : Layer list) : <span class="dt">float</span> list list =</a>
@@ -204,7 +204,7 @@ code span.wa { color: #7f9f7f; font-weight: bold; } /* Warning */
 <a class="sourceLine" id="cb9-3" title="3">    |&gt; List<span class="kw">.</span>fold (<span class="kw">fun</span> (acc : <span class="dt">float</span> list list) index -&gt;</a>
 <a class="sourceLine" id="cb9-4" title="4">        <span class="kw">let</span> biases, weights, activation =</a>
 <a class="sourceLine" id="cb9-5" title="5">            parameters.biases.[index], parameters.weights.[index], layers.[index].activation</a>
-<a class="sourceLine" id="cb9-6" title="6">        [forwardSingleLayer biases weights acc.[<span class="dv">0</span>] activation] @ acc) </a>
+<a class="sourceLine" id="cb9-6" title="6">        [forwardSingleLayer biases weights acc.[<span class="dv">0</span>] activation] @ acc)</a>
 <a class="sourceLine" id="cb9-7" title="7">            [inputs]</a>
 <a class="sourceLine" id="cb9-8" title="8">    |&gt; List<span class="kw">.</span>append [List<span class="kw">.</span>init (List<span class="kw">.</span>last layers).outputDims <span class="dt">float</span>]</a></code></pre></div>
 <h3 id="calculating-error">Calculating Error</h3>
@@ -216,92 +216,92 @@ code span.wa { color: #7f9f7f; font-weight: bold; } /* Warning */
 <p>Similarly to the activation functions, the loss functions are supplied using pattern matching In this case however, they return a function that can be applied wherever the particular value required instead of taking an returning a list. Part of <code>lossFunction</code> can be seen below:</p>
 <div class="sourceCode" id="cb11"><pre class="sourceCode fsharp"><code class="sourceCode fsharp"><a class="sourceLine" id="cb11-1" title="1"><span class="kw">let</span> lossFunction (loss : Loss) (n : <span class="dt">int</span>) : <span class="dt">float</span> -&gt; <span class="dt">float</span> -&gt; <span class="dt">float</span> =</a>
 <a class="sourceLine" id="cb11-2" title="2">    <span class="kw">match</span> loss <span class="kw">with</span></a>
-<a class="sourceLine" id="cb11-3" title="3">    | MSE -&gt; </a>
-<a class="sourceLine" id="cb11-4" title="4">        <span class="kw">fun</span> actual target -&gt; </a>
+<a class="sourceLine" id="cb11-3" title="3">    | MSE -&gt;</a>
+<a class="sourceLine" id="cb11-4" title="4">        <span class="kw">fun</span> actual target -&gt;</a>
 <a class="sourceLine" id="cb11-5" title="5">            (<span class="fl">1.0</span> / (n |&gt; <span class="dt">float</span>)) * (actual - target) ** <span class="fl">2.0</span></a>
-<a class="sourceLine" id="cb11-6" title="6">    | MAE -&gt; </a>
-<a class="sourceLine" id="cb11-7" title="7">        <span class="kw">fun</span> actual target -&gt; </a>
+<a class="sourceLine" id="cb11-6" title="6">    | MAE -&gt;</a>
+<a class="sourceLine" id="cb11-7" title="7">        <span class="kw">fun</span> actual target -&gt;</a>
 <a class="sourceLine" id="cb11-8" title="8">            (<span class="fl">1.0</span> / (n |&gt; <span class="dt">float</span>)) * (abs (actual - target))</a></code></pre></div>
 <h3 id="back-propagation">Back Propagation</h3>
 <p>Back propagation is more complex than the forward version. We first calculate the intermidate output sums. For the output layer, the only thing that needs to be done is for the derivatve of the loss function to applied to the outputs. For the hidden layers, the individual deltas for each node in the previous layer are found. Afterwards, the layer weights are taken and multiplied by their corresponding deltas. The values coming into each node are then summed.</p>
 <p>The new weights are then calculated. This is simpler. The derivative of the activation function is found and then multiplied by the corresponding output delta sum. This is then multipliued by the output od of the previous layer resulting in a value corresponding to <code>learningRate * delta * outPrev</code>. This value is then subtracted from the corresponding weight as back propagation is defined.</p>
 <p>The new weights and intermediate output deltas are then returned.</p>
 <div class="sourceCode" id="cb12"><pre class="sourceCode fsharp"><code class="sourceCode fsharp"><a class="sourceLine" id="cb12-1" title="1"><span class="kw">let</span> backPropSingleLayer (targetOutputs : <span class="dt">float</span> list) (loss : Loss) (learningRate : <span class="dt">float</span>) (backPropPart : <span class="dt">float</span> list) (layerIndex : <span class="dt">int</span>) (forwardPropParts : <span class="dt">float</span> list list) (allWeights : <span class="dt">float</span> list list list) (layers : Layer list) : <span class="dt">float</span> list list * <span class="dt">float</span> list =</a>
-<a class="sourceLine" id="cb12-2" title="2">    </a>
+<a class="sourceLine" id="cb12-2" title="2"></a>
 <a class="sourceLine" id="cb12-3" title="3">    <span class="kw">let</span> intermediateOutputDeltaSum =</a>
 <a class="sourceLine" id="cb12-4" title="4">        <span class="kw">if</span> layerIndex = <span class="dv">0</span></a>
 <a class="sourceLine" id="cb12-5" title="5">        <span class="kw">then</span> <span class="co">(* Output layer *)</span></a>
 <a class="sourceLine" id="cb12-6" title="6">            forwardPropParts.[layerIndex + <span class="dv">1</span>]</a>
-<a class="sourceLine" id="cb12-7" title="7">            |&gt; List<span class="kw">.</span>map2 (dLossFunction loss targetOutputs.Length) backPropPart </a>
+<a class="sourceLine" id="cb12-7" title="7">            |&gt; List<span class="kw">.</span>map2 (dLossFunction loss targetOutputs.Length) backPropPart</a>
 <a class="sourceLine" id="cb12-8" title="8">        <span class="kw">else</span> <span class="co">(* Hidden layers *)</span></a>
 <a class="sourceLine" id="cb12-9" title="9">            List<span class="kw">.</span>init forwardPropParts.[layerIndex + <span class="dv">1</span>].Length (<span class="kw">fun</span> _ -&gt;</a>
-<a class="sourceLine" id="cb12-10" title="10">                forwardPropParts.[layerIndex] </a>
-<a class="sourceLine" id="cb12-11" title="11">                |&gt; dActivateLayer layers.[layerIndex - <span class="dv">1</span>].activation </a>
-<a class="sourceLine" id="cb12-12" title="12">                |&gt; List<span class="kw">.</span>map2 ( * ) backPropPart) </a>
+<a class="sourceLine" id="cb12-10" title="10">                forwardPropParts.[layerIndex]</a>
+<a class="sourceLine" id="cb12-11" title="11">                |&gt; dActivateLayer layers.[layerIndex - <span class="dv">1</span>].activation</a>
+<a class="sourceLine" id="cb12-12" title="12">                |&gt; List<span class="kw">.</span>map2 ( * ) backPropPart)</a>
 <a class="sourceLine" id="cb12-13" title="13">            |&gt; List<span class="kw">.</span>mapi (<span class="kw">fun</span> index1 deltas -&gt;</a>
 <a class="sourceLine" id="cb12-14" title="14">                allWeights.[layerIndex]</a>
-<a class="sourceLine" id="cb12-15" title="15">                |&gt; List<span class="kw">.</span>mapi (<span class="kw">fun</span> index2 weights -&gt; weights.[index1] * deltas.[index2])) </a>
+<a class="sourceLine" id="cb12-15" title="15">                |&gt; List<span class="kw">.</span>mapi (<span class="kw">fun</span> index2 weights -&gt; weights.[index1] * deltas.[index2]))</a>
 <a class="sourceLine" id="cb12-16" title="16">            |&gt; List<span class="kw">.</span>map List<span class="kw">.</span>sum</a>
-<a class="sourceLine" id="cb12-17" title="17">    </a>
+<a class="sourceLine" id="cb12-17" title="17"></a>
 <a class="sourceLine" id="cb12-18" title="18">    <span class="kw">let</span> newWeights =</a>
 <a class="sourceLine" id="cb12-19" title="19">        forwardPropParts.[layerIndex + <span class="dv">1</span>]</a>
 <a class="sourceLine" id="cb12-20" title="20">        |&gt; dActivateLayer layers.[layerIndex].activation</a>
 <a class="sourceLine" id="cb12-21" title="21">        |&gt; List<span class="kw">.</span>map2 ( * ) intermediateOutputDeltaSum</a>
-<a class="sourceLine" id="cb12-22" title="22">        |&gt; List<span class="kw">.</span>map (<span class="kw">fun</span> delta -&gt; </a>
-<a class="sourceLine" id="cb12-23" title="23">            forwardPropParts.[layerIndex + <span class="dv">2</span>] </a>
+<a class="sourceLine" id="cb12-22" title="22">        |&gt; List<span class="kw">.</span>map (<span class="kw">fun</span> delta -&gt;</a>
+<a class="sourceLine" id="cb12-23" title="23">            forwardPropParts.[layerIndex + <span class="dv">2</span>]</a>
 <a class="sourceLine" id="cb12-24" title="24">            |&gt; List<span class="kw">.</span>map (<span class="kw">fun</span> out -&gt; learningRate * delta * out))</a>
 <a class="sourceLine" id="cb12-25" title="25">        |&gt; List<span class="kw">.</span>map2 (List<span class="kw">.</span>map2 (-)) allWeights.[layerIndex + <span class="dv">1</span>]</a>
-<a class="sourceLine" id="cb12-26" title="26">    </a>
+<a class="sourceLine" id="cb12-26" title="26"></a>
 <a class="sourceLine" id="cb12-27" title="27">    newWeights, intermediateOutputDeltaSum</a></code></pre></div>
 <p>The full back propagation invloved first reversing the parameters. This makes it easier to work on as we start from the final layer and work towards the input.</p>
 <p>The next step is to fold through the network from the outer layer and calculate all the new values for each weight using <code>backPropSingleLayer</code>. This is then added to a list containing each layer and acts as the accumulator.</p>
-<div class="sourceCode" id="cb13"><pre class="sourceCode fsharp"><code class="sourceCode fsharp"><a class="sourceLine" id="cb13-1" title="1"><span class="kw">let</span> backPropFull (layers : Layer list) (parameters : Parameters) (targetOutputs : <span class="dt">float</span> list list) (learningRate : <span class="dt">float</span>) (loss : Loss) (forwardPropParts : <span class="dt">float</span> list list) : (<span class="dt">float</span> list list * <span class="dt">float</span> list) list =  </a>
-<a class="sourceLine" id="cb13-2" title="2">    </a>
-<a class="sourceLine" id="cb13-3" title="3">    <span class="kw">let</span> weights = </a>
+<div class="sourceCode" id="cb13"><pre class="sourceCode fsharp"><code class="sourceCode fsharp"><a class="sourceLine" id="cb13-1" title="1"><span class="kw">let</span> backPropFull (layers : Layer list) (parameters : Parameters) (targetOutputs : <span class="dt">float</span> list list) (learningRate : <span class="dt">float</span>) (loss : Loss) (forwardPropParts : <span class="dt">float</span> list list) : (<span class="dt">float</span> list list * <span class="dt">float</span> list) list =</a>
+<a class="sourceLine" id="cb13-2" title="2"></a>
+<a class="sourceLine" id="cb13-3" title="3">    <span class="kw">let</span> weights =</a>
 <a class="sourceLine" id="cb13-4" title="4">        List<span class="kw">.</span>rev parameters.weights</a>
 <a class="sourceLine" id="cb13-5" title="5"></a>
 <a class="sourceLine" id="cb13-6" title="6">    List<span class="kw">.</span>init (layers.Length) id</a>
 <a class="sourceLine" id="cb13-7" title="7">    |&gt; List<span class="kw">.</span>fold (<span class="kw">fun</span> acc index -&gt;</a>
 <a class="sourceLine" id="cb13-8" title="8">        <span class="kw">let</span> targetOutputs =</a>
-<a class="sourceLine" id="cb13-9" title="9">            acc.[<span class="dv">0</span>] </a>
-<a class="sourceLine" id="cb13-10" title="10">            |&gt; fst </a>
+<a class="sourceLine" id="cb13-9" title="9">            acc.[<span class="dv">0</span>]</a>
+<a class="sourceLine" id="cb13-10" title="10">            |&gt; fst</a>
 <a class="sourceLine" id="cb13-11" title="11">            |&gt; List<span class="kw">.</span>map List<span class="kw">.</span>sum</a>
-<a class="sourceLine" id="cb13-12" title="12">        </a>
+<a class="sourceLine" id="cb13-12" title="12"></a>
 <a class="sourceLine" id="cb13-13" title="13">        <span class="kw">let</span> backPropPart = snd acc.[<span class="dv">0</span>]</a>
 <a class="sourceLine" id="cb13-14" title="14"></a>
-<a class="sourceLine" id="cb13-15" title="15">        <span class="kw">let</span> backPropOutput = </a>
+<a class="sourceLine" id="cb13-15" title="15">        <span class="kw">let</span> backPropOutput =</a>
 <a class="sourceLine" id="cb13-16" title="16">            backPropSingleLayer targetOutputs loss learningRate backPropPart index forwardPropParts weights layers</a>
-<a class="sourceLine" id="cb13-17" title="17">        </a>
-<a class="sourceLine" id="cb13-18" title="18">        [backPropOutput] @ acc) </a>
+<a class="sourceLine" id="cb13-17" title="17"></a>
+<a class="sourceLine" id="cb13-18" title="18">        [backPropOutput] @ acc)</a>
 <a class="sourceLine" id="cb13-19" title="19">            [targetOutputs, (List<span class="kw">.</span>concat targetOutputs)]</a></code></pre></div>
 <p>The derivatives of the activations and loss functions are very similar to the normal counter parts. Parts of the <code>dActivateLayer</code> and <code>dLossFunction</code> can be seen below:</p>
 <div class="sourceCode" id="cb14"><pre class="sourceCode fsharp"><code class="sourceCode fsharp"><a class="sourceLine" id="cb14-1" title="1"><span class="kw">let</span> dActivateLayer (activation : Activation) (input : <span class="dt">float</span> list) : <span class="dt">float</span> list =</a>
 <a class="sourceLine" id="cb14-2" title="2">    <span class="kw">match</span> activation <span class="kw">with</span></a>
-<a class="sourceLine" id="cb14-3" title="3">    | Sigmoid -&gt; </a>
+<a class="sourceLine" id="cb14-3" title="3">    | Sigmoid -&gt;</a>
 <a class="sourceLine" id="cb14-4" title="4">        List<span class="kw">.</span>map (<span class="kw">fun</span> x -&gt; x * (<span class="fl">1.0</span> - x)) input</a>
-<a class="sourceLine" id="cb14-5" title="5">    | Relu -&gt; </a>
+<a class="sourceLine" id="cb14-5" title="5">    | Relu -&gt;</a>
 <a class="sourceLine" id="cb14-6" title="6">        List<span class="kw">.</span>map (<span class="kw">fun</span> x -&gt; <span class="kw">if</span> x &gt; <span class="fl">0.0</span> <span class="kw">then</span> <span class="fl">1.0</span> <span class="kw">else</span> <span class="fl">0.0</span>) input</a>
 <a class="sourceLine" id="cb14-7" title="7"></a>
 <a class="sourceLine" id="cb14-8" title="8"><span class="kw">let</span> dLossFunction (loss : Loss) (n : <span class="dt">int</span>) : <span class="dt">float</span> -&gt; <span class="dt">float</span> -&gt; <span class="dt">float</span> =</a>
 <a class="sourceLine" id="cb14-9" title="9">    <span class="kw">match</span> loss <span class="kw">with</span></a>
-<a class="sourceLine" id="cb14-10" title="10">    | MSE -&gt; </a>
-<a class="sourceLine" id="cb14-11" title="11">    <span class="kw">fun</span> actual target -&gt; </a>
+<a class="sourceLine" id="cb14-10" title="10">    | MSE -&gt;</a>
+<a class="sourceLine" id="cb14-11" title="11">    <span class="kw">fun</span> actual target -&gt;</a>
 <a class="sourceLine" id="cb14-12" title="12">    (<span class="fl">2.0</span> / (n |&gt; <span class="dt">float</span>)) * (actual - target) * <span class="fl">-1.0</span></a>
-<a class="sourceLine" id="cb14-13" title="13">    | MAE -&gt; </a>
-<a class="sourceLine" id="cb14-14" title="14">    <span class="kw">fun</span> target actual -&gt; </a>
+<a class="sourceLine" id="cb14-13" title="13">    | MAE -&gt;</a>
+<a class="sourceLine" id="cb14-14" title="14">    <span class="kw">fun</span> target actual -&gt;</a>
 <a class="sourceLine" id="cb14-15" title="15">        <span class="kw">if</span> actual &gt; target <span class="kw">then</span> <span class="fl">1.0</span> <span class="kw">else</span> <span class="fl">-1.0</span></a></code></pre></div>
 <h3 id="training">Training</h3>
 <p>Training the network is a fairly simple recursive function that continually picks a random sample of the data set and carries out forwards and backwards propagation using the sample for any number of iterations. A simplified version of the function (initialisation and printing etc. removed) can be seen below:</p>
 <div class="sourceCode" id="cb15"><pre class="sourceCode fsharp"><code class="sourceCode fsharp"><a class="sourceLine" id="cb15-1" title="1"><span class="kw">let</span> <span class="kw">rec</span> train (parameters : Parameters) (model : Layer list) (maxIterations : <span class="dt">int</span>) (iterations : <span class="dt">int</span>) =</a>
 <a class="sourceLine" id="cb15-2" title="2">    <span class="kw">let</span> idx = System<span class="kw">.</span>Random().Next(<span class="dv">0</span>, List<span class="kw">.</span>length targetOutputs)</a>
 <a class="sourceLine" id="cb15-3" title="3"></a>
-<a class="sourceLine" id="cb15-4" title="4">    <span class="kw">let</span> fullSingle = </a>
+<a class="sourceLine" id="cb15-4" title="4">    <span class="kw">let</span> fullSingle =</a>
 <a class="sourceLine" id="cb15-5" title="5">        forwardFull parameters inputs.[idx] architecture</a>
 <a class="sourceLine" id="cb15-6" title="6">        |&gt; backPropFull architecture parameters targets.[idx] learningRate loss</a>
 <a class="sourceLine" id="cb15-7" title="7">        |&gt; weightUpdate parameters</a>
-<a class="sourceLine" id="cb15-8" title="8">    </a>
+<a class="sourceLine" id="cb15-8" title="8"></a>
 <a class="sourceLine" id="cb15-9" title="9">    train fullSingle model maxIterations (iterations + <span class="dv">1</span>)</a>
-<a class="sourceLine" id="cb15-10" title="10">    </a>
+<a class="sourceLine" id="cb15-10" title="10"></a>
 <a class="sourceLine" id="cb15-11" title="11"><span class="co">(* This is called like below *)</span></a>
 <a class="sourceLine" id="cb15-12" title="12">train initial architecture iterations <span class="dv">0</span></a></code></pre></div>
 <h2 id="bugs">Bugs</h2>

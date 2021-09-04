@@ -11,7 +11,7 @@ def loadMarkdown(inputFile : str, mediaDirectory : str) -> str:
     Loads the markdown and fixes image paths.
     """
     with open(inputFile, 'r') as file:
-        return re.sub(r'!\[(.*)\]\((.*)\)', r'![\1](%s\2)' % mediaDirectory, file.read())
+        return re.sub(r'!\[(.*)\]\((.*)\)', r'![\1](%s%s\2)' % (mediaDirectory, os.path.sep), file.read())
 
 
 def generateIntro(content : str, introTemplateFile : str, outputFile : str, mediaDirectory : str) -> Tuple[str, datetime]:
@@ -30,7 +30,6 @@ def generateIntro(content : str, introTemplateFile : str, outputFile : str, medi
         image = re.findall(r'(!\[.*\]\(.*\))', intro)[0]  # find image
         intro = re.sub(r'(!\[.*\]\(.*\))', '', intro)     # remove image from intro
         image = re.findall(r'!\[.*\]\((.*)\)', image)[0]  # convert image to just path to image
-        image = os.path.join(mediaDirectory, image)
     except:
         image = ""  # don't need to remove image if not in intro
 
@@ -63,6 +62,18 @@ def generateIndexFile(intros : List[Tuple[str, str]], indexTemplateFile : str, o
     with open(outputIndexFile, 'w') as f:
         f.write(webpage)
 
+    print("Success!")
+
+
+def generate404(notFoundTemplateFile : str, output404File : str, styleFile : str, mediaDirectory : str) -> None:
+    print("Generating '404.html' ... ", end="")
+    with open(notFoundTemplateFile) as file:
+        template = Template(file.read())
+    webpage = template.render(style=styleFile, files=mediaDirectory)
+
+    os.makedirs(os.path.dirname(output404File), exist_ok=True)
+    with open(output404File, 'w') as f:
+        f.write(webpage)
     print("Success!")
 
 
@@ -108,6 +119,7 @@ if __name__ == "__main__":
     parser.add_argument("-f", "--media", help="Directory containing media files (images, css etc.)", required=True)
     parser.add_argument("-s", "--style", help="Input CSS file", default="files/website.css")
     parser.add_argument("-i", "--index", help="Directory to output index file", default=".")
+    parser.add_argument("-x", "--notfound", help="Directory to output 404 file", default=".")
     args = parser.parse_args()
 
     intros = []
@@ -133,3 +145,10 @@ if __name__ == "__main__":
         args.style,
         args.media,
     )
+
+    generate404(
+        os.path.join(args.templates, "404.html.template"),
+        os.path.join(args.notfound, "404.html"),
+        args.style,
+        args.media,
+        )
