@@ -19,7 +19,7 @@ jobs:
         python-version: 3.8
     - name: Install required pip packages
       run: |
-        python3 pip3 install -r requirements.txt
+        pip3 install -r requirements.txt
     - name: Create local changes
       run: |
         python3 md2html.py -m files/markdown/ -t templates/ -s /files/website.css -o pages/ -f /files
