@@ -1,5 +1,5 @@
 # joshj.dev
 
-Portfolio for Josh Jennings.
+Website and portfolio for Josh Jennings.
 
 Hosted using GitHub pages.

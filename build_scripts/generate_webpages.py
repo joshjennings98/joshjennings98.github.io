@@ -16,8 +16,8 @@ def loadMarkdown(inputFile : str, mediaDirectory : str) -> str:
 
 def generateIntro(content : str, introTemplateFile : str, outputFile : str) -> Tuple[str, datetime]:
     """
-    For an input file `inputFile` create an introduction paragraph for the homepage
-    based on the <intro date=X></intro> tags and add a read more link to `outputFile`. Return
+    For a string containing markdown content, create an introduction paragraph for the homepage
+    based on the <intro date=X></intro> tags and add a read more link to outputFile. Return
     the introduction and the date specified in the <intro> tag.
     """
 
@@ -66,6 +66,9 @@ def generateIndexFile(intros : List[Tuple[str, str]], indexTemplateFile : str, o
 
 
 def generate404(notFoundTemplateFile : str, output404File : str, styleFile : str, mediaDirectory : str) -> None:
+    """
+    Generate the 404 page.
+    """
     print("Generating '404.html' ... ", end="")
     with open(notFoundTemplateFile) as file:
         template = Template(file.read())
@@ -79,9 +82,8 @@ def generate404(notFoundTemplateFile : str, output404File : str, styleFile : str
 
 def markdownToHTML(content : str, pageTemplateFile : str, introTemplateFile : str, style : str, outputFile : str, mediaDirectory : str) -> str:
     """
-    Take a file written in markdown `inputFile`, use pandoc to convert it to HTML,
-    and save it to `outputFile`. The function will return the intro paragraph an image
-    for use on the homepage.
+    Take content written in markdown, use pandoc to convert it to HTML, and save it to
+    outputFile. The function will return the intro paragraph an image for use on the homepage.
     """
     print(f"Generating '{outputFile}' ... ", end="")
     intro = generateIntro(content, introTemplateFile, outputFile)

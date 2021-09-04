@@ -1,4 +1,4 @@
-name: Build webpages from markdown files
+name: Build website content
 
 on:
   push:
@@ -19,7 +19,7 @@ jobs:
         python-version: 3.8
     - name: Install required pip packages
       run: |
-        pip3 install -r requirements.txt
+        pip3 install -r build_scripts/requirements.txt
     - name: Download Pandoc
       run: |
         if [ "$RUNNER_OS" == "Linux" ]; then
@@ -29,9 +29,10 @@ jobs:
         else
           sudo brew install pandoc
         fi
-    - name: Create local changes
+    - name: Build website and CV
       run: |
-        python3 md2html.py -m files/markdown/ -t templates/ -s /files/website.css -o pages/ -f /files
+        python3 build_scripts/generate_webpages.py -m ../files/markdown/ -t ../templates/ -s /files/website.css -o pages/ -f /files
+        python3 build_scripts/generate_cv.py -c ../templates/cv.yaml -t ../templates/cv.html.template -o ../CV-Josh-Jennings.html
     - name: Commit files
       run: |
         git config --local user.email "41898282+github-actions[bot]@users.noreply.github.com"
