@@ -5,6 +5,7 @@ on:
     paths:
       - 'files/src/**'
       - '.github/workflows/build.yml'
+      - 'files/templates/**'
 
 jobs:
   Build-website-content:

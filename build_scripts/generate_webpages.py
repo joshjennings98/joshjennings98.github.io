@@ -93,6 +93,8 @@ def markdownToHTML(content : str, pageTemplateFile : str, introTemplateFile : st
     pandoc_args = ['-s' ,'--highlight-style=zenburn', '--columns', '1000']
     content = pypandoc.convert_text(content, 'html5', format='md', extra_args=pandoc_args)
 
+    content = "\n".join(content.splitlines()[3:])  # remove duplicated DOCTYPE stuff from pandoc output
+
     # A couple of things to make the pages prettier
     content = content.replace("pre, code", "pre")
     content = content.replace("<figure>", "<div class=\"picture-left\">\n<figure>")
