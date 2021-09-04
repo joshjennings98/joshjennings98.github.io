@@ -20,8 +20,16 @@ jobs:
     - name: Install required pip packages
       run: |
         pip3 install -r requirements.txt
+    - name: Download Pandoc
+      run: |
+        if [ "$RUNNER_OS" == "Linux" ]; then
+          sudo apt install pandoc
+        elif [ "$RUNNER_OS" == "Windows" ]; then
+          python setup.py download_pandoc
+        else
+          sudo brew install pandoc
+        fi
     - name: Create local changes
-      uses: docker://pandoc/core:2.9
       run: |
         python3 md2html.py -m files/markdown/ -t templates/ -s /files/website.css -o pages/ -f /files
     - name: Commit files
