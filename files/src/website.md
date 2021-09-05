@@ -88,46 +88,46 @@ The next step just sets up Python 3.8.
 
 We install the dependencies depending on what needs updating. We use `git diff` to determine if there were any changes to the markdown (or CV yaml) in the last commit. If there were then we install the dependencies.
 
-We only install pandoc if we made changes to the markdown. The CV generation doesn't require pandoc so we don't install it if we don't need to.
+We only install pandoc if we made changes to the markdown or to the templates. The CV generation doesn't require pandoc so we don't install it if we don't need to.
 
 ```yaml
 - name: Install dependencies
 	run: |
-	if [[ $(git diff HEAD^ files/src/) ]] ; then
+	if [[ $(git diff HEAD^ files/src/ files/templates/**.template) ]] ; then
 		pip3 install -r build_scripts/requirements.txt
-		if [[ $(git diff HEAD^ files/src/**.md) ]] ; then
-			sudo apt install pandoc
+		if [[ $(git diff HEAD^ files/src/**.md files/templates/**.template ':!files/templates/cv.html.template') ]] ; then
+		sudo apt install pandoc
 		fi
 	else
 		echo "Nothing to rebuild so skipping dependency install."
 	fi
 ```
 
-Again using `git diff` we check for changes to the markdown and if there were any changes then we use the `generate_webpages.py` script to convert the markdown to HTML.
+Again using `git diff` we check for changes to the markdown or templates (excluding the CV template) and if there were any changes then we use the `generate_webpages.py` script to convert the markdown to HTML.
 
 ```yaml
 - name: Generate webpages from markdown files
 	run: |
-	if [[ $(git diff HEAD^ files/src/**.md) ]] ; then
+	if [[ $(git diff HEAD^ files/src/**.md files/templates/**.template ':!files/templates/cv.html.template') ]] ; then
 		python3 build_scripts/generate_webpages.py -m files/src/ -t files/templates/ -s /files/website.css -o pages/ -f /files
 	else
 		echo "Skipping stage as no markdown files were modified."
 	fi
 ```
 
-Once again, we use `git diff` we check for changes to the CV yaml and only run the `generate_cv.py` script if necessary.
+Once again, we use `git diff` we check for changes to the CV yaml or template and only run the `generate_cv.py` script if necessary.
 
 ```yaml
 - name: Generate CV from YAML
 	run: |
-	if [[ $(git diff HEAD^ files/src/cv.yaml) ]] ; then
+	if [[ $(git diff HEAD^ files/src/cv.yaml files/templates/cv.html.template) ]] ; then
 		python3 build_scripts/generate_cv.py -c files/src/cv.yaml -t files/templates/cv.html.template -o pages/CV-Josh-Jennings.html
 	else
 		echo "Skipping stage as CV wasn't modified."
 	fi
 ```
 
-We then stage any changes and commit them. If the workflow is run due to the workflow file being updated then we won't want to commit the changes as the commit would be empty. This would cause issues so we check if there are actually changes before we commit anything.
+We then stage any changes and commit them. If the workflow is run due to the workflow file being updated then we won't want to commit the changes as the commit would be empty. This would cause issues so we check if there are actually changes to the markdown or templates before we commit anything.
 
 ```yaml
 - name: Commit changes
@@ -135,7 +135,7 @@ We then stage any changes and commit them. If the workflow is run due to the wor
 	git config --local user.email "41898282+github-actions[bot]@users.noreply.github.com"
 	git config --local user.name "github-actions[bot]"
 	git add .
-	if [[ $(git diff HEAD^ files/src/) ]] ; then
+	if [[ $(git diff HEAD^ files/src/ files/templates/**.template) ]] ; then
 		git commit -m "Build website - $(date)."
 	else
 		echo "No changes to src directory. Aborting deploy."
