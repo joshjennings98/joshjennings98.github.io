@@ -137,40 +137,40 @@ code span.wa { color: #7f9f7f; font-weight: bold; } /* Warning */
 <a class="sourceLine" id="cb4-3" title="3">    <span class="fu">with:</span></a>
 <a class="sourceLine" id="cb4-4" title="4">    <span class="fu">python-version:</span><span class="at"> </span><span class="fl">3.8</span></a></code></pre></div>
 <p>We install the dependencies depending on what needs updating. We use <code>git diff</code> to determine if there were any changes to the markdown (or CV yaml) in the last commit. If there were then we install the dependencies.</p>
-<p>We only install pandoc if we made changes to the markdown. The CV generation doesn’t require pandoc so we don’t install it if we don’t need to.</p>
+<p>We only install pandoc if we made changes to the markdown or to the templates. The CV generation doesn’t require pandoc so we don’t install it if we don’t need to.</p>
 <div class="sourceCode" id="cb5"><pre class="sourceCode yaml"><code class="sourceCode yaml"><a class="sourceLine" id="cb5-1" title="1"><span class="kw">-</span> <span class="fu">name:</span><span class="at"> Install dependencies</span></a>
 <a class="sourceLine" id="cb5-2" title="2"><span class="fu">    run:</span> <span class="st">|</span></a>
-<a class="sourceLine" id="cb5-3" title="3">    if <span class="kw">[[</span> $(git diff HEAD^ files/src/) <span class="kw">]]</span> ; then</a>
+<a class="sourceLine" id="cb5-3" title="3">    if <span class="kw">[[</span> $(git diff HEAD^ files/src/ files/templates/<span class="dt">**.template)</span> <span class="kw">]]</span> ; then</a>
 <a class="sourceLine" id="cb5-4" title="4">        pip3 install -r build_scripts/requirements.txt</a>
-<a class="sourceLine" id="cb5-5" title="5">        if <span class="kw">[[</span> $(git diff HEAD^ files/src/<span class="dt">**.md)</span> <span class="kw">]]</span> ; then</a>
-<a class="sourceLine" id="cb5-6" title="6">            sudo apt install pandoc</a>
+<a class="sourceLine" id="cb5-5" title="5">        if <span class="kw">[[</span> $(git diff HEAD^ files/src/<span class="dt">**.md</span> files/templates/<span class="dt">**.template</span> <span class="st">&#39;:!files/templates/cv.html.template&#39;</span>) <span class="kw">]]</span> ; then</a>
+<a class="sourceLine" id="cb5-6" title="6">        sudo apt install pandoc</a>
 <a class="sourceLine" id="cb5-7" title="7">        fi</a>
 <a class="sourceLine" id="cb5-8" title="8">    else</a>
 <a class="sourceLine" id="cb5-9" title="9">        echo <span class="st">&quot;Nothing to rebuild so skipping dependency install.&quot;</span></a>
 <a class="sourceLine" id="cb5-10" title="10">    fi</a></code></pre></div>
-<p>Again using <code>git diff</code> we check for changes to the markdown and if there were any changes then we use the <code>generate_webpages.py</code> script to convert the markdown to HTML.</p>
+<p>Again using <code>git diff</code> we check for changes to the markdown or templates (excluding the CV template) and if there were any changes then we use the <code>generate_webpages.py</code> script to convert the markdown to HTML.</p>
 <div class="sourceCode" id="cb6"><pre class="sourceCode yaml"><code class="sourceCode yaml"><a class="sourceLine" id="cb6-1" title="1"><span class="kw">-</span> <span class="fu">name:</span><span class="at"> Generate webpages from markdown files</span></a>
 <a class="sourceLine" id="cb6-2" title="2"><span class="fu">    run:</span> <span class="st">|</span></a>
-<a class="sourceLine" id="cb6-3" title="3">    if <span class="kw">[[</span> $(git diff HEAD^ files/src/<span class="dt">**.md)</span> <span class="kw">]]</span> ; then</a>
+<a class="sourceLine" id="cb6-3" title="3">    if <span class="kw">[[</span> $(git diff HEAD^ files/src/<span class="dt">**.md</span> files/templates/<span class="dt">**.template</span> <span class="st">&#39;:!files/templates/cv.html.template&#39;</span>) <span class="kw">]]</span> ; then</a>
 <a class="sourceLine" id="cb6-4" title="4">        python3 build_scripts/generate_webpages.py -m files/src/ -t files/templates/ -s /files/website.css -o pages/ -f /files</a>
 <a class="sourceLine" id="cb6-5" title="5">    else</a>
 <a class="sourceLine" id="cb6-6" title="6">        echo <span class="st">&quot;Skipping stage as no markdown files were modified.&quot;</span></a>
 <a class="sourceLine" id="cb6-7" title="7">    fi</a></code></pre></div>
-<p>Once again, we use <code>git diff</code> we check for changes to the CV yaml and only run the <code>generate_cv.py</code> script if necessary.</p>
+<p>Once again, we use <code>git diff</code> we check for changes to the CV yaml or template and only run the <code>generate_cv.py</code> script if necessary.</p>
 <div class="sourceCode" id="cb7"><pre class="sourceCode yaml"><code class="sourceCode yaml"><a class="sourceLine" id="cb7-1" title="1"><span class="kw">-</span> <span class="fu">name:</span><span class="at"> Generate CV from YAML</span></a>
 <a class="sourceLine" id="cb7-2" title="2"><span class="fu">    run:</span> <span class="st">|</span></a>
-<a class="sourceLine" id="cb7-3" title="3">    if <span class="kw">[[</span> $(git diff HEAD^ files/src/cv.yaml) <span class="kw">]]</span> ; then</a>
+<a class="sourceLine" id="cb7-3" title="3">    if <span class="kw">[[</span> $(git diff HEAD^ files/src/cv.yaml files/templates/cv.html.template) <span class="kw">]]</span> ; then</a>
 <a class="sourceLine" id="cb7-4" title="4">        python3 build_scripts/generate_cv.py -c files/src/cv.yaml -t files/templates/cv.html.template -o pages/CV-Josh-Jennings.html</a>
 <a class="sourceLine" id="cb7-5" title="5">    else</a>
 <a class="sourceLine" id="cb7-6" title="6">        echo <span class="st">&quot;Skipping stage as CV wasn&#39;t modified.&quot;</span></a>
 <a class="sourceLine" id="cb7-7" title="7">    fi</a></code></pre></div>
-<p>We then stage any changes and commit them. If the workflow is run due to the workflow file being updated then we won’t want to commit the changes as the commit would be empty. This would cause issues so we check if there are actually changes before we commit anything.</p>
+<p>We then stage any changes and commit them. If the workflow is run due to the workflow file being updated then we won’t want to commit the changes as the commit would be empty. This would cause issues so we check if there are actually changes to the markdown or templates before we commit anything.</p>
 <div class="sourceCode" id="cb8"><pre class="sourceCode yaml"><code class="sourceCode yaml"><a class="sourceLine" id="cb8-1" title="1"><span class="kw">-</span> <span class="fu">name:</span><span class="at"> Commit changes</span></a>
 <a class="sourceLine" id="cb8-2" title="2"><span class="fu">    run:</span> <span class="st">|</span></a>
 <a class="sourceLine" id="cb8-3" title="3">    git config --local user.email <span class="st">&quot;41898282+github-actions[bot]@users.noreply.github.com&quot;</span></a>
 <a class="sourceLine" id="cb8-4" title="4">    git config --local user.name <span class="st">&quot;github-actions[bot]&quot;</span></a>
 <a class="sourceLine" id="cb8-5" title="5">    git add .</a>
-<a class="sourceLine" id="cb8-6" title="6">    if <span class="kw">[[</span> $(git diff HEAD^ files/src/) <span class="kw">]]</span> ; then</a>
+<a class="sourceLine" id="cb8-6" title="6">    if <span class="kw">[[</span> $(git diff HEAD^ files/src/ files/templates/<span class="dt">**.template)</span> <span class="kw">]]</span> ; then</a>
 <a class="sourceLine" id="cb8-7" title="7">        git commit -m <span class="st">&quot;Build website - $(date).&quot;</span></a>
 <a class="sourceLine" id="cb8-8" title="8">    else</a>
 <a class="sourceLine" id="cb8-9" title="9">        echo <span class="st">&quot;No changes to src directory. Aborting deploy.&quot;</span></a>
