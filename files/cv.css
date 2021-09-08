@@ -4,8 +4,8 @@
 --------------------------------------------------------------------------------------- */
 html, body, div, span, applet, object, iframe, h1, h2, h3, h4, h5, h6, p, blockquote, pre, a, abbr, acronym, address, big, cite, code, del, dfn, em, img, ins, kbd, q, s, samp, small, strike, strong, sub, sup, tt, var, b, u, i, center, dl, dt, dd, ol, ul, li, fieldset, form, label, legend, table, caption, tbody, tfoot, thead, tr, th, td, article, aside, canvas, details, embed, figure, figcaption, footer, header, hgroup, menu, nav, output, ruby, section, summary, time, mark, audio, video {
   margin: 0;
-  margin-right: 13;
-  margin-left: 6;
+  margin-right: 10;
+  margin-left: 5;
   padding: 0;
   border: 0;
   font-size: 80%;
@@ -54,7 +54,7 @@ body {
   margin-top: 20;
   margin-bottom: 15;
   width: 21cm;
-  height: 29.7cm;
+  height: 30.5cm;
   align-items: stretch;
   justify-content: stretch; }
 
@@ -73,7 +73,9 @@ body {
     color: #1DA1DA;
     font-family: 'Source Sans Pro';
     font-variant: small-caps;
-    font-size: 0.9333rem; }
+    font-weight: 700;
+    font-size: 1.0rem;
+    margin-bottom: 0.2em; }
   .about-me .about-me__address {
     font-weight: 500;
     font-style: italic;
@@ -162,6 +164,14 @@ section {
 .skills .skills__list span:not(:last-child)::after {
   content: ', ';
   margin-right: -1em; }
+
+a:hover, a:visited, a:link, a:active {
+  text-decoration: none;
+  color: #5D5D5D;
+  margin-left: 0px;
+  margin-right: 0px;
+  font-weight: 600;
+  font-size: 0.9rem; }
 
 footer {
   margin-top: auto;
