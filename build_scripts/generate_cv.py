@@ -1,6 +1,6 @@
 #!/bin/python3
 
-import argparse, os, shutil, yaml
+import argparse, os, yaml
 from jinja2 import Template
 
 
