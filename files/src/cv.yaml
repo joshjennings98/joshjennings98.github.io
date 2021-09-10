@@ -21,9 +21,9 @@ sections:
       description: Development Solutions Group -- Arm ltd.
       location: Nov 2020 - Present
       content:
-        - ∙ Worked as a backend developer in the online tools group utilising Golang to implement the asynchronous incremental build system for Keil Studio Cloud online compiler so projects would only upload the necessary files to be recompiled.
-        - ∙ Worked on a RESTful API that made it simpler for Keil Studio Cloud to deploy and keep track of new builders and jobs. Used Docker to deploy builders and an ORM database library to keep track of messages and jobs in an efficient way.
-        - ∙ Worked on the Jenkins CI for the Arm Compiler teams, migrating pipelines to use docker and conan. Worked on a plugin that allowed developers to copy a command from the dashboard to reproduce any of the tests simplifying their debugging.
+        - ∙ Worked as a backend developer in the online tools group utilising Golang to implement the incremental build system for Keil Studio Cloud online compiler so projects would only upload the necessary files to be recompiled.
+        - ∙ Worked on a RESTful API that made it simpler for Keil Studio Cloud to deploy and keep track of new builders and jobs. Used Docker to deploy builders and an ORM databases to keep track of messages and jobs efficiently.
+        - ∙ Worked on the Jenkins CI for the Arm Compiler teams, migrating pipelines to use docker and conan. Worked on a plugin that allowed developers to copy a command from the dashboard to reproduce any of the tests to simplify their debugging.
         - ∙ Ran sprint retrospectives and hosted daily sync-ups with my team. Also took part in engineering efficiency meetings.
         - ∙ Regularly contributed to code reviews and provided help with onboarding to new team members. Made sure documentation was up to date and wrote setup guides on Confluence. Ran talks on how to use newly developed tools.
     Student Shapers Developer:
@@ -43,7 +43,7 @@ sections:
     Discord Bot:
       description: (See project on <a href="https://github.com/joshjennings98/discord-bot">github</a>)
       content:
-        - Made a discord bot that can tell users when the next birthday is, the birthday for a given user, as well as wishing users happy birthday. Utilised MongoDB to host a database per server, can run concurrently on multiple servers in different timezones. Uses GitHub Actions to automatically rebuild, test, and deploy the bot to Heroku when changes are pushed.
+        - Created a discord bot that can tell users when the next birthday is, the birthday for a given user, as well as wishing users happy birthday. Utilised MongoDB to host a database per server. Can run concurrently on multiple servers in different timezones. Uses GitHub Actions to automatically rebuild, test, and deploy the bot to Heroku when changes are pushed.
     F# Neural Network Library:
       description: (See project on <a href="https://github.com/joshjennings98/fsharp-neural-network">github</a> and a writeup on my <a href="https://joshj.dev/pages/fsharp-neural-network.html">website</a>)
       content:
@@ -65,17 +65,16 @@ skills:
   Programming:
     - Golang
     - Python
-    - Modern C++
+    - C
+    - Modern and Embedded C++
     - F#
-    - Groovy (Jenkins)
-    - Object Oriented and Functional Programming
+    - Groovy
+    - Javascript
+    - CMake
   Miscellaneous:
     - Linux
-    - Git
-    - Agile Development
-    - CI/CD
-    - Jenkins
+    - Version Control (Git, SVN)
+    - CI/CD (Jenkins, GitHub Actions)
     - Conan
-    - GitHub Actions
     - Docker
     - REST APIs
