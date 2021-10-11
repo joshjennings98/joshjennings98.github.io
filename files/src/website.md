@@ -10,10 +10,12 @@ This website uses my own static site generator and GitHub actions to convert mar
 
 </intro>
 
-- [Introduction](#introduction)
-- [Implementation](#implementation)
-- [Website features](#website-features)
-- [GitHub Actions Workflow](#github-actions-workflow)
+- [This website!!!](#this-website)
+	- [Introduction](#introduction)
+	- [Implementation](#implementation)
+	- [Website features](#website-features)
+	- [GitHub Actions Workflow](#github-actions-workflow)
+	- [GitHub Repository](#github-repository)
 
 </picture>
 
@@ -33,6 +35,8 @@ Another similar script is used to generate my CV from a YAML file, a jinja templ
 
 This website is based off of [https://thebestmotherfucking.website/](https://thebestmotherfucking.website/) with some changes. It has a nice short invert script that lets you switch to dark or light mode based on the OS settings (or by clicking the button). It can run on literally anything without losing the look of the website by using simple CSS. The website has different behavior for mobile devices yet retains a simple yet consistent styling.
 
+The website itself is also very small. The images are kept to as few kB as possible and the CV is generated into HTML instead of hosting a PDF. These are attempts to minimise the carbon footprint of my website. At the time of writing all of the pages weigh less than 35kB!
+
 <picture>
 
 ![Running on a HTC Wildfire!](images/website-wildfire.jpg)
@@ -41,6 +45,8 @@ In cases where the invert button isn't supported, it is specifically designed to
 
 
 This was tested using a HTC Wildfire using Android 2.2 (Froyo). This phone is so weak I was never able to get it to run Angry Birds back in the day! As you can see, the styling is simple enough that the website looks identical to on other devices. If you scroll up you find the "Go to homepage" but not the "Invert mode" button as the web browser used on this device doesn't support very recent versions of CSS.
+
+*Note: image is compressed to 11kB to reduce the carbon footprint of my website.*
 
 </picture>
 
