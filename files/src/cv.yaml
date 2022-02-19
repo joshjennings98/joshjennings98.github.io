@@ -53,7 +53,7 @@ sections:
     Discord Bot:
       description: (See project on <a href="https://github.com/joshjennings98/discord-bot">github</a>)
       content:
-        - Created a discord bot in Golang that can provide users birthday information and wish happy birthday on a per-server basis. 
+        - Created a Discord bot in Golang that provides users' birthday information and wishes happy birthday on a per-server basis. 
         - Utilised MongoDB to host the birthday database. The bot can run concurrently on multiple servers in different timezones. 
         - Uses GitHub Actions to automatically rebuild and deploy the bot to Heroku when changes are pushed.
     F# Neural Network Library:
@@ -68,7 +68,7 @@ sections:
     Static Site Generator:
       description: (See project on <a href="https://github.com/joshjennings98/joshjennings98.github.io">github</a> and a writeup on my <a href="https://joshj.dev/pages/website.html">website</a>)
       content:
-        - Built a static website generator using python that converts markdown into HTML using pandoc and Jinja templates. 
+        - Built a static website generator using Python that converts markdown into HTML using Pandoc and Jinja templates. 
         - Utilises GitHub Actions to automatically rebuild the site only if the markdown files or templates change.
     Intermittent Claudication Health App:
       description: (See project on <a href="https://github.com/joshjennings98/Intermittent-Claudication-Health-App">github</a>)
