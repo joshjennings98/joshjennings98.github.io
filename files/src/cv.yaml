@@ -14,67 +14,88 @@ sections:
       description: MEng Electrical and Electronic Engineering
       location: Oct. 2016 - Jul. 2020
       content:
-        - <b>Degree Result:</b> Upper Second Class Honours (2:1)
-        - "<b>A Levels:</b> Mathematics (A*), Further Mathematics (A), Physics (A)<span style='display:inline-block; width: 3em;'></span><b>GCSEs:</b> 10 Grade A* to C, including 4 A*"
+        - "<b>Degree Result:</b> Upper Second Class Honours (2:1)<span style='display:inline-block; width: 2.75em;'></span><b>A Levels:</b> Mathematics (A*), Further Mathematics (A), Physics (A)"
   Professional Experience:
     Software Engineer:
-      description: Development Solutions Group -- Arm ltd.
-      location: Nov 2020 - Present
+      description: Online Tools Group — Arm ltd.
+      location: Dec 2021 - Present
       content:
-        - ∙ Worked as a backend developer in the online tools group utilising Golang to implement the incremental build system for Keil Studio Cloud online compiler so projects would only upload the necessary files to be recompiled.
-        - ∙ Worked on a RESTful API that made it simpler for Keil Studio Cloud to deploy and keep track of new builders and jobs. Used Docker to deploy builders and an ORM databases to keep track of messages and jobs efficiently.
-        - ∙ Worked on the Jenkins CI for the Arm Compiler teams, migrating pipelines to use docker and conan. Worked on a plugin that allowed developers to copy a command from the dashboard to reproduce any of the tests to simplify their debugging.
-        - ∙ Ran sprint retrospectives and hosted daily sync-ups with my team. Also took part in engineering efficiency meetings.
-        - ∙ Regularly contributed to code reviews and provided help with onboarding to new team members. Made sure documentation was up to date and wrote setup guides on Confluence. Ran talks on how to use newly developed tools.
-    Student Shapers Developer:
-      description: Digital Learning Hub/Department of Chemistry -- Imperial College London
+        - Used Golang, Docker, and Kubernetes (with custom resources/operators) to deploy new services for Keil Studio's Cloud IDE.
+        - Created an asynchronous HTTP file transfer system using Golang to allow Keil Studio to incrementally compile projects.
+        - Updated cleanup and deployment cron jobs using Golang and RabbitMQ, decreasing runtime and container storage needs.
+        - Worked on a REST API using Golang with OpenAPI that utilised ORM databases to monitor/deploy Keil Studio instances.
+        - Developed Python tools to benchmark performance solutions for CircleCI workflows including deployment of Keil Studio.
+        - Ran sprint retrospectives and hosted daily sync-ups with my team as well as taking part in engineering efficiency meetings.
+        - Regularly took part in code reviews. Provided onboarding to new team members. Wrote documentation and setup guides.
+    Graduate Software Engineer:
+      description: Development Solutions Group — Arm ltd.
+      location: Nov 2020 - Dec 2021
+      content:
+        - Created a Python tool for Arm Compiler that can replicate any test running in CI locally, vastly reducing debug time.
+        - Rewrote Jenkins pipelines to use Docker and Conan for Arm Compiler and led migration of SVN repositories to Gerrit.
+        - Developed a guide/testbench for the Generic Interrupt Controller making it easier for other Fast Models developers to use.
+    Student Developer:
+      description: Digital Learning Hub/Department of Chemistry — Imperial College London
       location: Jul 2018 - Sep 2019
       content:
-        - "∙ Worked in conjunction with the Digital Learning Hub at Imperial College to create interactive tutorials on several different machine learning topics to be used in conjunction with Imperial College’s online Machine Learning Masters Degree Course."
-        - ∙ Produced fully featured web applications using JavaScript, HTML, and CSS, utilising Git for version control as well as python based build automation for the deployment of the web applications.
-        - ∙ Worked for the Department of Chemistry in an interdisciplinary team consisting of engineers and chemists to develop a smartphone based biosensor for use with Lateral Flow Assays that could detect Vancomycin concentration in blood plasma using OpenCV and a convolutional neural network by converting colour intensity into a concentration value.
-        - ∙ Negotiated for funding, went to an international competition, pitched the app to professionals, and ran a public panel.
+        - Created interactive tutorials on machine learning topics for Imperial College's online Machine Learning Masters Degree.
+        - Produced interactive web apps using JavaScript, HTML, and CSS. Used Python/Flask for build automation and deployment.
+        - Built a smartphone-based biosensor that used OpenCV and Lateral Flow Assays to calculate Vancomycin levels in blood.
+        - Negotiated for funding, took part in an international competition, pitched the app to professionals, and ran a public panel.
 
   Projects:
     Spiking Neural Network Simulator for Event-Driven Hardware:
       description: (See project on <a href="https://github.com/joshjennings98/fyp">github</a>)
       content:
-        - Used C++ and Python to develop a simulator for generating and testing new spiking neural network models on the Cambridge Computer Laboratory’s Partially-Ordered Event-Triggered System. Designed better algorithms that increased simulation efficiency and improved the current implementations. Provided tooling for researchers wanting to develop new network models. Investigated whether POETS provided performance gains over conventional architectures.
+        - Built a spiking neural network simulator for Cambridge Computer Laboratory's Partially-Ordered Event-Triggered System. 
+        - Used C++ and Python to design algorithms that increased simulation efficiency and improved the current implementations. 
+        - Provided tools for researchers and investigated whether there were performance gains over conventional architectures.
     Discord Bot:
       description: (See project on <a href="https://github.com/joshjennings98/discord-bot">github</a>)
       content:
-        - Created a discord bot that can tell users when the next birthday is, the birthday for a given user, as well as wishing users happy birthday. Utilised MongoDB to host a database per server. Can run concurrently on multiple servers in different timezones. Uses GitHub Actions to automatically rebuild, test, and deploy the bot to Heroku when changes are pushed.
+        - Created a discord bot in Golang that can provide users birthday information and wish happy birthday on a per-server basis. 
+        - Utilised MongoDB to host the birthday database. The bot can run concurrently on multiple servers in different timezones. 
+        - Uses GitHub Actions to automatically rebuild and deploy the bot to Heroku when changes are pushed.
     F# Neural Network Library:
       description: (See project on <a href="https://github.com/joshjennings98/fsharp-neural-network">github</a> and a writeup on my <a href="https://joshj.dev/pages/fsharp-neural-network.html">website</a>)
       content:
-        - Developed a small library for creating neural networks designed for and built with F#. The library allows for the creation of neural networks of any size with a large selection of activation functions, optimisers, loss functions, and initialisers.
+        - Developed a small library for creating neural networks designed for and built with F#. 
+        - The library supports neural networks of any size with many activation functions, optimisers, loss functions, and initialisers.
     Game Boy Emulator:
       description: (See project on <a href="https://github.com/joshjennings98/game-boy-cpp">github</a>)
       content:
-        - Utilised C++ and the SDL2 library to create a Game Boy emulator.
+        - Utilised C++ and the SDL2 library to build a Game Boy emulator.
     Static Site Generator:
       description: (See project on <a href="https://github.com/joshjennings98/joshjennings98.github.io">github</a> and a writeup on my <a href="https://joshj.dev/pages/website.html">website</a>)
       content:
-        - Built a custom static site generator for my website written in python that converts markdown into HTML using pandoc and Jinja templates. It uses GitHub Actions to automatically rebuild the site only if the markdown files or templates change.
+        - Built a static website generator using python that converts markdown into HTML using pandoc and Jinja templates. 
+        - Utilises GitHub Actions to automatically rebuild the site only if the markdown files or templates change.
     Intermittent Claudication Health App:
       description: (See project on <a href="https://github.com/joshjennings98/Intermittent-Claudication-Health-App">github</a>)
       content:
-        - Created a cross-platform smartphone app using JavaScript with the goal to improve the quality of life for patients suffering from Intermittent Claudication. Leveraged React Native and Firebase to create a platform that allows patients to exercise together countering the effects of Intermittent Claudication. The patient’s progress can be monitored remotely by a health practitioner. Developed as part of a team utilising iterative development techniques as well as making sure we regularly peer reviewed each others code. The project won a prize for the best 3rd year group project.
+        - Built a cross-platform smartphone app that improves quality of life for patients suffering from Intermittent Claudication. 
+        - Leveraged JavaScript, React Native, and Firebase to create a platform that allows patients to exercise together and keep track of the illness. A patient's progress can be monitored remotely by a health practitioner using a web interface. 
+        - The application won the prize for the best 3rd year group project.
 
 skills:
-  Programming:
+  Experienced in:
     - Golang
     - Python
-    - C
-    - Modern and Embedded C++
     - F#
-    - Groovy
-    - Javascript
-    - CMake
-  Miscellaneous:
+    - Git
     - Linux
-    - Version Control (Git, SVN)
-    - CI/CD (Jenkins, GitHub Actions)
-    - Conan
+    - CircleCI
     - Docker
-    - REST APIs
+    - Kubernetes
+    - RabbitMQ
+    - Swagger/OpenAPI
+    - Databases.
+  Some familiarity:
+    - Modern/Embedded C++
+    - Javascript
+    - AWS
+    - Terraform
+    - CMake
+    - Conan
+    - Jenkins/Groovy
+    - GitHub Actions.

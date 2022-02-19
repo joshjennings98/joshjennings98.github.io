@@ -10,6 +10,7 @@ html, body, div, span, applet, object, iframe, h1, h2, h3, h4, h5, h6, p, blockq
   border: 0;
   font-size: 80%;
   font: inherit;
+  size: A4;
   vertical-align: baseline; }
 
 article, aside, details, figcaption, figure, footer, header, hgroup, menu, nav, section {
@@ -51,7 +52,7 @@ body {
   display: flex;
   flex-direction: column;
   position: relative;
-  margin-top: 20;
+  margin-top: 15;
   margin-bottom: 15;
   width: 21cm;
   height: 30.5cm;
@@ -94,7 +95,7 @@ body {
 
 section {
   width: 100%;
-  margin-top: 0.25rem;
+  margin-top: 0.0rem;
   font-family: 'Source Sans Pro'; }
   section .section__heading {
     color: #1DA1DA;
@@ -136,11 +137,11 @@ section {
         font-weight: 500;
         font-style: italic; }
   section ul {
-    list-style-type: none;
+    list-style-type:disc ;
     margin-left: 1.1rem;
     margin-top: 0.5rem;
     font-size: 0.9rem;
-    line-height: 1.1em; }
+    line-height: 1.2em; }
     section ul li {
       font-size: 0.9rem; }
       section ul li b {
@@ -153,7 +154,7 @@ section {
     color: #333333; }
 
 .skills table tr td:first-child {
-  width: 7.5em;
+  width: 8.5em;
   text-align: right;
   font-weight: bold;
   font-size: 1rem; }
