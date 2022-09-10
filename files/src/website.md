@@ -65,15 +65,6 @@ on:
       - 'files/templates/**'
 ```
 
-We run using Ubuntu image as I have experience with Linux.
-
-```yaml
-jobs:
-  Build-website-content:
-    runs-on: ubuntu-latest
-    steps:
-```
-
 We checkout the repository. This has `persist-credentials: false` as otherwise, the token used is the `GITHUB_TOKEN`, instead of my personal access token. The `fetch-depth` is set to zero because otherwise, there would be errors pushing refs to the destination repository.
 
 ```yaml
@@ -81,15 +72,6 @@ We checkout the repository. This has `persist-credentials: false` as otherwise, 
 	with:
 	persist-credentials: false
 	fetch-depth: 0
-```
-
-The next step just sets up Python 3.8.
-
-```yaml
-- name: Setup python
-	uses: actions/setup-python@v2
-	with:
-	python-version: 3.8
 ```
 
 We install the dependencies depending on what needs updating. We use `git diff` to determine if there were any changes to the markdown (or CV yaml) in the last commit. If there were then we install the dependencies.
