@@ -27,9 +27,6 @@ This is my website and a portfolio of some of my personal projects.
 <li>I can be contacted via <a href="mailto:josh@joshj.dev">email</a>.</li>
 </ul>
 </p>
-<p>
-For a fun BIOS-themed version of this website <a title="Note this doesn't work well on mobile devices..." href="https://joshj.dev/bios.html" onclick="return confirm('Note: If you are on mobile then this version of the website may have formatting issues.')">click here</a>.
-</p>
 <h2>Projects</h2>
 {% for intro in intros -%}
 {{intro}}

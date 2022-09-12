@@ -1,4 +1,4 @@
-# This website!!!
+# Static Website Generator
 
 <picture>
 
@@ -10,12 +10,11 @@ This website uses my own static site generator and GitHub actions to convert mar
 
 </intro>
 
-- [This website!!!](#this-website)
-	- [Introduction](#introduction)
-	- [Implementation](#implementation)
-	- [Website features](#website-features)
-	- [GitHub Actions Workflow](#github-actions-workflow)
-	- [GitHub Repository](#github-repository)
+- [Introduction](#introduction)
+- [Implementation](#implementation)
+- [Website features](#website-features)
+- [GitHub Actions Workflow](#github-actions-workflow)
+- [GitHub Repository](#github-repository)
 
 </picture>
 
@@ -50,9 +49,9 @@ This was tested using a HTC Wildfire using Android 2.2 (Froyo). This phone is so
 
 </picture>
 
-## GitHub Actions Workflow
+## How it works
 
-The GitHub actions is a simple workflow and it will be explained below.
+We use a GitHub actions workflow for generating the website. The GitHub actions is a simple workflow and it will be explained a bit below.
 
 We set the workflow to only run when the GitHub actions workflow is updated, or when the markdown/CV files (or the templates themselves) are updated.
 
@@ -84,7 +83,7 @@ We only install pandoc if we made changes to the markdown or to the templates. T
 	if [[ $(git diff HEAD^ files/src/ files/templates/**.template) ]] ; then
 		pip3 install -r build_scripts/requirements.txt
 		if [[ $(git diff HEAD^ files/src/**.md files/templates/**.template ':!files/templates/cv.html.template') ]] ; then
-		sudo apt install pandoc
+			sudo apt install pandoc
 		fi
 	else
 		echo "Nothing to rebuild so skipping dependency install."
@@ -130,17 +129,7 @@ We then stage any changes and commit them. If the workflow is run due to the wor
 	fi
 ```
 
-We use a `github-push-action` to then push the changes to the same repo. This results in a commit from the GitHub actions bot stating that the website has been built. These changes will then be reflected when GitHub pages completes it's deploy actions.
-
-```yaml
-- name: Push changes ready for Github Pages to deploy
-	uses: ad-m/github-push-action@master
-	with:
-	github_token: ${{ secrets.GITHUB_TOKEN }}
-	branch: master
-```
-
-And that is the entire workflow. As you can see, it is nice and simple yet very effective!
+We will then use `github-push-action` to then push the changes to the same repo and that is it.
 
 ## GitHub Repository
 
