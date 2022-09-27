@@ -13,7 +13,7 @@ This website uses my own static site generator and GitHub actions to convert mar
 - [Introduction](#introduction)
 - [Implementation](#implementation)
 - [Website features](#website-features)
-- [GitHub Actions Workflow](#github-actions-workflow)
+- [How it works](#how-it-works)
 - [GitHub Repository](#github-repository)
 
 </picture>
@@ -51,85 +51,109 @@ This was tested using a HTC Wildfire using Android 2.2 (Froyo). This phone is so
 
 ## How it works
 
-We use a GitHub actions workflow for generating the website. The GitHub actions is a simple workflow and it will be explained a bit below.
+We use two GitHub actions workflows for generating the website and CV.
 
-We set the workflow to only run when the GitHub actions workflow is updated, or when the markdown/CV files (or the templates themselves) are updated.
+For the website:
 
-```yaml
+```yml
+name: Build Website
+
 on:
   push:
     paths:
-      - 'files/src/**'
-      - '.github/workflows/build.yml'
+      - 'files/src/**.md'
       - 'files/templates/**'
+      - '!files/templates/cv.html.template'
+      - 'files/website.css'
+
+concurrency:
+  group: ${{ github.repository }}
+
+jobs:
+  build-and-deploy:
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v2
+      with:
+        persist-credentials: false # otherwise token used is the GITHUB_TOKEN, instead of your personal access token.
+        fetch-depth: 0 # otherwise, there would be errors pushing refs to the destination repository.
+    - name: Setup python
+      uses: actions/setup-python@v2
+      with:
+        python-version: 3.8
+    - name: Install dependencies
+      run: |
+          pip3 install -r build_scripts/requirements.txt
+          sudo apt install pandoc
+    - name: Generate webpages from markdown files
+      run: |
+        python3 build_scripts/generate_webpages.py -m files/src/ -t files/templates/ -s /files/website.css -o pages/ -f /files
+    - name: Commit changes
+      run: |
+	  	git pull
+        git config --local user.email "41898282+github-actions[bot]@users.noreply.github.com"
+        git config --local user.name "github-actions[bot]"
+        git add .
+        git commit -m "Update website - $(date)."
+    - name: Push changes ready for Github Pages to deploy
+      uses: ad-m/github-push-action@master
+      with:
+        github_token: ${{ secrets.GITHUB_TOKEN }}
+        branch: master
 ```
 
-We checkout the repository. This has `persist-credentials: false` as otherwise, the token used is the `GITHUB_TOKEN`, instead of my personal access token. The `fetch-depth` is set to zero because otherwise, there would be errors pushing refs to the destination repository.
+For the CV:
 
-```yaml
-- uses: actions/checkout@v2
-	with:
-	persist-credentials: false
-	fetch-depth: 0
+```yml
+name: Build CV
+
+on:
+  push:
+    paths:
+      - 'files/src/cv.yml'
+      - 'files/templates/cv.html.template'
+      - 'files/cv.css'
+
+concurrency:
+  group: ${{ github.repository }}
+
+jobs:
+  build-and-deploy:
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v2
+      with:
+        persist-credentials: false # otherwise token used is the GITHUB_TOKEN, instead of your personal access token.
+        fetch-depth: 0 # otherwise, there would be errors pushing refs to the destination repository.
+    - name: Setup python
+      uses: actions/setup-python@v2
+      with:
+        python-version: 3.8
+    - name: Install dependencies
+      run: |
+          pip3 install -r build_scripts/requirements.txt
+    - name: Generate CV from YAML
+      run: |
+          python3 build_scripts/generate_cv.py -c files/src/cv.yaml -t files/templates/cv.html.template -o pages/CV-Josh-Jennings.html
+    - name: Commit changes
+      run: |
+        git pull
+        git config --local user.email "41898282+github-actions[bot]@users.noreply.github.com"
+        git config --local user.name "github-actions[bot]"
+        git add .
+		git commit -m "Update CV - $(date)."
+    - name: Push changes ready for Github Pages to deploy
+      uses: ad-m/github-push-action@master
+      with:
+        github_token: ${{ secrets.GITHUB_TOKEN }}
+        branch: master
 ```
 
-We install the dependencies depending on what needs updating. We use `git diff` to determine if there were any changes to the markdown (or CV yaml) in the last commit. If there were then we install the dependencies.
+These are very similar and are only differentiated by which changes trigger them and which files get updated.
 
-We only install pandoc if we made changes to the markdown or to the templates. The CV generation doesn't require pandoc so we don't install it if we don't need to.
+I use concurrency with the context set to the entire repository so that only one workflow will run at a time.
 
-```yaml
-- name: Install dependencies
-	run: |
-	if [[ $(git diff HEAD^ files/src/ files/templates/**.template) ]] ; then
-		pip3 install -r build_scripts/requirements.txt
-		if [[ $(git diff HEAD^ files/src/**.md files/templates/**.template ':!files/templates/cv.html.template') ]] ; then
-			sudo apt install pandoc
-		fi
-	else
-		echo "Nothing to rebuild so skipping dependency install."
-	fi
-```
-
-Again using `git diff` we check for changes to the markdown or templates (excluding the CV template) and if there were any changes then we use the `generate_webpages.py` script to convert the markdown to HTML.
-
-```yaml
-- name: Generate webpages from markdown files
-	run: |
-	if [[ $(git diff HEAD^ files/src/**.md files/templates/**.template ':!files/templates/cv.html.template') ]] ; then
-		python3 build_scripts/generate_webpages.py -m files/src/ -t files/templates/ -s /files/website.css -o pages/ -f /files
-	else
-		echo "Skipping stage as no markdown files were modified."
-	fi
-```
-
-Once again, we use `git diff` we check for changes to the CV yaml or template and only run the `generate_cv.py` script if necessary.
-
-```yaml
-- name: Generate CV from YAML
-	run: |
-	if [[ $(git diff HEAD^ files/src/cv.yaml files/templates/cv.html.template) ]] ; then
-		python3 build_scripts/generate_cv.py -c files/src/cv.yaml -t files/templates/cv.html.template -o pages/CV-Josh-Jennings.html
-	else
-		echo "Skipping stage as CV wasn't modified."
-	fi
-```
-
-We then stage any changes and commit them. If the workflow is run due to the workflow file being updated then we won't want to commit the changes as the commit would be empty. This would cause issues so we check if there are actually changes to the markdown or templates before we commit anything.
-
-```yaml
-- name: Commit changes
-	run: |
-	git config --local user.email "41898282+github-actions[bot]@users.noreply.github.com"
-	git config --local user.name "github-actions[bot]"
-	git add .
-	if [[ $(git diff HEAD^ files/src/ files/templates/**.template) ]] ; then
-		git commit -m "Build website - $(date)."
-	else
-		echo "No changes to src directory. Aborting deploy."
-	fi
-```
-
-We will then use `github-push-action` to then push the changes to the same repo and that is it.
+Due to the similarities of these workflows they could easily be turned into a [composite action](https://docs.github.com/en/actions/creating-actions/creating-a-composite-action) which I may do in the future.
 
 ## GitHub Repository
 
