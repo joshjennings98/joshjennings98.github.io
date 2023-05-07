@@ -1,0 +1,61 @@
+name: Update
+
+on:
+  workflow_call:
+    inputs:
+      branch:
+        description: Branch to run on
+        type: string
+        required: false
+      update:
+        description: What to update ('cv' or 'website')
+        type: string
+        required: true
+    secrets:
+      GIT_SECRET:
+        required: true
+
+concurrency:
+  group: ${{ inputs.branch || github.head_ref || github.ref }}
+
+jobs:
+  build-and-deploy:
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v3
+      with:
+        ref: ${{ inputs.branch || github.head_ref || github.ref }}
+        persist-credentials: false # otherwise token used is the GITHUB_TOKEN, instead of your personal access token.
+        fetch-depth: 0 # otherwise, there would be errors pushing refs to the destination repository.
+    - name: Setup python
+      uses: actions/setup-python@v4
+      with:
+        python-version: 3.11
+        cache: 'pip'
+    - name: Install dependencies
+      run: |
+          pip3 install -r build_scripts/requirements.txt
+    - name: Install pandoc
+      if: inputs.update == 'website'
+      run: |
+          sudo apt install pandoc
+    - name: Generate CV from YAML
+      if: inputs.update == 'cv'
+      run: |
+          python3 build_scripts/generate_cv.py -c files/src/cv.yaml -t files/templates/cv.html.template -o pages/CV-Josh-Jennings.html
+    - name: Generate webpages from markdown files
+      if: inputs.update == 'website'
+      run: |
+        python3 build_scripts/generate_webpages.py -m files/src/ -t files/templates/ -s /files/website.css -o pages/ -f /files
+    - name: Commit changes
+      run: |
+        git pull
+        git config --local user.email "41898282+github-actions[bot]@users.noreply.github.com"
+        git config --local user.name "github-actions[bot]"
+        git add .
+        git commit -m "Update ${{ inputs.update }} - $(date)."
+    - name: Push changes ready for Github Pages to deploy
+      uses: ad-m/github-push-action@master
+      with:
+        github_token: ${{ secrets.GIT_SECRET }}
+        branch: ${{ inputs.branch || github.head_ref || github.ref }}

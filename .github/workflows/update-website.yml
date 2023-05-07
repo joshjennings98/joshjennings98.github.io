@@ -2,43 +2,19 @@ name: Build Website
 
 on:
   push:
+    branches:
+      - master
     paths:
       - 'files/src/**.md'
       - 'files/templates/**'
       - '!files/templates/cv.html.template'
-      - 'files/website.css'
-
-concurrency:
-  group: ${{ github.repository }}
 
 jobs:
-  build-and-deploy:
-    runs-on: ubuntu-latest
-    steps:
-    - uses: actions/checkout@v2
-      with:
-        persist-credentials: false # otherwise token used is the GITHUB_TOKEN, instead of your personal access token.
-        fetch-depth: 0 # otherwise, there would be errors pushing refs to the destination repository.
-    - name: Setup python
-      uses: actions/setup-python@v2
-      with:
-        python-version: 3.8
-    - name: Install dependencies
-      run: |
-          pip3 install -r build_scripts/requirements.txt
-          sudo apt install pandoc
-    - name: Generate webpages from markdown files
-      run: |
-        python3 build_scripts/generate_webpages.py -m files/src/ -t files/templates/ -s /files/website.css -o pages/ -f /files
-    - name: Commit changes
-      run: |
-        git pull
-        git config --local user.email "41898282+github-actions[bot]@users.noreply.github.com"
-        git config --local user.name "github-actions[bot]"
-        git add .
-        git commit -m "Update website - $(date)."
-    - name: Push changes ready for Github Pages to deploy
-      uses: ad-m/github-push-action@master
-      with:
-        github_token: ${{ secrets.GITHUB_TOKEN }}
-        branch: master
+  build-and-deploy-website:
+    name: Build and deploy website
+    uses: joshjennings98/joshjennings98.github.io/.github/workflows/update.yml@master
+    secrets:
+      GIT_SECRET: ${{ secrets.GITHUB_TOKEN }}
+    with:
+      update: website
+      branch: ${{ github.head_ref || github.ref }}
