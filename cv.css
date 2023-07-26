@@ -52,8 +52,8 @@ body {
   display: flex;
   flex-direction: column;
   position: relative;
-  margin-top: 10;
-  margin-bottom: 15;
+  margin-top: 15;
+  margin-bottom: 10;
   width: 21cm;
   height: 30.5cm;
   align-items: stretch;
@@ -154,17 +154,20 @@ section {
     color: #333333; }
 
 .skills table tr td:first-child {
-  width: 8.5em;
-  text-align: right;
   font-weight: bold;
-  font-size: 1rem; }
+  text-align: left;
+  }
 
 .skills table tr {
   line-height: 1.3em; }
 
+.skills .skills__list span:first-child {
+  margin-left: 1.6em;
+}
+
 .skills .skills__list span:not(:last-child)::after {
   content: ', ';
-  margin-right: -1em; }
+  margin-right: -0.8em; }
 
 a:hover, a:visited, a:link, a:active {
   text-decoration: none;

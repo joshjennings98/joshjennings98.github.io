@@ -1,0 +1,172 @@
+:root {
+  --c-text: #3c3836;
+  --c-background: #fbf1c7;
+  --c-code-background: #ebdbb2;
+  --c-dark-text: #ebdbb2;
+  --c-dark-background: #282828;
+  --c-dark-code-background: #3c3836;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    --c-text: #ebdbb2;
+    --c-background: #282828;
+    --c-code-background: #3c3836;
+    --c-dark-text: #3c3836;
+    --c-dark-background: #fbf1c7;
+    --c-dark-code-background: #ebdbb2;
+  }
+}
+
+.homepage.page {
+  display: block; /* The homepage is displayed by default */
+}
+
+.page {
+  display: none;
+}
+
+.page:target {
+  display: block; /* When an id is targeted, show that page */
+}
+
+.page:target ~ .homepage.page {
+  display: none; /* When an id is targeted, hide the homepage */
+}
+
+/* This CSS rule will add invisible content before every element that gets targeted by a hash link, effectively pushing the actual content down the page by a fixed amount. */
+:target::before {
+  content: "";
+  display: block;
+  height: 1000px; /* Fixed header height*/
+  margin: -1000px 0 0; /* Negative fixed header height */
+}
+
+.homepage {
+  padding-top: 1px;  /* this sorts out the non anchor homepage being shifted vs the anchor pages */
+}
+
+body, code, pre {
+  font-family: Courier New;
+}
+
+body {
+  margin: 0;
+  line-height: 1.6;
+  display: flex;
+  flex-direction: column;
+  height: 100vh;
+}
+
+.dark-mode-checkbox:checked ~ .container {
+  --c-text: var(--c-dark-text);
+  --c-background: var(--c-dark-background);
+  --c-code-background: var(--c-dark-code-background);
+}
+
+.container {
+  padding: 1.5rem;
+  color: var(--c-text);
+  background-color: var(--c-background);
+  flex-grow: 1;
+  display: flex;
+  flex-direction: column;
+}
+
+::selection, ::-moz-selection {
+  background: #928374;
+  color: #ebdbb2;
+}
+
+a, hr {
+  color: var(--c-text);
+}
+
+label {
+  user-select: none;
+  cursor: pointer;
+}
+
+.content404 {
+  user-select: none;
+}
+
+.content, .page {
+  margin: 40px auto;
+  margin-top: 0;
+  max-width: 650px;
+}
+
+code {
+  font-weight: bold;
+}
+
+pre {
+  border: 2px solid var(--c-text);
+  padding: 10px;
+  background-color: var(--c-code-background);
+  overflow-x: auto;
+  scrollbar-color: var(--c-text) var(--c-code-background);
+}
+
+img {
+  filter: grayscale(100%) invert(15%) sepia(32%) saturate(245%) hue-rotate(353deg) brightness(107%) contrast(97%);  image-rendering: pixelated;
+  background: none;
+  max-height: 500px;
+  max-width: 500px;
+}
+
+@media (max-width: 500px) {
+  img {
+    max-width: 100%; 
+  }
+}
+
+.image-outer-wrapper {
+  display: grid;
+  place-items: center;
+}
+
+.image-inner-wrapper {
+  display: inline-flex;
+  border: 2px solid var(--c-text);
+}
+
+.sidebar-wrapper {
+  position: fixed;
+  left: 10px;
+  top: 10px;
+  bottom: 0;
+  width: 17%;
+  padding: 10px;
+  overflow-y: auto;
+}
+
+.sidebar a, .sidebar label, .sidebar span {
+  display: inline-block;
+  margin-bottom: 10px;
+}
+
+.small {
+  display: none;
+}
+
+@media (max-width: 1000px) {
+  .sidebar-wrapper, .sidebar, .sidebar label, .sidebar a, .sidebar span {
+    display: flex;
+    left: 0;
+    flex-wrap: wrap;
+    width: 100%;
+    position: relative;
+    margin-right: 15px;
+    padding: 0;
+  }
+  
+  .big {
+    display: none;
+  }
+
+  .small {
+    display: inline;
+  }
+}

@@ -29,24 +29,21 @@ jobs:
         fetch-depth: 0 # otherwise, there would be errors pushing refs to the destination repository.
     - name: Setup python
       uses: actions/setup-python@v4
+      if: inputs.update == 'cv'
       with:
         python-version: 3.11
         cache: 'pip'
     - name: Install dependencies
       run: |
-          pip3 install -r build_scripts/requirements.txt
-    - name: Install pandoc
-      if: inputs.update == 'website'
-      run: |
-          sudo apt install pandoc
+          pip3 install -r requirements.txt
     - name: Generate CV from YAML
       if: inputs.update == 'cv'
       run: |
-          python3 build_scripts/generate_cv.py -c files/src/cv.yaml -t files/templates/cv.html.template -o pages/CV-Josh-Jennings.html
+          python3 generate_cv.py -c cv.yaml -t templates/cv.html.tmpl -o CV-Josh-Jennings.html
     - name: Generate webpages from markdown files
       if: inputs.update == 'website'
       run: |
-        python3 build_scripts/generate_webpages.py -m files/src/ -t files/templates/ -s /files/website.css -o pages/ -f /files
+        go run main.go
     - name: Commit changes
       run: |
         git pull

@@ -1,0 +1,52 @@
+<head>
+  <title>joshj.dev</title>
+  <link rel="stylesheet" href="website.css">
+</head>
+<body>
+  <input id="dark-mode" class="dark-mode-checkbox" hidden type="checkbox">
+  <div class="container">
+    <div class="content">
+      <div class="sidebar-wrapper">
+        <div class="sidebar">
+          <div><label for="dark-mode" title="Toggle dark mode (if supported)" class="page-button"><u>Theme</u></label></div>
+          <div><a href="#">Home</a></div>
+          <div><a href="https://github.com/joshjennings98" target="_blank">GitHub</a></div>
+          <div><a href="./CV-Josh-Jennings.html" target="_blank">CV Link</a></div>
+        </div>
+        <br>
+        <div class="sidebar">
+          <div><span><b>Projects:</b></span></div>
+        </div>
+        <div class="sidebar">
+          {{ range .Pages -}}
+          <div><a href="#{{ slugify .Title }}">{{ .Title }}</a></div>
+          {{ end -}}
+        </div>
+      </div>
+      <h1>{{ .Name }}</h1>
+      <hr>
+      {{ range .Pages -}}
+      <div class="page" id="{{ slugify .Title }}">
+        <div class="page-header">
+          <h2>{{ .Title }}</h2>
+        </div>
+        {{ range .Paragraphs -}}
+        {{ parseContent . }}
+        {{ end -}}
+      <div><a href="#{{ slugify .Title }}">Back to top.</a></div>
+      </div>
+      {{ end -}}
+      <div class="homepage page" id="homepage">
+        <h2>About Me</h2>
+        <p>My name is Josh Jennings and I'm a backend software engineer at Arm. I work in the Online Tools Group where I help develop and maintain <a href="https://www.keil.arm.com/">keil.arm.com</a> as well as the backend services that power the <a href="https://studio.keil.arm.com/">Keil Studio Cloud</a> online IDE for embedded developers. My areas of expertise are in backend web development using Go and Python as well as the use of Kubernetes in orchestrating scalable cloud services.</p>
+        <ul>
+          <li>My GitHub is available <a href="https://github.com/joshjennings98">here</a>.</li>
+          <li>My LinkedIn is available <a href="https://www.linkedin.com/in/josh-jennings-41a17213a/">here</a>.</li>
+          <li>A copy of my CV is available <a href="https://joshj.dev/pages/CV-Josh-Jennings.html">here</a>.</li>
+          <li>I can be contacted via <a href="mailto:josh@joshj.dev">email</a>.</li>
+        </ul>
+        <p>This website is where I document my (mostly dumb) projects. It was made with no JavaScript, only HTML and CSS (you can read more about that <a href="#website">here</a>). You can toggle the theme between dark and light using the <label for="dark-mode" title="Toggle dark mode (if supported)" class="page-button"><u>Theme</u></label> button in the top left corner. This website is also single page, elements are hidden based on CSS rules. You can view the other pages at the links<span class="big">&nbsp;on the left</span><span class="small">&nbsp;at the top</span>.</p>
+       </div>
+    </div>
+  </div>
+</body>

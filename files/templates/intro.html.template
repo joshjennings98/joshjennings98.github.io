@@ -1,8 +1,0 @@
-<div class="fancyPositioning">
-{% if image  -%}<div class="picture-left"><img src="{{image}}"></div>{% endif %}
-<div class="tleft"><h3>{{title}}
-<div class=date>{{date}}</div></h3>
-<p>{{intro}}<br>
-<a href="{{outputFile}}">Read More...</a></p>
-</div>
-</div>

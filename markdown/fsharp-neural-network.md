@@ -1,20 +1,6 @@
 # F# Neural Network
 
-<picture>
-
-<intro date="25/04/2019">
-
-![A neural network attempts to immitate a brain.](images/neuralnetwork.png)
-
 A small F# library that allows for the creation of scalable fully-connected neural networks. It was developed for and built entirely using F#.
-
-</intro>
-
-- [Usage](#usage)
-- [How it works](#how-it-works)
-- [More Info](#github-repository)
-
-</picture>
 
 ## Usage
 
@@ -24,9 +10,9 @@ Networks can be specified using the following format. Any number of layers are s
 
 ```fsharp
 let network = [
-	{inputDims = 3; outputDims = 5; activation = Sigmoid};
-	{inputDims = 5; outputDims = 6; activation = Sigmoid};
-	{inputDims = 6; outputDims = 2; activation = Sigmoid};
+    {inputDims = 3; outputDims = 5; activation = Sigmoid};
+    {inputDims = 5; outputDims = 6; activation = Sigmoid};
+    {inputDims = 6; outputDims = 2; activation = Sigmoid};
 ]
 ```
 
@@ -52,20 +38,20 @@ Input data is provided in the form of a list of inputs, and a list of labels cor
 ```fsharp
 (* Inputs *)
 let data = [
-	[0.5; 1.0; 0.2];
-	[0.1; 0.7; 1.0];
-	[1.0; 0.1; 0.1];
-	[0.0; 0.34; 0.8];
-	[0.6; 0.1; 0.3]
+    [0.5; 1.0; 0.2];
+    [0.1; 0.7; 1.0];
+    [1.0; 0.1; 0.1];
+    [0.0; 0.34; 0.8];
+    [0.6; 0.1; 0.3]
 ]
 
 (* Labels *)
 let labels = [
-	[1.0; 1.0];
-	[0.0; 1.0];
-	[0.0; 0.0];
-	[1.0; 0.0];
-	[0.0; 1.0];
+    [1.0; 1.0];
+    [0.0; 1.0];
+    [0.0; 0.0];
+    [1.0; 0.0];
+    [0.0; 1.0];
 ]
 ```
 
@@ -82,7 +68,6 @@ Currently, the following loss functions are avaliable:
 * Cross Entropy
 * Mean Absolute Error
 
-
 ### Running a trained network
 
 A single run of the network can be specified as follows:
@@ -96,13 +81,13 @@ We can test multiple inputs by using a loop:
 
 ```fsharp
 for idx in List.init (List.length data) id do
-	printfn "Input: %A" data.[idx]
-	printfn "Output: %A" (runNetwork model data.[idx] network)
+    printfn "Input: %A" data.[idx]
+    printfn "Output: %A" (runNetwork model data.[idx] network)
 ```
 
 This will print the following:
 
-```fsharp
+```
 Input: [0.5; 1.0; 0.2]
 Output: [0.9748251802; 0.9991071572]
 
@@ -135,7 +120,7 @@ let forwardSingleLayer (bias : float) (weights : float list list) (inputs : floa
     |> activateLayer activation
 ```
 
-The `activateLayer` function takes an activation and maps the corresponding activation function across the list before returning it. A small part of this function can be see below:
+The activateLayer function takes an activation and maps the corresponding activation function across the list before returning it. A small part of this function can be see below:
 
 ```fsharp
 let activateLayer (activation : Activation) (input : float list) : float list =
@@ -170,7 +155,7 @@ let getOverallError (targetOutputs : float list) (actualOutputs : float list) (l
     |> List.sum
 ```
 
-Similarly to the activation functions, the loss functions are supplied using pattern matching In this case however, they return a function that can be applied wherever the particular value required instead of taking an returning a list. Part of `lossFunction` can be seen below:
+Similarly to the activation functions, the loss functions are supplied using pattern matching In this case however, they return a function that can be applied wherever the particular value required instead of taking an returning a list. Part of lossFunction can be seen below:
 
 ```fsharp
 let lossFunction (loss : Loss) (n : int) : float -> float -> float =
@@ -185,8 +170,7 @@ let lossFunction (loss : Loss) (n : int) : float -> float -> float =
 
 ### Back Propagation
 
-Back propagation is more complex than the forward version. We first calculate the intermidate output sums.
-For the output layer, the only thing that needs to be done is for the derivatve of the loss function to applied to the outputs. For the hidden layers, the individual deltas for each node in the previous layer are found. Afterwards, the layer weights are taken and multiplied by their corresponding deltas. The values coming into each node are then summed.
+Back propagation is more complex than the forward version. We first calculate the intermidate output sums. For the output layer, the only thing that needs to be done is for the derivatve of the loss function to applied to the outputs. For the hidden layers, the individual deltas for each node in the previous layer are found. Afterwards, the layer weights are taken and multiplied by their corresponding deltas. The values coming into each node are then summed.
 
 The new weights are then calculated. This is simpler. The derivative of the activation function is found and then multiplied by the corresponding output delta sum. This is then multipliued by the output od of the previous layer resulting in a value corresponding to `learningRate * delta * outPrev`. This value is then subtracted from the corresponding weight as back propagation is defined.
 
@@ -261,11 +245,11 @@ let dActivateLayer (activation : Activation) (input : float list) : float list =
 let dLossFunction (loss : Loss) (n : int) : float -> float -> float =
     match loss with
     | MSE ->
-	fun actual target ->
-	(2.0 / (n |> float)) * (actual - target) * -1.0
+    fun actual target ->
+    (2.0 / (n |> float)) * (actual - target) * -1.0
     | MAE ->
-	fun target actual ->
-		if actual > target then 1.0 else -1.0
+    fun target actual ->
+        if actual > target then 1.0 else -1.0
 ```
 
 ### Training
@@ -289,9 +273,8 @@ train initial architecture iterations 0
 
 ## Bugs
 
-Be careful with the chosen parameters. The networks can die easily if the chosen parameters cause weigths to overflow and become NaN, alternatively the network won't learn the data set correctly.
+Be careful with the chosen parameters. The networks can die easily if the chosen parameters cause weigths to overflow and become NaN, alternatively the network won’t learn the data set correctly.
 
 ## GitHub Repository
 
-The full project can be viewed on [GitHub.](https://github.com/joshjennings98/fsharp-neural-network)
-
+The full project can be viewed on [GitHub](https://github.com/joshjennings98/fsharp-neural-network).

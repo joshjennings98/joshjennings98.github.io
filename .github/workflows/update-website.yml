@@ -5,9 +5,9 @@ on:
     branches:
       - master
     paths:
-      - 'files/src/**.md'
-      - 'files/templates/**'
-      - '!files/templates/cv.html.template'
+      - 'markdown/**.md'
+      - 'templates/**'
+      - '!/templates/cv.html.tmpl'
 
 jobs:
   build-and-deploy-website:
