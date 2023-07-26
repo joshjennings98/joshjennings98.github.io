@@ -89,6 +89,7 @@ func parseContent(line string) string {
 	if matches := codeBlockRegex.FindStringSubmatch(line); matches != nil {
 		lang := matches[1]
 		code := matches[2]
+		code = strings.ReplaceAll(strings.ReplaceAll(code, "<", "&lt;"), ">", "&gt;")
 
 		return fmt.Sprintf("<pre class=\"%scode\" title=\"%s\">%s</pre>", lang, lang, code)
 	}
@@ -185,6 +186,7 @@ func parseMarkdown(inputDir string) (pages []Page, err error) {
 			return err
 		}
 		if !info.IsDir() && filepath.Ext(path) == ".md" {
+			log.Printf("Generating page for %q", path)
 			page, err := readMarkdown(path)
 			if err != nil {
 				return err
