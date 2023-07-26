@@ -19,11 +19,161 @@
           <div><span><b>Projects:</b></span></div>
         </div>
         <div class="sidebar">
+          <div><a href="#this-website">This Website</a></div>
           <div><a href="#f-neural-network">F# Neural Network</a></div>
           </div>
       </div>
       <h1>Josh's Website</h1>
       <hr>
+      <div class="page" id="this-website">
+        <div class="page-header">
+          <h2>This Website</h2>
+        </div>
+        <p></p>
+        <p>The goal of this website was to create an interactive static website using on HTML and CSS, no JavaScript. I had recently read <a href="https://briankoberlein.com/tech/quiet-web/">an article about the quiet web</a> which inspired me to try and create an interesting website that satisfied the requirements laid out in the blog post:</p>
+        <p></p>
+        <ul><li> Exclude any page that has ads. 
+</li>
+<li> Remove them if they use Google Analytics or Google Fonts. 
+</li>
+<li> Remove them if they use scripts or trackers.
+
+</li></ul>
+        <p>These are arbitrary requirements but it seemed like an interesting challenge. On top of this, in the event that CSS was disabled, I also wanted my website to retain most of it's usability.</p>
+        <p></p>
+        <p>I am not one for frontend development and none of the previous versions of my site have used a JavaScript framework, however, in a previous iteration of my website I had a script that would allow you to change the theme between light mode and dark mode. I enjoyed this gimicky feature and wanted to keep that functionality.</p>
+        <p></p>
+        <h3>Re-implementing theme toggle using only CSS</h3>
+        <p></p>
+        <p>The main feature that I wanted to emulate using CSS was a light mode toggle. I wanted to be able to click a button and have the colour scheme change. With JavaScript I would watch for a checkbox and have an <code>onchange</code> event that makes the colour changes. Since this relies on JavaScript, this approach is not possible. So using only CSS we need some way to:</p>
+        <p></p>
+        <ul><li> Know that a checkbox has been checked.
+</li>
+<li> If the user was previously in a dark mode the page should become light or vice versa. 
+</li>
+<li> This needs to be dynamic and not just occur on page load but any time a user checks the checkbox.
+
+</li></ul>
+        <p>Luckily, CSS has <a href="https://developer.mozilla.org/en-US/docs/Web/CSS/Pseudo-classes">pseudo-classes</a>. These are keywords that are attached to a selector and specify a state of the selected element, for example <code>:hover</code> is triggered when an element is hovered over. There exists the <a href="https://developer.mozilla.org/en-US/docs/Web/CSS/:checked"><code>:checked</code> pseudo-class</a> which can be used to change the style of a checkbox or radio button based on whether or not it is checked. This satisfies the goal of making the change dynamic and controllable by the user.</p>
+        <p></p>
+        <p>However, there is a problem. CSS stands for Cascading Style Sheets. Styling in CSS will only apply to descendants of the the DOM node for the element (if the styling doesn't only affect the specific element i.e. <code>margin</code> will only affect the current element, but <code>font-family</code> will apply to the descendants). In either case, the inheritance only goes down the DOM tree and we cannot affect the properties of any parent elements.</p>
+        <p></p>
+        <p>We can have some degree of control over which descendants are affected by the styling through the use of the <a href="https://developer.mozilla.org/en-US/docs/Web/CSS/General_sibling_combinator">general sibling combinator</a>. This seperates two seletors and matches all instances of the second element that appear anywhere after the first element that share the same parent element. For example, the following would match all span elements that come after the paragraph element in the DOM tree:</p>
+        <p></p>
+        <pre class="csscode" title="css">p ~ span {
+  color: red;
+}
+</pre>
+        <p></p>
+        <p>From the <a href="https://developer.mozilla.org/en-US/docs/Web/CSS/General_sibling_combinator#html">general sibling combinator docs</a> we can see how this would work:</p>
+        <p></p>
+        <pre class="htmlcode" title="html">&lt;article&gt;
+  &lt;span&gt;This is not red because it appears before any paragraph.&lt;/span&gt;
+  &lt;p&gt;Here is a paragraph.&lt;/p&gt;
+  &lt;code&gt;Here is some code.&lt;/code&gt;
+  &lt;span&gt;
+    This span is red because it appears after the paragraph, even though there
+    are other nodes in between
+  &lt;/span&gt;
+  &lt;p&gt;Whatever it may be, keep smiling.&lt;/p&gt;
+  &lt;h1&gt;Dream big&lt;/h1&gt;
+  &lt;span&gt;
+    Doesn't matter how many or what kind of nodes are in between, all spans from
+    the same parent after a paragraph are red.
+  &lt;/span&gt;
+&lt;/article&gt;
+&lt;span&gt;
+  This span is not red because it doesn't share a parent with a paragraph
+&lt;/span&gt;
+</pre>
+        <p></p>
+        <p>How does this help us? Well, since we can style elements based on the pseudo-class selectors, the CSS can be modified to change based on the checked state of a checkbox. Say we have a class for the checkbox called <code>.dark-mode-checkbox</code>, we can do the following and change the font for siblings of an element based on whether the checkbox is checked:</p>
+        <p></p>
+        <pre class="csscode" title="css">.content {
+  font-family: Serif;
+}
+
+.dark-mode-checkbox:checked ~ .container {
+  font-family: Monospace;
+}
+</pre>
+        <p></p>
+        <p>And in the HTML do something like this:</p>
+        <p></p>
+        <pre class="htmlcode" title="html">&lt;input hidden class="dark-mode-checkbox" id="dark-mode" type="checkbox"&gt;
+
+&lt;div class="container"&gt;
+  &lt;label class="dark-mode-label" for="dark-mode"&gt;Toggle Dark Mode&lt;/label&gt;
+  ...
+&lt;/div&gt;
+</pre>
+        <p></p>
+        <p>You can see that the checkbox and the container are siblings. This is important as we wouldn't be able to have the content as a descendant of the checkbox due to the nature of inputs. One strange thing it does mean, is that we have the label for the button not be a parent or sibling of the checkbox. This is not an issue as we use the <code>for</code> attribute.</p>
+        <p></p>
+        <p>Now that we have the general technique, we can utilise it for the dark mode.</p>
+        <p></p>
+        <pre class="csscode" title="css">:root {
+  --c-text: #3c3836;
+  --c-background: #fbf1c7;
+  --c-dark-text: #ebdbb2;
+  --c-dark-background: #282828;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    --c-text: #ebdbb2;
+    --c-background: #282828;
+    --c-dark-text: #3c3836;
+    --c-dark-background: #fbf1c7;
+  }
+}
+
+.dark-mode-checkbox:checked ~ .container {
+  --c-text: var(--c-dark-text);
+  --c-background: var(--c-dark-background);
+}
+
+.container {
+  color: var(--c-text);
+  background-color: var(--c-background);
+}
+</pre>
+        <p></p>
+        <p>We use <a href="https://developer.mozilla.org/en-US/docs/Web/CSS/Using_CSS_custom_properties">CSS variables</a> and change them based on whether the checkbox is checked. We can then reference these variables in the CSS (such as when we set the background and text colour) to update the colours accordingly.</p>
+        <p></p>
+        <p>We can also utilise <a href="https://developer.mozilla.org/en-US/docs/Web/CSS/@media/prefers-color-scheme"><code>prefers-color-scheme</code></a> to detect whether the initial colour scheme should be light or dark. Since we can use generic terminalogy in our labels, we can treat the light mode as the dark mode for users who initially requested the dark mode. There is this neat <a href="https://codepen.io/kleinfreund/pen/NmpKZM">codepen demo</a> for determining whether your web browser supports this and what defaults to. This all means that the website will be the correct mode for users and they won't have to click the checkbox to toggle the theme. This ultimately makes the whole approach with the checkbox pointless, but this whole website is an exercise in pointlessness so I am doing it anyway. It also led to some interesting problems that I got to solve, I will go over theses in the next few sections.</p>
+        <p></p>
+        <p>One more problem arises. The checkbox is not part of the content and so it is unaffected by the styling. We cannot make it part of the container because it will never be able to affect the styling of it's parent. Luckily, since the label that you can click doesn't have to be a sibling of the checkbox itself, we can just hide the actual checkbox. Since the label can be clicked and we used the <code>for</code> attribute, it should still be accessible.</p>
+        <p></p>
+        <h3>Storing theme across pages</h3>
+        <p></p>
+        <p>TODO.</p>
+        <p></p>
+        <h3>Having usable URLs</h3>
+        <p></p>
+        <p>TODO.</p>
+        <p></p>
+        <h3>Making sure images are on theme</h3>
+        <p></p>
+        <p>TODO.</p>
+        <p></p>
+        <h3>Code Generation</h3>
+        <p></p>
+        <p>TODO.</p>
+        <p></p>
+        <h3>Deployment using GitHub Pages</h3>
+        <p></p>
+        <p>TODO.</p>
+        <p></p>
+        <h3>Acknowledgements</h3>
+        <p></p>
+        <p>A lot of inspiration was taked from <a href="https://kleinfreund.de/css-only-dark-mode/">this blog post</a> on CSS-only dark mode for the initial work on reimplementing the theme toggle without JavaScript.</p>
+        <p></p>
+        <h3>Github</h3>
+        <p></p>
+        <p>The full project can be viewed on <a href="https://github.com/joshjennings98/joshjennings98.github.io">GitHub</a>.</p>
+        <div><a href="#this-website">Back to top.</a></div>
+      </div>
       <div class="page" id="f-neural-network">
         <div class="page-header">
           <h2>F# Neural Network</h2>
@@ -31,9 +181,9 @@
         <p></p>
         <p>A small F# library that allows for the creation of scalable fully-connected neural networks. It was developed for and built entirely using F#.</p>
         <p></p>
-        <h2>Usage</h2>
+        <h3>Usage</h3>
         <p></p>
-        <h3>Defining a network</h3>
+        <h4>Defining a network</h4>
         <p></p>
         <p>Networks can be specified using the following format. Any number of layers are supported. Provided they align, the dimensions can be as large as desired.</p>
         <p></p>
@@ -71,7 +221,7 @@
 <li> Linear
 
 </li></ul>
-        <h3>Training a network</h3>
+        <h4>Training a network</h4>
         <p></p>
         <p>Input data is provided in the form of a list of inputs, and a list of labels corresponding to each input.</p>
         <p></p>
@@ -109,7 +259,7 @@ let model = trainNetwork network labels data 0.05 MSE 100000
 <li> Mean Absolute Error
 
 </li></ul>
-        <h3>Running a trained network</h3>
+        <h4>Running a trained network</h4>
         <p></p>
         <p>A single run of the network can be specified as follows:</p>
         <p></p>
@@ -144,64 +294,64 @@ Output: [0.003145187104; 0.9791424116]
         <p></p>
         <p>These match up with the labels specified earlier.</p>
         <p></p>
-        <h2>How it works</h2>
+        <h3>How it works</h3>
         <p></p>
-        <h3>Forward Propagation</h3>
+        <h4>Forward Propagation</h4>
         <p></p>
         <p>A single forward propagation though a layer just involves multiplying the inputs to the layer with the layer weights (their dot product). After this, they are summed and the bias added before having the activation layer for that function applied.</p>
         <p></p>
         <pre class="fsharpcode" title="fsharp">let forwardSingleLayer (bias : float) (weights : float list list) (inputs : float list) (activation : Activation) : float list =
     weights
-    |> List.map (fun list -> List.map2 ( * ) list inputs)
-    |> List.map (fun list -> List.sum list + bias)
-    |> activateLayer activation
+    |&gt; List.map (fun list -&gt; List.map2 ( * ) list inputs)
+    |&gt; List.map (fun list -&gt; List.sum list + bias)
+    |&gt; activateLayer activation
 </pre>
         <p></p>
         <p>The activateLayer function takes an activation and maps the corresponding activation function across the list before returning it. A small part of this function can be see below:</p>
         <p></p>
         <pre class="fsharpcode" title="fsharp">let activateLayer (activation : Activation) (input : float list) : float list =
     match activation with
-    | Sigmoid ->
-        List.map (fun x -> 1.0 / (1.0 + exp(-x))) input
-    | Relu ->
-        List.map (fun x -> max x 0.0) input
+    | Sigmoid -&gt;
+        List.map (fun x -&gt; 1.0 / (1.0 + exp(-x))) input
+    | Relu -&gt;
+        List.map (fun x -&gt; max x 0.0) input
 </pre>
         <p></p>
         <p>The full forward propagation is slightly more complex. It first creates an empty list the size of the network. It folds though the epty list using the accumulator to store the intermediate activated and unactivated output of all layers. It then adds an extra layer containing only 1.0s to the end of the forward propagated output. This makes it easier when doing back propagation.</p>
         <p></p>
         <pre class="fsharpcode" title="fsharp">let forwardFull (parameters : Parameters) (inputs : float list) (layers : Layer list) : float list list =
     List.init layers.Length id
-    |> List.fold (fun (acc : float list list) index ->
+    |&gt; List.fold (fun (acc : float list list) index -&gt;
         let biases, weights, activation =
             parameters.biases.[index], parameters.weights.[index], layers.[index].activation
         [forwardSingleLayer biases weights acc.[0] activation] @ acc)
             [inputs]
-    |> List.append [List.init (List.last layers).outputDims float]
+    |&gt; List.append [List.init (List.last layers).outputDims float]
 </pre>
         <p></p>
-        <h3>Calculating Error</h3>
+        <h4>Calculating Error</h4>
         <p></p>
         <p>To calculate the error in the output, the output of forward propagation and the target output are passed to a function that calculated the loss.</p>
         <p></p>
         <pre class="fsharpcode" title="fsharp">let getOverallError (targetOutputs : float list) (actualOutputs : float list) (loss : Loss) : float =
     actualOutputs
-    |> List.map2 (lossFunction loss targetOutputs.Length) targetOutputs
-    |> List.sum
+    |&gt; List.map2 (lossFunction loss targetOutputs.Length) targetOutputs
+    |&gt; List.sum
 </pre>
         <p></p>
         <p>Similarly to the activation functions, the loss functions are supplied using pattern matching In this case however, they return a function that can be applied wherever the particular value required instead of taking an returning a list. Part of lossFunction can be seen below:</p>
         <p></p>
-        <pre class="fsharpcode" title="fsharp">let lossFunction (loss : Loss) (n : int) : float -> float -> float =
+        <pre class="fsharpcode" title="fsharp">let lossFunction (loss : Loss) (n : int) : float -&gt; float -&gt; float =
     match loss with
-    | MSE ->
-        fun actual target ->
-            (1.0 / (n |> float)) * (actual - target) ** 2.0
-    | MAE ->
-        fun actual target ->
-            (1.0 / (n |> float)) * (abs (actual - target))
+    | MSE -&gt;
+        fun actual target -&gt;
+            (1.0 / (n |&gt; float)) * (actual - target) ** 2.0
+    | MAE -&gt;
+        fun actual target -&gt;
+            (1.0 / (n |&gt; float)) * (abs (actual - target))
 </pre>
         <p></p>
-        <h3>Back Propagation</h3>
+        <h4>Back Propagation</h4>
         <p></p>
         <p>Back propagation is more complex than the forward version. We first calculate the intermidate output sums. For the output layer, the only thing that needs to be done is for the derivatve of the loss function to applied to the outputs. For the hidden layers, the individual deltas for each node in the previous layer are found. Afterwards, the layer weights are taken and multiplied by their corresponding deltas. The values coming into each node are then summed.</p>
         <p></p>
@@ -215,25 +365,25 @@ Output: [0.003145187104; 0.9791424116]
         if layerIndex = 0
         then (* Output layer *)
             forwardPropParts.[layerIndex + 1]
-            |> List.map2 (dLossFunction loss targetOutputs.Length) backPropPart
+            |&gt; List.map2 (dLossFunction loss targetOutputs.Length) backPropPart
         else (* Hidden layers *)
-            List.init forwardPropParts.[layerIndex + 1].Length (fun _ ->
+            List.init forwardPropParts.[layerIndex + 1].Length (fun _ -&gt;
                 forwardPropParts.[layerIndex]
-                |> dActivateLayer layers.[layerIndex - 1].activation
-                |> List.map2 ( * ) backPropPart)
-            |> List.mapi (fun index1 deltas ->
+                |&gt; dActivateLayer layers.[layerIndex - 1].activation
+                |&gt; List.map2 ( * ) backPropPart)
+            |&gt; List.mapi (fun index1 deltas -&gt;
                 allWeights.[layerIndex]
-                |> List.mapi (fun index2 weights -> weights.[index1] * deltas.[index2]))
-            |> List.map List.sum
+                |&gt; List.mapi (fun index2 weights -&gt; weights.[index1] * deltas.[index2]))
+            |&gt; List.map List.sum
 
     let newWeights =
         forwardPropParts.[layerIndex + 1]
-        |> dActivateLayer layers.[layerIndex].activation
-        |> List.map2 ( * ) intermediateOutputDeltaSum
-        |> List.map (fun delta ->
+        |&gt; dActivateLayer layers.[layerIndex].activation
+        |&gt; List.map2 ( * ) intermediateOutputDeltaSum
+        |&gt; List.map (fun delta -&gt;
             forwardPropParts.[layerIndex + 2]
-            |> List.map (fun out -> learningRate * delta * out))
-        |> List.map2 (List.map2 (-)) allWeights.[layerIndex + 1]
+            |&gt; List.map (fun out -&gt; learningRate * delta * out))
+        |&gt; List.map2 (List.map2 (-)) allWeights.[layerIndex + 1]
 
     newWeights, intermediateOutputDeltaSum
 </pre>
@@ -248,11 +398,11 @@ Output: [0.003145187104; 0.9791424116]
         List.rev parameters.weights
 
     List.init (layers.Length) id
-    |> List.fold (fun acc index ->
+    |&gt; List.fold (fun acc index -&gt;
         let targetOutputs =
             acc.[0]
-            |> fst
-            |> List.map List.sum
+            |&gt; fst
+            |&gt; List.map List.sum
 
         let backPropPart = snd acc.[0]
 
@@ -267,22 +417,22 @@ Output: [0.003145187104; 0.9791424116]
         <p></p>
         <pre class="fsharpcode" title="fsharp">let dActivateLayer (activation : Activation) (input : float list) : float list =
     match activation with
-    | Sigmoid ->
-        List.map (fun x -> x * (1.0 - x)) input
-    | Relu ->
-        List.map (fun x -> if x > 0.0 then 1.0 else 0.0) input
+    | Sigmoid -&gt;
+        List.map (fun x -&gt; x * (1.0 - x)) input
+    | Relu -&gt;
+        List.map (fun x -&gt; if x &gt; 0.0 then 1.0 else 0.0) input
 
-let dLossFunction (loss : Loss) (n : int) : float -> float -> float =
+let dLossFunction (loss : Loss) (n : int) : float -&gt; float -&gt; float =
     match loss with
-    | MSE ->
-    fun actual target ->
-    (2.0 / (n |> float)) * (actual - target) * -1.0
-    | MAE ->
-    fun target actual ->
-        if actual > target then 1.0 else -1.0
+    | MSE -&gt;
+    fun actual target -&gt;
+    (2.0 / (n |&gt; float)) * (actual - target) * -1.0
+    | MAE -&gt;
+    fun target actual -&gt;
+        if actual &gt; target then 1.0 else -1.0
 </pre>
         <p></p>
-        <h3>Training</h3>
+        <h4>Training</h4>
         <p></p>
         <p>Training the network is a fairly simple recursive function that continually picks a random sample of the data set and carries out forwards and backwards propagation using the sample for any number of iterations. A simplified version of the function (initialisation and printing etc. removed) can be seen below:</p>
         <p></p>
@@ -291,8 +441,8 @@ let dLossFunction (loss : Loss) (n : int) : float -> float -> float =
 
     let fullSingle =
         forwardFull parameters inputs.[idx] architecture
-        |> backPropFull architecture parameters targets.[idx] learningRate loss
-        |> weightUpdate parameters
+        |&gt; backPropFull architecture parameters targets.[idx] learningRate loss
+        |&gt; weightUpdate parameters
 
     train fullSingle model maxIterations (iterations + 1)
 
@@ -300,11 +450,11 @@ let dLossFunction (loss : Loss) (n : int) : float -> float -> float =
 train initial architecture iterations 0
 </pre>
         <p></p>
-        <h2>Bugs</h2>
+        <h3>Bugs</h3>
         <p></p>
         <p>Be careful with the chosen parameters. The networks can die easily if the chosen parameters cause weigths to overflow and become NaN, alternatively the network won’t learn the data set correctly.</p>
         <p></p>
-        <h2>GitHub Repository</h2>
+        <h3>GitHub</h3>
         <p></p>
         <p>The full project can be viewed on <a href="https://github.com/joshjennings98/fsharp-neural-network">GitHub</a>.</p>
         <div><a href="#f-neural-network">Back to top.</a></div>
@@ -318,7 +468,7 @@ train initial architecture iterations 0
           <li>A copy of my CV is available <a href="CV-Josh-Jennings.html">here</a>.</li>
           <li>I can be contacted via <a href="mailto:josh@joshj.dev">email</a>.</li>
         </ul>
-        <p>This website is where I document my (mostly dumb) projects. It was made with no JavaScript, only HTML and CSS (you can read more about that <a href="#website">here</a>). You can toggle the theme between dark and light using the <label for="dark-mode" title="Toggle dark mode (if supported)" class="page-button"><u>Theme</u></label> button in the top left corner. This website is also single page, elements are hidden based on CSS rules. You can view the other pages at the links<span class="big">&nbsp;on the left</span><span class="small">&nbsp;at the top</span>.</p>
+        <p>This website is where I document my (mostly dumb) projects. It was made with no JavaScript, only HTML and CSS (you can read more about that <a href="#this-website">here</a>). You can toggle the theme between dark and light using the <label for="dark-mode" title="Toggle dark mode (if supported)" class="page-button"><u>Theme</u></label> button in the top left corner. This website is also single page, elements are hidden based on CSS rules. You can view the other pages at the links<span class="big">&nbsp;on the left</span><span class="small">&nbsp;at the top</span>.</p>
        </div>
     </div>
   </div>
