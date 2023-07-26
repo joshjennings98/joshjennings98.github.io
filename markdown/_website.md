@@ -1,6 +1,6 @@
 ## This Website
 
-The goal of this website was to create an interactive static website using on HTML and CSS, no JavaScript. I had recently read [an article about the quiet web](https://briankoberlein.com/tech/quiet-web/) which inspired me to try and create an interesting website that satisfied the requriements laid out in the blog post:
+The goal of this website was to create an interactive static website using on HTML and CSS, no JavaScript. I had recently read [an article about the quiet web](https://briankoberlein.com/tech/quiet-web/) which inspired me to try and create an interesting website that satisfied the requirements laid out in the blog post:
 
 * Exclude any page that has ads. 
 * Remove them if they use Google Analytics or Google Fonts. 
@@ -14,7 +14,7 @@ I am not one for frontend development and none of the previous versions of my si
 
 The main feature that I wanted to emulate using CSS was a light mode toggle. I wanted to be able to click a button and have the colour scheme change. With JavaScript I would watch for a checkbox and have an `onchange` event that makes the colour changes. Since this relies on JavaScript, this approach is not possible. So using only CSS we need some way to:
 
-* Know that a checkbox has been checked
+* Know that a checkbox has been checked.
 * If the user was previously in a dark mode the page should become light or vice versa. 
 * This needs to be dynamic and not just occur on page load but any time a user checks the checkbox.
 
@@ -30,7 +30,7 @@ p ~ span {
 }
 ```
 
-From the [general sibling combinator](https://developer.mozilla.org/en-US/docs/Web/CSS/General_sibling_combinator) we can see how this would work:
+From the [general sibling combinator docs](https://developer.mozilla.org/en-US/docs/Web/CSS/General_sibling_combinator#html) we can see how this would work:
 
 ```html
 <article>
@@ -108,7 +108,7 @@ Now that we have the general technique, we can utilise it for the dark mode.
 }
 ```
 
-We can use [CSS variables](https://developer.mozilla.org/en-US/docs/Web/CSS/Using_CSS_custom_properties) and change them based on whether the checkbox is checked, then we will reference these colours in the CSS refering to colours for the background and text which will update the colours accordingly.
+We use [CSS variables](https://developer.mozilla.org/en-US/docs/Web/CSS/Using_CSS_custom_properties) and change them based on whether the checkbox is checked. We can then reference these variables in the CSS (such as when we set the background and text colour) to update the colours accordingly.
 
 We can also utilise [`prefers-color-scheme`](https://developer.mozilla.org/en-US/docs/Web/CSS/@media/prefers-color-scheme) to detect whether the initial colour scheme should be light or dark. Since we can use generic terminalogy in our labels, we can treat the light mode as the dark mode for users who initially requested the dark mode. There is this neat [codepen demo](https://codepen.io/kleinfreund/pen/NmpKZM) for determining whether your web browser supports this and what defaults to. This all means that the website will be the correct mode for users and they won't have to click the checkbox to toggle the theme. This ultimately makes the whole approach with the checkbox pointless, but this whole website is an exercise in pointlessness so I am doing it anyway. It also led to some interesting problems that I got to solve, I will go over theses in the next few sections.
 
