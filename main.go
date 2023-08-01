@@ -83,7 +83,7 @@ func parseContent(line string) string {
 	}
 
 	if strings.HasPrefix(line, "* ") {
-		return fmt.Sprintf("<ul><li>%s</li></ul>", strings.Join(strings.Split(line, "*")[1:], "</li>\n<li>"))
+		return fmt.Sprintf("<ul><li>%s</li></ul>", strings.Join(strings.Split(line, "*")[1:], "</li>\n<li>")) // TODO: split out each check so we can have code and links etc. in bullet points
 	}
 
 	if matches := codeBlockRegex.FindStringSubmatch(line); matches != nil {
