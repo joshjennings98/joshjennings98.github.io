@@ -1,20 +1,20 @@
 :root {
-  --c-text: #3c3836;
-  --c-background: #fbf1c7;
-  --c-code-background: #ebdbb2;
-  --c-dark-text: #ebdbb2;
-  --c-dark-background: #282828;
-  --c-dark-code-background: #3c3836;
+  --c-text: #444;
+  --c-background: #eee;
+  --c-code-background: #ddd;
+  --c-dark-text: #ccc;
+  --c-dark-background: #111;
+  --c-dark-code-background: #222;
 }
 
 @media (prefers-color-scheme: dark) {
   :root {
-    --c-text: #ebdbb2;
-    --c-background: #282828;
-    --c-code-background: #3c3836;
-    --c-dark-text: #3c3836;
-    --c-dark-background: #fbf1c7;
-    --c-dark-code-background: #ebdbb2;
+    --c-text: #ccc;
+    --c-background: #111;
+    --c-code-background: #222;
+    --c-dark-text: #444;
+    --c-dark-background: #eee;
+    --c-dark-code-background: #ddd;
   }
 }
 
@@ -74,8 +74,8 @@ body {
 }
 
 ::selection, ::-moz-selection {
-  background: #928374;
-  color: #ebdbb2;
+  background: var(--c-text);
+  color: var(--c-background);
 }
 
 a, hr {
