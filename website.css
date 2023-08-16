@@ -110,7 +110,6 @@ pre {
 }
 
 img {
-  filter: grayscale(100%) invert(15%) sepia(32%) saturate(245%) hue-rotate(353deg) brightness(107%) contrast(97%);  image-rendering: pixelated;
   background: none;
   max-height: 500px;
   max-width: 500px;

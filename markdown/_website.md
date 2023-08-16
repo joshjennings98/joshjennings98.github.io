@@ -163,6 +163,7 @@ a {
 <label for="homepage-button" class="page-button">Home</label>
 <label for="page1-button" class="page-button">Page 1</label>
 <label for="page2-button" class="page-button">Page 2</label>
+
 <input type="radio" class="radio" id="homepage-button" checked hidden>
 <input type="radio" class="radio" id="page1-button" hidden>
 <input type="radio" class="radio" id="page2-button" hidden>
@@ -200,11 +201,12 @@ In our case we have behavior similar to the radio buttons. We will hide all page
 
 There is a difference vs the radio button version, that being that we have explicit behavior for the homepage. Since the default is that there is no fragment, we want to make sure that the homepage is shown if there is no fragment. We can't have a default fragment as that would make the URL messy. We therefore use the power of the General sibling combinator again to have the homepage show by default then hide if any other sibling page is selected. This means that the individual pages of the website can be accessed by doing `https://website.com#page`! Due to the nature of the combinators, we need to make sure that the homepage is the final section of the website since we want to hide it if a page is selected and we can only affect elements that come after the current DOM element. 
 
-To specify linsk to the pages within the website, we just have to create links to them like you would in a table of contents:
+To specify links to the pages within the website, we just have to create links to them like you would in a table of contents:
 
 ```html
-<a href="#page1>Page 1</a>
+<a href="#page1">Page 1</a>
 <a href="#page2">Page 2</a>
+
 <div class="page" id="page1"/>
 <div class="page" id="page2"/>
 ```
