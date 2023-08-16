@@ -154,17 +154,35 @@
         <p></p>
         <p>TODO.</p>
         <p></p>
-        <h3>Making sure images are on theme</h3>
-        <p></p>
-        <p>TODO.</p>
-        <p></p>
         <h3>Code Generation</h3>
         <p></p>
-        <p>TODO.</p>
+        <p>I implemented my own static site generator. Since my website is basically a single page application, I only ned to populate the <code>index.html</code> file. I use Go with it's powerful templating to fill the relevant sections of the <code>index.html</code> with content that has been parsed from markdown files. This means that if I want to add a page, I just add a markdown file, and the website will automatically regenerate the <code>index.html</code> when I push the change to GitHub. This is done with a simple CI workflow. GitHub pages then handles the deployment of the actual website, this is discuessed in the section below.</p>
+        <p></p>
+        <p>The Go code is not interesting. It is written with only standard library modules. It reads the markdown from the markdown directory, converts it into HTML using regex to convert the various markdown tags into their HTML equivalent, and then populates the templates for the <code>index.html</code> and <code>404.html</code> pages. Since there is only one page to really think about, the code is kept relatively simple.</p>
+        <p></p>
+        <p>The index template <a href="https://github.com/joshjennings98/joshjennings98.github.io/blob/master/templates/index.html.tmpl">can be found here</a>, whilst the Go program for populating the template <a href="https://github.com/joshjennings98/joshjennings98.github.io/blob/master/main.go">can be found here</a>.</p>
+        <p></p>
+        <p>The workflow to run the program in CI is very simple. It uses GitHub actions to checkout the repo, and if there are changes to the markdown or templates then it will regenerate the index and commit the changes back to the repository. There is also a similar workflow that is used for generating my CV. In this case, the CV is kept as a <code>yaml</code> file and then a python script is used to turn it into HTML. </p>
+        <p></p>
+        <p>The CI workflows <a href="https://github.com/joshjennings98/joshjennings98.github.io/tree/master/.github/workflows">can be found here</a>.</p>
         <p></p>
         <h3>Deployment using GitHub Pages</h3>
         <p></p>
-        <p>TODO.</p>
+        <p>I don't want to spend money so I host the website with GitHub pages. This is particularly nice since I am hosting the repository on GitHub so deployments are trivial.</p>
+        <p></p>
+        <p>You can use GitHub pages with fancy <a href="https://jekyllrb.com/">Jekyll</a> setups but that probably involves some JavaScript which I don't want (also I prefer <a href="https://gohugo.io/">Hugo</a> if I use a static site generator that isn't my own). Instead I just use my own static site generator that populates the <code>index.html.template</code> as talked about in the previous section. This makes the deployments very simple as there is only one page, it is as simple as the <a href="https://pages.github.com/">hello world example for github pages</a>. Since this is hosted on GitHub I don't even have to worry about CI for the actual deplyoment as it is handled by GitHub.</p>
+        <p></p>
+        <p>Unfortunately I can't have just one page, I need a 404 page so that users can still navigate my website if they go to a wrong page. Again, because this is GitHub pages, this is very simple. You just need to create a <code>404.html</code> and have it at the root of the repo, no need for special files like a <code>.htaccess</code>. You can create a tempalte for the 404 page and populate it like the index so that the website looks consistent and all the links can be accessed easily from the 404 page.</p>
+        <p></p>
+        <p>If you want to use a custom domain with GitHub pages, that is also relatively simple, you just need to add a CNAME record to your reopository. This involves two steps:</p>
+        <ul><li> Adding a CNAME record file to your repository.
+</li>
+<li> Creating a CNAME record with your DNS provider.
+
+</li></ul>
+        <p>The CNAME record file contains the domain you want to use for your website. A CNAME record is used to specify that a domain name is an alias for another domain. This basically acts as a redirect so a custom dmain name can be used. The target domain must have an A address record. The A adress record is used to map a domain to it's corresponding IP where the werbsite is hosted.</p>
+        <p></p>
+        <p>To create the CNAME record itself, you must go to your DNS provider and create a CNAME record that points the domain to the GitHub pages URL (in my case joshjenning98.github.io). This is a different process for different DNS provders. In my case I used Google domains (for the <code>.dev</code> top level domain) for which the information on setting up a CNAME record can be found <a href="https://support.google.com/a/answer/47283?hl=en#zippy=%2Cstep-get-your-unique-cname-record%2Cstep-add-the-cname-record-to-your-domains-dns-records">on this page</a>. If you want to enforce HTTPS (a requirement for <code>.dev</code>) you must aso go to the GitHub pages setting and have "Enforce HTTPS" enabled.</p>
         <p></p>
         <h3>Acknowledgements</h3>
         <p></p>
