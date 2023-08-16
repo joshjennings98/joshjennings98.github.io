@@ -20,6 +20,7 @@
         </div>
         <div class="sidebar">
           <div><a href="#this-website">This Website</a></div>
+          <div><a href="#backend-demo-tool">Backend Demo Tool</a></div>
           <div><a href="#f-neural-network">F# Neural Network</a></div>
           </div>
       </div>
@@ -173,6 +174,97 @@
         <p></p>
         <p>The full project can be viewed on <a href="https://github.com/joshjennings98/joshjennings98.github.io">GitHub</a>.</p>
         <div><a href="#this-website">Back to top.</a></div>
+      </div>
+      <div class="page" id="backend-demo-tool">
+        <div class="page-header">
+          <h2>Backend Demo Tool</h2>
+        </div>
+        <p></p>
+        <p>This is a small <a href="https://flask.palletsprojects.com/en/2.3.x/">Flask</a> application that makes it easier to demonstrate backend features.</p>
+        <p></p>
+        <p>Frontend developers have a much easier time of it when it comes to demonstrating their work. It is easy to see what they've done and they can make it look as interesting as they want. In comparison, trying to demo a backend API or tool is rarely interesting to watch. It usually involves a lot of text, ends up with the presenter pulling out a terminal to show commands on the fly, searching their command history and hoping they do everything in the right order. All this to get some JSON or similarly uninteresting output.</p>
+        <p></p>
+        <p>This project is an attempt to try and improve that situation and make backend demos simpler and more engaging. To do this, a python application was created that reads a simple text file containing information to present and generates a web server with Flask. The data for each slide is exposed as JSON via endpoints and with a simple <code>index.html</code> and some JavaScript, the tool is able to create a simple presentation that is shown in the browser and can be clicked through like a PowerPoint presentation.</p>
+        <p></p>
+        <p>The advantage this provides is that python can be to execute pre-written commands and stream the results back to the webserver and expose it via an iframe that is then embedded into a slide. This allows you to easily demonstrate commands without having to open a terminal. It also means you can plan the exact order of the commands and not worry about mixing them up. A side effect of running the presentation in the browser is that you can easily have links that open up in new tabs which can be useful to show the result of any executed commands, this is useful as you can just share the web browser during a meeting instead of having to switch between PowerPoint, a terminal, and a web browser.</p>
+        <p></p>
+        <p>This application lends itself to a presentation method similar to the <a href="https://en.wikipedia.org/wiki/Takahashi_method">Takahashi method</a> where you have a concise slides with very little text. The created presentations are more complex than the Taskahashi method but it is still purposefully designed to keep things simple by only having one type of content per slide, be that text, a command output, or something else.</p>
+        <p></p>
+        <p>The result is that with this application backend demos should be much easier to create and run whilst also being slightly more engaging.</p>
+        <p></p>
+        <h2>Features</h2>
+        <p></p>
+        <ul><li> A presentation is uses just a simple text file.
+</li>
+<li> A slide can contain one of: text, an executed command, a code block, or an image and are delimted by the tags: <code>[TEXT]</code>, <code>[COMMAND]</code>, <code>[CODE]</code>, and <code>[IMAGE]</code>.
+</li>
+<li> Executed commands will stream output to be shown in the slide.
+</li>
+<li> The command that is executed is shown above the command output.
+</li>
+<li> Correctly renders commands that span multiple lines.
+</li>
+<li> Optionally run command every few seconds like <code>watch</code>.
+</li>
+<li> Code blocks are automatically highlighted using <a href="https://highlightjs.org/">hightlight.js</a>.
+</li>
+<li> Text slides will add text line by line like a PowerPoint presentation with animations.
+</li>
+<li> Left click or right arrow to go forwards, right click or left arrow to go backwards.
+</li>
+<li> When going backwards previously rendered text is handled properly and slides don't reset.
+</li>
+<li> Extremely easy to use and share via screen sharing.
+</li>
+<li> Configurable CSS if you desire to change the look.
+</li>
+<li> Jump to any slide via a drop down menu.
+
+</li></ul>
+        <h2>Usage</h2>
+        <p></p>
+        <p>The tool is not on PyPi so to install it you will need to <a href="https://github.com/joshjennings98/backend-demo">clone the repository</a>. Once this is done <code>cd</code> into the base directory and run <code>pip install .</code> to install it as <code>backend_demo</code>.</p>
+        <p></p>
+        <p>To create a presentation you just need to write a command file <code>commands.txt</code> like this:</p>
+        <p></p>
+        <pre class="code" title="">[TEXT] 
+This is a slide
+
+[COMMAND] 
+ping -c 4 google.com
+
+[TEXT] 
+I am another text slide
+with multiple lines
+
+[IMAGE]
+https://upload.wikimedia.org/wikipedia/en/7/73/Hyperion_cover.jpg
+
+[CODE]
+def main():
+    print("I am a code block")
+    print("I will be automatically syntax highlighted with hightlight.js")
+
+[COMMAND]
+echo commands \
+spanning \
+multiple \
+lines \
+are \
+handled
+</pre>
+        <p></p>
+        <p>To present a presentation, pass the command file as an argument to <code>backend_demo</code>:</p>
+        <p></p>
+        <pre class="code" title="">backend_demo commands.txt
+</pre>
+        <p></p>
+        <p><i>Currently, all the commands are run in a sub shell on you machine so be careful with what you execute.</i></p>
+        <p></p>
+        <h2>Github Repository</h2>
+        <p></p>
+        <p>The full project can be viewed on <a href="https://github.com/joshjennings98/backend-demo">GitHub</a>.</p>
+        <div><a href="#backend-demo-tool">Back to top.</a></div>
       </div>
       <div class="page" id="f-neural-network">
         <div class="page-header">
