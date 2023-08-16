@@ -116,11 +116,111 @@ One more problem arises. The checkbox is not part of the content and so it is un
 
 ### Storing theme across pages
 
-TODO.
+Now there is a theme I can toggle without JavaScript (yay), but if I go to another page on the website, the theme resets. This is because there is no state stored between pages. If I were using JavaScript then I could use `localStorage` to store a flag that lets the website know which theme should be used. You could do this with three lines of JavaScript. Unfortunately, I want to do it with zero lines of JavaScript which sadly isn't possible. There is no way to access the `localStorage` without JavaScript or JQuery (or maybe some fancy HTML5 or something). This is a limitation of CSS, there is literally no way to solve this. You cannot persist the theme information across pages.
+
+Luckily there is a solution. Have the entire website in just one page, this way there is nothing to persist across pages because there are no pages. The website can act as if there are multiple pages whilst actually having only one page, this can be done using the power of CSS and radio buttons. In the previous section we went over the `:checked` psuedo-class for checkboxes. Another input type also has it's own `:checked` psuedo-class: radio buttons. Radio buttons allow you to select one option from a set of multiple options. You can select only one option at a time which means that we can use the radio button to control what page we are on. Then we can use the `:checked` pseudo-class to either show or hide sections on the website depending on the 'page' that has been chosen:
+
+```css
+.page1, .page2, .homepage {
+  display: none;
+}
+
+#homepage-button:checked ~ .homepage { display: block; }
+#page1-button:checked ~ .page1 { display: block; }
+#page2-button:checked ~ .page2 { display: block; }
+```
+
+By default all the pages will be hidden, and then when a radio button is selected, it will override the default styling and set the display to `block` making the section visible. Since we will want the main page of the website to be visible, we can make the homepage radio button the value that is checked by default.
+
+```html
+<input type="radio" class="radio" id="homepage-button" checked>
+<input type="radio" class="radio" id="page1-button">
+<input type="radio" class="radio" id="page2-button">
+```
+
+This is all good, except radio buttons don't look like page links. We want this webpage to look like a normal website, users should be able to interact with it like they would any other website and a set of radio buttons to switch pages looks a bit stupid. To solve this, we will use a simialr technique that we used with the theme toggle, we will hide the radio buttons themselves and rely on the button labels. We can make the radio button labels by styling them so they have underlines and so that when a user hovers over them, the mouse pointer changes. This way a user will never know they aren't actual links and from an accessability standpoint we will make sure to have good labels. We can make links stay the same colour if they have been visited (I never liked them changing colour) and then the page switch buttons will be indistinguishable from normal links.
+
+```css
+.page-button {
+  cursor: pointer;
+  text-decoration: underline;
+}
+
+.page1, .page2, .homepage {
+  display: none;
+}
+
+#homepage-button:checked ~ .homepage { display: block; }
+#page1-button:checked ~ .page1 { display: block; }
+#page2-button:checked ~ .page2 { display: block; }
+
+a {
+  color: var(--c-text);
+}
+```
+
+```html
+<label for="homepage-button" class="page-button">Home</label>
+<label for="page1-button" class="page-button">Page 1</label>
+<label for="page2-button" class="page-button">Page 2</label>
+<input type="radio" class="radio" id="homepage-button" checked hidden>
+<input type="radio" class="radio" id="page1-button" hidden>
+<input type="radio" class="radio" id="page2-button" hidden>
+```
+
+A nice thing about having a single webpage and using the radio buttons is that the website is extremely responsive as there are no HTTP requests between page switches since we have all the 'pages' all the time. This could cause problems in the future if there were a lot of pages and the website became very large. However, this would only affect the initial page load and once loaded you would have a quick and snappy website. There are many websites outhere that have multi-megabyte pages as they load in all the image, scripts, and styles yet they remain responsive so I am confident this website would as well.
+
+A problem with this is that if we add a page we need to make changes to the CSS to add the new rule for which page to show and hide. This can be solved by tempalting the CSS when generating the website or it will be solved as a side effect of what we do in the next section.
 
 ### Having usable URLs
 
-TODO.
+We almost have a fully functional website that behaves as if there are multiple pages whilst actually only having one page. Unfortunately, there is yet another issue. You can only choose the pages via the radio buttons, you can't go to a specific page via a URL. This means you cannot share a page, a problem if the site is used as a blog or a portfolio. This is because you cannot set radio buttons based on the contents of the URL (well as usual, you could do if you were willing to use JavaScript, but I am not). Without this feature the website is basically unusable, I want to be able to link to specific pages from other pages or even from other websites. Luckily, there is a solution!
+
+This problem can be solved by replacing the radio buttons with links. But wait, then we won't be able to use the `:checked` pseudo-class. Yes, that is true, but luckily there is another pseudo-class we can use: the [`:target` pseudo-class](https://developer.mozilla.org/en-US/docs/Web/CSS/:target)! This pseudo-class represents an element with an id matching the URL's [fragment](https://en.wikipedia.org/wiki/URI_fragment). This is a string of characters that refers to a resource that is subordinate to another resource. For URLs, the fragment is the last part of a URL preceded by the `#`. It is usually used for identifying a portion of a document so that you can jump to a particular heading. We choose this over the query of the URL so that the pseudo-class can be used. Some other examples of how the fragment can be used, such as a pure CSS light box or table of contents, can be found in [the Mozilla web docs](https://developer.mozilla.org/en-US/docs/Web/CSS/:target#examples).
+
+In our case we have behavior similar to the radio buttons. We will hide all pages and then depending on which id is targeted, we will unhide that page:
+
+```css
+.homepage.page {
+  display: block; /* The homepage is displayed by default */
+}
+
+.page {
+  display: none;
+}
+
+.page:target {
+  display: block; /* When an id is targeted, show that page */
+}
+
+.page:target ~ .homepage.page {
+  display: none; /* When an id is targeted, hide the homepage */
+}
+```
+
+There is a difference vs the radio button version, that being that we have explicit behavior for the homepage. Since the default is that there is no fragment, we want to make sure that the homepage is shown if there is no fragment. We can't have a default fragment as that would make the URL messy. We therefore use the power of the General sibling combinator again to have the homepage show by default then hide if any other sibling page is selected. This means that the individual pages of the website can be accessed by doing `https://website.com#page`! Due to the nature of the combinators, we need to make sure that the homepage is the final section of the website since we want to hide it if a page is selected and we can only affect elements that come after the current DOM element. 
+
+To specify linsk to the pages within the website, we just have to create links to them like you would in a table of contents:
+
+```html
+<a href="#page1>Page 1</a>
+<a href="#page2">Page 2</a>
+<div class="page" id="page1"/>
+<div class="page" id="page2"/>
+```
+
+An issue with this is that when you go to a heading via a fragment, it shifts the page downwards so that the heading is at the top of the page. This is fine if we were using the fragments with what they were designed for but it is a bit annoying as we want to be able to see the website header on each 'page'. To solve this we do a bit of a hacky solution, we add some invisible content before every element that gets targeted by a fragment, effectively pushing the actual content down the page by a fixed amount. it is a bit messy but it works.
+
+```css
+:target::before {
+  content: "";
+  display: block;
+  height: 1000px; /* Fixed header height*/
+  margin: -1000px 0 0; /* Negative fixed header height */
+}
+```
+
+And with that, we have a fully usable single-page website that behaves like it has multiple pages and has a theme toggle and uses no JavaScript. Obviously this is isn't viable for every website, but it was a fun idea to mess about with and the result is something I am quite happy with. It has all the features I want in a website without the bloat (although it uses slightly complex CSS that probably doesn't function on some browsers). Even if CSS is fully disabled, the website remains usable, it isn't as nice to use but is still completely functional. The fact it is just a single page of HTML and a bit of CSS means that it should be easily trasnsportable across web hosts with very little work when migrating. Now we just need a way to add content and deploy it!
 
 ### Code Generation
 
@@ -146,13 +246,15 @@ If you want to use a custom domain with GitHub pages, that is also relatively si
 * Adding a CNAME record file to your repository.
 * Creating a CNAME record with your DNS provider.
 
-The CNAME record file contains the domain you want to use for your website. A CNAME record is used to specify that a domain name is an alias for another domain. This basically acts as a redirect so a custom dmain name can be used. The target domain must have an A address record. The A adress record is used to map a domain to it's corresponding IP where the werbsite is hosted.
+The CNAME record file contains the domain you want to use for your website. A CNAME record is used to specify that a domain name is an alias for another domain. This basically acts as a redirect so a custom dmain name can be used. The target domain must have an A address record. The A address record is used to map a domain to it's corresponding IP where the werbsite is hosted.
 
 To create the CNAME record itself, you must go to your DNS provider and create a CNAME record that points the domain to the GitHub pages URL (in my case joshjenning98.github.io). This is a different process for different DNS provders. In my case I used Google domains (for the `.dev` top level domain) for which the information on setting up a CNAME record can be found [on this page](https://support.google.com/a/answer/47283?hl=en#zippy=%2Cstep-get-your-unique-cname-record%2Cstep-add-the-cname-record-to-your-domains-dns-records). If you want to enforce HTTPS (a requirement for `.dev`) you must aso go to the GitHub pages setting and have "Enforce HTTPS" enabled.
 
 ### Acknowledgements
 
 A lot of inspiration was taked from [this blog post](https://kleinfreund.de/css-only-dark-mode/) on CSS-only dark mode for the initial work on reimplementing the theme toggle without JavaScript.
+
+This [person on codepen](https://codepen.io/finnhvman) has a lot of amazing CSS only stuff available that make this website seem like a toy. They also have some cool SVG stuff like this [gas giant](https://codepen.io/finnhvman/pen/jOQvYaz) that I want to include on my website somehow.
 
 ### Github
 
