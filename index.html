@@ -1,8 +1,8 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>joshj.dev</title>
-  <base href="https://joshj.dev">  
 <style>
 :root {
   --c-text: rgba(17, 17, 17, 1);
@@ -101,10 +101,17 @@ body {
   height: 600px;
   width: 250%;
   perspective: 100px;
-  max-height: 20%;  
-  min-height: 20%;
+  max-height: 300px;  
   overflow: hidden;
 }
+
+/* max height will be either 300px or if that is greater than 20% then 20% */
+@media (max-height: 1500px) {
+  .lighth {
+    max-height: 20%;
+  }
+}
+
 .lighth::before {
   content: '';
   position: absolute;
@@ -292,7 +299,9 @@ nav ul ul {
   top: 60px;
 }
 
-nav ul li:hover > ul { display: inherit; }
+@media not all and (pointer: coarse) { /* no hover on touch devices */
+  nav ul li:hover > ul { display: inherit; }
+}
 
 nav ul ul li {
   width: 250px;
