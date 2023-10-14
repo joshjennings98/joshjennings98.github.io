@@ -1,215 +1,355 @@
 <head>
   <title>joshj.dev</title>
-  <link rel="stylesheet" href="website.css">
   <base href="https://joshj.dev">  
-</head>
-<body>
-  <input id="dark-mode" class="dark-mode-checkbox" hidden type="checkbox">
-  <div class="container">
-    <div class="content">
-      <div class="sidebar-wrapper">
-        <div class="sidebar">
-          <div><label for="dark-mode" title="Toggle dark mode (if supported)" class="page-button"><u>Theme</u></label></div>
-          <div><a href="#">Home</a></div>
-          <div><a href="https://github.com/joshjennings98" target="_blank">GitHub</a></div>
-          <div><a href="CV-Josh-Jennings.html" target="_blank">CV Link</a></div>
-        </div>
-        <br>
-        <div class="sidebar">
-          <div><span><b>Projects:</b></span></div>
-        </div>
-        <div class="sidebar">
-          <div><a href="#this-website">This Website</a></div>
-          <div><a href="#backend-demo-tool">Backend Demo Tool</a></div>
-          <div><a href="#f-neural-network">F# Neural Network</a></div>
-          </div>
-      </div>
-      <h1>Josh's Website</h1>
-      <hr>
-      <div class="page" id="this-website">
-        <div class="page-header">
-          <h2>This Website</h2>
-        </div>
-        <p></p>
-        <p>The goal of this website was to create an interactive static website using on HTML and CSS, no JavaScript. I had recently read <a href="https://briankoberlein.com/tech/quiet-web/">an article about the quiet web</a> which inspired me to try and create an interesting website that satisfied the requirements laid out in the blog post:</p>
-        <p></p>
-        <ul><li> Exclude any page that has ads. 
-</li>
-<li> Remove them if they use Google Analytics or Google Fonts. 
-</li>
-<li> Remove them if they use scripts or trackers.
-
-</li></ul>
-        <p>These are arbitrary requirements but it seemed like an interesting challenge. On top of this, in the event that CSS was disabled, I also wanted my website to retain most of it's usability.</p>
-        <p></p>
-        <p>I am not one for frontend development and none of the previous versions of my site have used a JavaScript framework, however, in a previous iteration of my website I had a script that would allow you to change the theme between light mode and dark mode. I enjoyed this gimicky feature and wanted to keep that functionality.</p>
-        <p></p>
-        <h3>Re-implementing theme toggle using only CSS</h3>
-        <p></p>
-        <p>The main feature that I wanted to emulate using CSS was a light mode toggle. I wanted to be able to click a button and have the colour scheme change. With JavaScript I would watch for a checkbox and have an <code>onchange</code> event that makes the colour changes. Since this relies on JavaScript, this approach is not possible. So using only CSS we need some way to:</p>
-        <p></p>
-        <ul><li> Know that a checkbox has been checked.
-</li>
-<li> If the user was previously in a dark mode the page should become light or vice versa. 
-</li>
-<li> This needs to be dynamic and not just occur on page load but any time a user checks the checkbox.
-
-</li></ul>
-        <p>Luckily, CSS has <a href="https://developer.mozilla.org/en-US/docs/Web/CSS/Pseudo-classes">pseudo-classes</a>. These are keywords that are attached to a selector and specify a state of the selected element, for example <code>:hover</code> is triggered when an element is hovered over. There exists the <a href="https://developer.mozilla.org/en-US/docs/Web/CSS/:checked"><code>:checked</code> pseudo-class</a> which can be used to change the style of a checkbox or radio button based on whether or not it is checked. This satisfies the goal of making the change dynamic and controllable by the user.</p>
-        <p></p>
-        <p>However, there is a problem. CSS stands for Cascading Style Sheets. Styling in CSS will only apply to descendants of the the DOM node for the element (if the styling doesn't only affect the specific element i.e. <code>margin</code> will only affect the current element, but <code>font-family</code> will apply to the descendants). In either case, the inheritance only goes down the DOM tree and we cannot affect the properties of any parent elements.</p>
-        <p></p>
-        <p>We can have some degree of control over which descendants are affected by the styling through the use of the <a href="https://developer.mozilla.org/en-US/docs/Web/CSS/General_sibling_combinator">general sibling combinator</a>. This seperates two seletors and matches all instances of the second element that appear anywhere after the first element that share the same parent element. For example, the following would match all span elements that come after the paragraph element in the DOM tree:</p>
-        <p></p>
-        <pre class="csscode" title="css">p ~ span {
-  color: red;
-}
-</pre>
-        <p></p>
-        <p>From the <a href="https://developer.mozilla.org/en-US/docs/Web/CSS/General_sibling_combinator#html">general sibling combinator docs</a> we can see how this would work:</p>
-        <p></p>
-        <pre class="htmlcode" title="html">&lt;article&gt;
-  &lt;span&gt;This is not red because it appears before any paragraph.&lt;/span&gt;
-  &lt;p&gt;Here is a paragraph.&lt;/p&gt;
-  &lt;code&gt;Here is some code.&lt;/code&gt;
-  &lt;span&gt;
-    This span is red because it appears after the paragraph, even though there
-    are other nodes in between
-  &lt;/span&gt;
-  &lt;p&gt;Whatever it may be, keep smiling.&lt;/p&gt;
-  &lt;h1&gt;Dream big&lt;/h1&gt;
-  &lt;span&gt;
-    Doesn't matter how many or what kind of nodes are in between, all spans from
-    the same parent after a paragraph are red.
-  &lt;/span&gt;
-&lt;/article&gt;
-&lt;span&gt;
-  This span is not red because it doesn't share a parent with a paragraph
-&lt;/span&gt;
-</pre>
-        <p></p>
-        <p>How does this help us? Well, since we can style elements based on the pseudo-class selectors, the CSS can be modified to change based on the checked state of a checkbox. Say we have a class for the checkbox called <code>.dark-mode-checkbox</code>, we can do the following and change the font for siblings of an element based on whether the checkbox is checked:</p>
-        <p></p>
-        <pre class="csscode" title="css">.content {
-  font-family: Serif;
-}
-
-.dark-mode-checkbox:checked ~ .container {
-  font-family: Monospace;
-}
-</pre>
-        <p></p>
-        <p>And in the HTML do something like this:</p>
-        <p></p>
-        <pre class="htmlcode" title="html">&lt;input hidden class="dark-mode-checkbox" id="dark-mode" type="checkbox"&gt;
-
-&lt;div class="container"&gt;
-  &lt;label class="dark-mode-label" for="dark-mode"&gt;Toggle Dark Mode&lt;/label&gt;
-  ...
-&lt;/div&gt;
-</pre>
-        <p></p>
-        <p>You can see that the checkbox and the container are siblings. This is important as we wouldn't be able to have the content as a descendant of the checkbox due to the nature of inputs. One strange thing it does mean, is that we have the label for the button not be a parent or sibling of the checkbox. This is not an issue as we use the <code>for</code> attribute.</p>
-        <p></p>
-        <p>Now that we have the general technique, we can utilise it for the dark mode.</p>
-        <p></p>
-        <pre class="csscode" title="css">:root {
-  --c-text: #3c3836;
-  --c-background: #fbf1c7;
-  --c-dark-text: #ebdbb2;
-  --c-dark-background: #282828;
+<style>
+:root {
+  --c-text: rgba(17, 17, 17, 1);
+  --c-background: rgba(238, 238, 238, 1);
+  --c-alternative: rgba(0, 85, 255, 1);
+  --c-alternative-transparent: rgba(0, 85, 255, 0);
+  --c-dark-text: rgba(17, 17, 17, 1);
+  --c-dark-background: rgba(238, 238, 238, 1);
+  --c-dark-alternative: rgba(229, 39, 157, 1);
+  --c-dark-alternative-transparent: rgba(229, 39, 157, 0);
 }
 
 @media (prefers-color-scheme: dark) {
   :root {
-    --c-text: #ebdbb2;
-    --c-background: #282828;
-    --c-dark-text: #3c3836;
-    --c-dark-background: #fbf1c7;
+    --c-text: rgba(238, 238, 238, 1);
+    --c-background: rgba(17, 17, 17, 1);
+    --c-alternative: rgba(229, 39, 157, 1);
+    --c-alternative-transparent: rgba(229, 39, 157, 0);
+    --c-dark-text: rgba(17, 17, 17, 1);
+    --c-dark-background: rgba(238, 238, 238, 1);
+    --c-dark-alternative: rgba(0, 85, 255, 1);
+    --c-dark-alternative-transparent: rgba(0, 85, 255, 0);
   }
 }
 
 .dark-mode-checkbox:checked ~ .container {
   --c-text: var(--c-dark-text);
   --c-background: var(--c-dark-background);
+  --c-alternative: var(--c-dark-alternative);
+  --c-alternative-transparent: var(--c-dark-alternative-transparent);
+}
+
+::selection, ::-moz-selection {
+  background: var(--c-alternative);
+  color: var(--c-background);
+}
+
+*, *::after, *::before {
+  box-sizing: border-box
+}
+
+body {
+  margin: 0;
 }
 
 .container {
-  color: var(--c-text);
+  font-family: sans-serif;
+  line-height: 1.6;
+  position: relative;
+  display: -webkit-flex;
+  display: -ms-flex;
+  display: flex;
+  -webkit-flex-direction: column;
+  -ms-flex-direction: column;
+  flex-direction: column;
+  justify-content: center;
+  -ms-align-items: center;
+  align-items: center;
   background-color: var(--c-background);
-}
-</pre>
-        <p></p>
-        <p>We use <a href="https://developer.mozilla.org/en-US/docs/Web/CSS/Using_CSS_custom_properties">CSS variables</a> and change them based on whether the checkbox is checked. We can then reference these variables in the CSS (such as when we set the background and text colour) to update the colours accordingly.</p>
-        <p></p>
-        <p>We can also utilise <a href="https://developer.mozilla.org/en-US/docs/Web/CSS/@media/prefers-color-scheme"><code>prefers-color-scheme</code></a> to detect whether the initial colour scheme should be light or dark. Since we can use generic terminalogy in our labels, we can treat the light mode as the dark mode for users who initially requested the dark mode. There is this neat <a href="https://codepen.io/kleinfreund/pen/NmpKZM">codepen demo</a> for determining whether your web browser supports this and what defaults to. This all means that the website will be the correct mode for users and they won't have to click the checkbox to toggle the theme. This ultimately makes the whole approach with the checkbox pointless, but this whole website is an exercise in pointlessness so I am doing it anyway. It also led to some interesting problems that I got to solve, I will go over theses in the next few sections.</p>
-        <p></p>
-        <p>One more problem arises. The checkbox is not part of the content and so it is unaffected by the styling. We cannot make it part of the container because it will never be able to affect the styling of it's parent. Luckily, since the label that you can click doesn't have to be a sibling of the checkbox itself, we can just hide the actual checkbox. Since the label can be clicked and we used the <code>for</code> attribute, it should still be accessible.</p>
-        <p></p>
-        <h3>Storing theme across pages</h3>
-        <p></p>
-        <p>Now there is a theme I can toggle without JavaScript (yay), but if I go to another page on the website, the theme resets. This is because there is no state stored between pages. If I were using JavaScript then I could use <code>localStorage</code> to store a flag that lets the website know which theme should be used. You could do this with three lines of JavaScript. Unfortunately, I want to do it with zero lines of JavaScript which sadly isn't possible. There is no way to access the <code>localStorage</code> without JavaScript or JQuery (or maybe some fancy HTML5 or something). This is a limitation of CSS, there is literally no way to solve this. You cannot persist the theme information across pages.</p>
-        <p></p>
-        <p>Luckily there is a solution. Have the entire website in just one page, this way there is nothing to persist across pages because there are no pages. The website can act as if there are multiple pages whilst actually having only one page, this can be done using the power of CSS and radio buttons. In the previous section we went over the <code>:checked</code> psuedo-class for checkboxes. Another input type also has it's own <code>:checked</code> psuedo-class: radio buttons. Radio buttons allow you to select one option from a set of multiple options. You can select only one option at a time which means that we can use the radio button to control what page we are on. Then we can use the <code>:checked</code> pseudo-class to either show or hide sections on the website depending on the 'page' that has been chosen:</p>
-        <p></p>
-        <pre class="csscode" title="css">.page1, .page2, .homepage {
-  display: none;
+  height: 100vh;
+  padding: 0;
+  margin: 0;
+  overflow: hidden
 }
 
-#homepage-button:checked ~ .homepage { display: block; }
-#page1-button:checked ~ .page1 { display: block; }
-#page2-button:checked ~ .page2 { display: block; }
-</pre>
-        <p></p>
-        <p>By default all the pages will be hidden, and then when a radio button is selected, it will override the default styling and set the display to <code>block</code> making the section visible. Since we will want the main page of the website to be visible, we can make the homepage radio button the value that is checked by default.</p>
-        <p></p>
-        <pre class="htmlcode" title="html">&lt;input type="radio" class="radio" id="homepage-button" checked&gt;
-&lt;input type="radio" class="radio" id="page1-button"&gt;
-&lt;input type="radio" class="radio" id="page2-button"&gt;
-</pre>
-        <p></p>
-        <p>This is all good, except radio buttons don't look like page links. We want this webpage to look like a normal website, users should be able to interact with it like they would any other website and a set of radio buttons to switch pages looks a bit stupid. To solve this, we will use a simialr technique that we used with the theme toggle, we will hide the radio buttons themselves and rely on the button labels. We can make the radio button labels by styling them so they have underlines and so that when a user hovers over them, the mouse pointer changes. This way a user will never know they aren't actual links and from an accessability standpoint we will make sure to have good labels. We can make links stay the same colour if they have been visited (I never liked them changing colour) and then the page switch buttons will be indistinguishable from normal links.</p>
-        <p></p>
-        <pre class="csscode" title="css">.page-button {
+.label {
+  display: inline-block;
+  margin-bottom: 10px;
+}
+
+.page-button {
   cursor: pointer;
-  text-decoration: underline;
+  user-select: none;
 }
 
-.page1, .page2, .homepage {
+.content {
+  display: -webkit-flex;
+  display: -ms-flex;
+  display: flex;
+  -webkit-flex-direction: column;
+  flex-direction: column;
+  -ms-align-items: center;
+  align-items: center;
+  flex-grow: 1;
+  color: var(--c-text);
+  z-index: 100;
+  overflow: scroll;
+  position: relative;
+}
+.content2 {
+  max-width: 800px; 
+}
+.lighth {
+  position: relative;
+  background-color: var(--c-background);
+  height: 600px;
+  width: 250%;
+  perspective: 100px;
+  max-height: 20%;  
+  min-height: 20%;
+  overflow: hidden;
+}
+.lighth::before {
+  content: '';
+  position: absolute;
+  background: linear-gradient(0, transparent, var(--c-background));
+  top: 0;
+  right: -100vh;
+  left: -100vh;
+  height: 100px;
+  z-index: 99
+}
+.lightv {
+  position: relative;
+  background-color: var(--c-background);
+  color: var(--c-alternative);
+  height: 100%;
+  width: 100%;
+  transform: rotateX(25deg);
+}
+.lightv::before {
+  content: '';
+  position: absolute;
+  background-color: currentColor;
+  -webkit-transform: translateX(-50%);
+  -ms-transform: translateX(-50%);
+  transform: translateX(-50%);
+  top: -100vh;
+  bottom: -100vh;
+  left: 50%;
+  width: 10px;
+  box-shadow: -140px 0 0 currentColor, -290px 0 0 currentColor, -440px 0 0 currentColor, -590px 0 0 currentColor, -740px 0 0 currentColor, -890px 0 0 currentColor, -1040px 0 0 currentColor, -1190px 0 0 currentColor, -1450px 0 0 currentColor, -1700px 0 0 currentColor, -1950px 0 0 currentColor,
+    140px 0 0 currentColor, 290px 0 0 currentColor, 440px 0 0 currentColor, 590px 0 0 currentColor, 740px 0 0 currentColor, 890px 0 0 currentColor, 1040px 0 0 currentColor, 1190px 0 0 currentColor, 1450px 0 0 currentColor, 1700px 0 0 currentColor, 1950px 0 0 currentColor
+}
+.lightv::after {
+  content: '';
+  position: absolute;
+  background-color: currentColor;
+  top: 0;
+  right: -100vh;
+
+  left: -100vh;
+  height: 10px;
+  box-shadow: 0 100px 0 0 currentColor, 0 200px 0 currentColor, 0 300px currentColor,
+    0 -100px 0 0 currentColor, 0 -200px 0 currentColor, 0 -300px currentColor;
+
+  animation: lightv 1s linear infinite;
+}
+@keyframes lightv {
+  from {
+    transform: translateY(0)
+  }
+  to {
+    transform: translateY(100px)
+  }
+}
+
+svg {
+	font-family: monospace;
+	position: relative; 
+  margin: 20px;
+}
+svg path {
+	animation: stroke 5s infinite alternate;
+	stroke-width: 3;
+	stroke: #e5279d;
+	font-size: 140px;
+}
+@keyframes stroke {
+	0%   {
+		fill: var(--c-alternative-transparent); stroke: var(--c-alternative);
+		stroke-dashoffset: 25%; stroke-dasharray: 0 50%; stroke-width: 3;
+	}
+	70%  {fill: var(--c-alternative-transparent); stroke: var(--c-alternative); }
+	80%  {fill: var(--c-alternative-transparent); stroke: var(--c-alternative); stroke-width: 3; }
+	100% {
+		fill: var(--c-alternative); stroke: var(--c-alternative-transparent); 
+		stroke-dashoffset: -25%; stroke-dasharray: 50% 0; stroke-width: 3;
+	}
+}
+
+p {
+  color: var(--c-text);
+  text-align: justify;
+  text-justify: inter-word;
+  position: relative;
+  z-index: -10;
+}
+
+ /* Hide scrollbar for Chrome, Safari and Opera */
+.content::-webkit-scrollbar {
   display: none;
 }
 
-#homepage-button:checked ~ .homepage { display: block; }
-#page1-button:checked ~ .page1 { display: block; }
-#page2-button:checked ~ .page2 { display: block; }
+/* Hide scrollbar for IE, Edge and Firefox */
+.content {
+  -ms-overflow-style: none;  /* IE and Edge */
+  scrollbar-width: none;  /* Firefox */
+} 
 
-a {
-  color: var(--c-text);
+.content{
+  -webkit-mask-image: linear-gradient(to top, transparent 0%, var(--c-background) 15%);
+  mask-image: linear-gradient(to top, transparent 0%, var(--c-background) 15%);
+  -webkit-mask-composite: destination-out;
+  mask-composite: destination-out;
+  padding-bottom: 5%;
 }
-</pre>
-        <p></p>
-        <pre class="htmlcode" title="html">&lt;label for="homepage-button" class="page-button"&gt;Home&lt;/label&gt;
-&lt;label for="page1-button" class="page-button"&gt;Page 1&lt;/label&gt;
-&lt;label for="page2-button" class="page-button"&gt;Page 2&lt;/label&gt;
 
-&lt;input type="radio" class="radio" id="homepage-button" checked hidden&gt;
-&lt;input type="radio" class="radio" id="page1-button" hidden&gt;
-&lt;input type="radio" class="radio" id="page2-button" hidden&gt;
-</pre>
-        <p></p>
-        <p>A nice thing about having a single webpage and using the radio buttons is that the website is extremely responsive as there are no HTTP requests between page switches since we have all the 'pages' all the time. This could cause problems in the future if there were a lot of pages and the website became very large. However, this would only affect the initial page load and once loaded you would have a quick and snappy website. There are many websites outhere that have multi-megabyte pages as they load in all the image, scripts, and styles yet they remain responsive so I am confident this website would as well.</p>
-        <p></p>
-        <p>A problem with this is that if we add a page we need to make changes to the CSS to add the new rule for which page to show and hide. This can be solved by tempalting the CSS when generating the website or it will be solved as a side effect of what we do in the next section.</p>
-        <p></p>
-        <h3>Having usable URLs</h3>
-        <p></p>
-        <p>We almost have a fully functional website that behaves as if there are multiple pages whilst actually only having one page. Unfortunately, there is yet another issue. You can only choose the pages via the radio buttons, you can't go to a specific page via a URL. This means you cannot share a page, a problem if the site is used as a blog or a portfolio. This is because you cannot set radio buttons based on the contents of the URL (well as usual, you could do if you were willing to use JavaScript, but I am not). Without this feature the website is basically unusable, I want to be able to link to specific pages from other pages or even from other websites. Luckily, there is a solution!</p>
-        <p></p>
-        <p>This problem can be solved by replacing the radio buttons with links. But wait, then we won't be able to use the <code>:checked</code> pseudo-class. Yes, that is true, but luckily there is another pseudo-class we can use: the <a href="https://developer.mozilla.org/en-US/docs/Web/CSS/:target"><code>:target</code> pseudo-class</a>! This pseudo-class represents an element with an id matching the URL's <a href="https://en.wikipedia.org/wiki/URI_fragment">fragment</a>. This is a string of characters that refers to a resource that is subordinate to another resource. For URLs, the fragment is the last part of a URL preceded by the <code>#</code>. It is usually used for identifying a portion of a document so that you can jump to a particular heading. We choose this over the query of the URL so that the pseudo-class can be used. Some other examples of how the fragment can be used, such as a pure CSS light box or table of contents, can be found in <a href="https://developer.mozilla.org/en-US/docs/Web/CSS/:target#examples">the Mozilla web docs</a>.</p>
-        <p></p>
-        <p>In our case we have behavior similar to the radio buttons. We will hide all pages and then depending on which id is targeted, we will unhide that page:</p>
-        <p></p>
-        <pre class="csscode" title="css">.homepage.page {
+#container {
+  margin: 0 auto;
+  max-width: 890px;
+}
+
+[id^=drop] {
+ display: none;
+}
+
+#menu-content {
+    position: relative;
+}
+
+#drop:checked ~ #menu #menu-content::after {
+    content: "-";
+    position: absolute;
+    left: 100%;       /* This will place the '-' right after the text content */
+    top: 0;           /* This will align it to the top of the text */
+    margin-left: 5px; /* Optional: for some spacing between the text and '-' */
+}
+
+nav {
+  margin: 0;
+  padding: 0;
+  background-color: var(--c-alternative);
+  width: 100%;
+
+}
+
+.nav-content {
+
+    display: flex;
+  justify-content: center;
+}
+
+
+nav:after {
+  content: "";
+  display: table;
+  clear: both;
+}
+
+nav ul {
+  padding: 0;
+  margin: 0;
+  list-style: none;
+  position: relative;
+  z-index: 200;
+}
+
+nav ul li {
+  margin: 0px;
+  display: inline-block;
+  float: left;
+  background-color: var(--c-alternative);
+  z-index: 200;
+}
+
+nav a, nav label {
+  display: block;
+  padding: 0 20px;
+  color: var(--c-dark-background);
+  font-size: 20px;
+  line-height: 60px;
+  text-decoration: none;
+}
+
+nav label > a {
+    padding: 0; /* This removes the padding from <a> inside <label> */
+}
+
+nav label {
+    color: var(--c-dark-background);
+}
+
+nav ul ul {
+  display: none;
+  position: absolute;
+  top: 60px;
+}
+
+nav ul li:hover > ul { display: inherit; }
+
+nav ul ul li {
+  width: 210px;
+  float: none;
+  display: list-item;
+  position: relative;
+  z-index: 200;
+}
+
+nav ul ul ul li {
+  position: relative;
+  top: -60px;
+  left: 170px;
+  z-index: 200;
+}
+
+li > a:only-child:after { content: ''; }
+
+
+nav a:hover,
+ nav ul ul ul a { 
+ user-select: none;
+  }
+  
+nav a:hover, nav label:hover {
+ text-decoration: underline;
+  text-decoration-thickness: 2px;
+    text-decoration-color: var(--c-dark-background);
+  text-underline-offset: 5px;
+}
+  
+.toggle {
+  display: inline-flex;
+  padding: 0 20px;
+  font-size: 20px;
+  line-height: 60px;
+  text-decoration: none;
+  border: none;
+  justify-content: flex-end;
+}
+  
+.toggle:hover { 
+  background-color: var(--c-alternative); 
+  cursor: pointer; 
+    user-select: none;
+   text-decoration: underline;
+  text-decoration-thickness: 2px;
+    text-decoration-color: var(--c-dark-background);
+  text-underline-offset: 5px;
+}
+
+#menu {
+  display: none;
+}
+
+/* Single page stuff
+--------------------------------------------- */
+
+.homepage.page {
   display: block; /* The homepage is displayed by default */
 }
 
@@ -224,142 +364,357 @@ a {
 .page:target ~ .homepage.page {
   display: none; /* When an id is targeted, hide the homepage */
 }
-</pre>
-        <p></p>
-        <p>There is a difference vs the radio button version, that being that we have explicit behavior for the homepage. Since the default is that there is no fragment, we want to make sure that the homepage is shown if there is no fragment. We can't have a default fragment as that would make the URL messy. We therefore use the power of the General sibling combinator again to have the homepage show by default then hide if any other sibling page is selected. This means that the individual pages of the website can be accessed by doing <code>https://website.com#page</code>! Due to the nature of the combinators, we need to make sure that the homepage is the final section of the website since we want to hide it if a page is selected and we can only affect elements that come after the current DOM element. </p>
-        <p></p>
-        <p>To specify links to the pages within the website, we just have to create links to them like you would in a table of contents:</p>
-        <p></p>
-        <pre class="htmlcode" title="html">&lt;a href="#page1"&gt;Page 1&lt;/a&gt;
-&lt;a href="#page2"&gt;Page 2&lt;/a&gt;
 
-&lt;div class="page" id="page1"/&gt;
-&lt;div class="page" id="page2"/&gt;
-</pre>
-        <p></p>
-        <p>An issue with this is that when you go to a heading via a fragment, it shifts the page downwards so that the heading is at the top of the page. This is fine if we were using the fragments with what they were designed for but it is a bit annoying as we want to be able to see the website header on each 'page'. To solve this we do a bit of a hacky solution, we add some invisible content before every element that gets targeted by a fragment, effectively pushing the actual content down the page by a fixed amount. it is a bit messy but it works.</p>
-        <p></p>
-        <pre class="csscode" title="css">:target::before {
+/* This CSS rule will add invisible content before every element that gets targeted by a hash link, effectively pushing the actual content down the page by a fixed amount. */
+:target::before {
   content: "";
   display: block;
   height: 1000px; /* Fixed header height*/
   margin: -1000px 0 0; /* Negative fixed header height */
 }
-</pre>
-        <p></p>
-        <p>And with that, we have a fully usable single-page website that behaves like it has multiple pages and has a theme toggle and uses no JavaScript. Obviously this is isn't viable for every website, but it was a fun idea to mess about with and the result is something I am quite happy with. It has all the features I want in a website without the bloat (although it uses slightly complex CSS that probably doesn't function on some browsers). Even if CSS is fully disabled, the website remains usable, it isn't as nice to use but is still completely functional. The fact it is just a single page of HTML and a bit of CSS means that it should be easily trasnsportable across web hosts with very little work when migrating. Now we just need a way to add content and deploy it!</p>
-        <p></p>
-        <h3>Code Generation</h3>
-        <p></p>
-        <p>I implemented my own static site generator. Since my website is basically a single page application, I only ned to populate the <code>index.html</code> file. I use Go with it's powerful templating to fill the relevant sections of the <code>index.html</code> with content that has been parsed from markdown files. This means that if I want to add a page, I just add a markdown file, and the website will automatically regenerate the <code>index.html</code> when I push the change to GitHub. This is done with a simple CI workflow. GitHub pages then handles the deployment of the actual website, this is discuessed in the section below.</p>
-        <p></p>
-        <p>The Go code is not interesting. It is written with only standard library modules. It reads the markdown from the markdown directory, converts it into HTML using regex to convert the various markdown tags into their HTML equivalent, and then populates the templates for the <code>index.html</code> and <code>404.html</code> pages. Since there is only one page to really think about, the code is kept relatively simple.</p>
-        <p></p>
-        <p>The index template <a href="https://github.com/joshjennings98/joshjennings98.github.io/blob/master/templates/index.html.tmpl">can be found here</a>, whilst the Go program for populating the template <a href="https://github.com/joshjennings98/joshjennings98.github.io/blob/master/main.go">can be found here</a>.</p>
-        <p></p>
-        <p>The workflow to run the program in CI is very simple. It uses GitHub actions to checkout the repo, and if there are changes to the markdown or templates then it will regenerate the index and commit the changes back to the repository. There is also a similar workflow that is used for generating my CV. In this case, the CV is kept as a <code>yaml</code> file and then a python script is used to turn it into HTML. </p>
-        <p></p>
-        <p>The CI workflows <a href="https://github.com/joshjennings98/joshjennings98.github.io/tree/master/.github/workflows">can be found here</a>.</p>
-        <p></p>
-        <h3>Deployment using GitHub Pages</h3>
-        <p></p>
-        <p>I don't want to spend money so I host the website with GitHub pages. This is particularly nice since I am hosting the repository on GitHub so deployments are trivial.</p>
-        <p></p>
-        <p>You can use GitHub pages with fancy <a href="https://jekyllrb.com/">Jekyll</a> setups but that probably involves some JavaScript which I don't want (also I prefer <a href="https://gohugo.io/">Hugo</a> if I use a static site generator that isn't my own). Instead I just use my own static site generator that populates the <code>index.html.template</code> as talked about in the previous section. This makes the deployments very simple as there is only one page, it is as simple as the <a href="https://pages.github.com/">hello world example for github pages</a>. Since this is hosted on GitHub I don't even have to worry about CI for the actual deplyoment as it is handled by GitHub.</p>
-        <p></p>
-        <p>Unfortunately I can't have just one page, I need a 404 page so that users can still navigate my website if they go to a wrong page. Again, because this is GitHub pages, this is very simple. You just need to create a <code>404.html</code> and have it at the root of the repo, no need for special files like a <code>.htaccess</code>. You can create a tempalte for the 404 page and populate it like the index so that the website looks consistent and all the links can be accessed easily from the 404 page.</p>
-        <p></p>
-        <p>If you want to use a custom domain with GitHub pages, that is also relatively simple, you just need to add a CNAME record to your reopository. This involves two steps:</p>
-        <ul><li> Adding a CNAME record file to your repository.
-</li>
-<li> Creating a CNAME record with your DNS provider.
 
-</li></ul>
-        <p>The CNAME record file contains the domain you want to use for your website. A CNAME record is used to specify that a domain name is an alias for another domain. This basically acts as a redirect so a custom dmain name can be used. The target domain must have an A address record. The A address record is used to map a domain to it's corresponding IP where the werbsite is hosted.</p>
-        <p></p>
-        <p>To create the CNAME record itself, you must go to your DNS provider and create a CNAME record that points the domain to the GitHub pages URL (in my case joshjenning98.github.io). This is a different process for different DNS provders. In my case I used Google domains (for the <code>.dev</code> top level domain) for which the information on setting up a CNAME record can be found <a href="https://support.google.com/a/answer/47283?hl=en#zippy=%2Cstep-get-your-unique-cname-record%2Cstep-add-the-cname-record-to-your-domains-dns-records">on this page</a>. If you want to enforce HTTPS (a requirement for <code>.dev</code>) you must aso go to the GitHub pages setting and have "Enforce HTTPS" enabled.</p>
-        <p></p>
-        <h3>Acknowledgements</h3>
-        <p></p>
-        <p>A lot of inspiration was taked from <a href="https://kleinfreund.de/css-only-dark-mode/">this blog post</a> on CSS-only dark mode for the initial work on reimplementing the theme toggle without JavaScript.</p>
-        <p></p>
-        <p>This <a href="https://codepen.io/finnhvman">person on codepen</a> has a lot of amazing CSS only stuff available that make this website seem like a toy. They also have some cool SVG stuff like this <a href="https://codepen.io/finnhvman/pen/jOQvYaz">gas giant</a> that I want to include on my website somehow.</p>
-        <p></p>
-        <h3>Github</h3>
-        <p></p>
-        <p>The full project can be viewed on <a href="https://github.com/joshjennings98/joshjennings98.github.io">GitHub</a>.</p>
-        <div><a href="#this-website">Back to top.</a></div>
-      </div>
-      <div class="page" id="backend-demo-tool">
-        <div class="page-header">
-          <h2>Backend Demo Tool</h2>
-        </div>
-        <p></p>
-        <p>This is a small <a href="https://flask.palletsprojects.com/en/2.3.x/">Flask</a> application that makes it easier to demonstrate backend features.</p>
-        <p></p>
-        <p>Frontend developers have a much easier time of it when it comes to demonstrating their work. It is easy to see what they've done and they can make it look as interesting as they want. In comparison, trying to demo a backend API or tool is rarely interesting to watch. It usually involves a lot of text, ends up with the presenter pulling out a terminal to show commands on the fly, searching their command history and hoping they do everything in the right order. All this to get some JSON or similarly uninteresting output.</p>
-        <p></p>
-        <p>This project is an attempt to try and improve that situation and make backend demos simpler and more engaging. To do this, a python application was created that reads a simple text file containing information to present and generates a web server with Flask. The data for each slide is exposed as JSON via endpoints and with a simple <code>index.html</code> and some JavaScript, the tool is able to create a simple presentation that is shown in the browser and can be clicked through like a PowerPoint presentation.</p>
-        <p></p>
-        <p>The advantage this provides is that python can be to execute pre-written commands and stream the results back to the webserver and expose it via an iframe that is then embedded into a slide. This allows you to easily demonstrate commands without having to open a terminal. It also means you can plan the exact order of the commands and not worry about mixing them up. A side effect of running the presentation in the browser is that you can easily have links that open up in new tabs which can be useful to show the result of any executed commands, this is useful as you can just share the web browser during a meeting instead of having to switch between PowerPoint, a terminal, and a web browser.</p>
-        <p></p>
-        <p>This application lends itself to a presentation method similar to the <a href="https://en.wikipedia.org/wiki/Takahashi_method">Takahashi method</a> where you have a concise slides with very little text. The created presentations are more complex than the Taskahashi method but it is still purposefully designed to keep things simple by only having one type of content per slide, be that text, a command output, or something else.</p>
-        <p></p>
-        <p>The result is that with this application backend demos should be much easier to create and run whilst also being slightly more engaging.</p>
-        <p></p>
-        <h2>Features</h2>
-        <p></p>
-        <ul><li> A presentation is uses just a simple text file.
-</li>
-<li> A slide can contain one of: text, an executed command, a code block, or an image and are delimted by the tags: <code>[TEXT]</code>, <code>[COMMAND]</code>, <code>[CODE]</code>, and <code>[IMAGE]</code>.
-</li>
-<li> Executed commands will stream output to be shown in the slide.
-</li>
-<li> The command that is executed is shown above the command output.
-</li>
-<li> Correctly renders commands that span multiple lines.
-</li>
-<li> Optionally run command every few seconds like <code>watch</code>.
-</li>
-<li> Code blocks are automatically highlighted using <a href="https://highlightjs.org/">hightlight.js</a>.
-</li>
-<li> Text slides will add text line by line like a PowerPoint presentation with animations.
-</li>
-<li> Left click or right arrow to go forwards, right click or left arrow to go backwards.
-</li>
-<li> When going backwards previously rendered text is handled properly and slides don't reset.
-</li>
-<li> Extremely easy to use and share via screen sharing.
-</li>
-<li> Configurable CSS if you desire to change the look.
-</li>
-<li> Jump to any slide via a drop down menu.
 
-</li></ul>
-        <h2>Usage</h2>
-        <p></p>
-        <p>The tool is not on PyPi so to install it you will need to <a href="https://github.com/joshjennings98/backend-demo">clone the repository</a>. Once this is done <code>cd</code> into the base directory and run <code>pip install .</code> to install it as <code>backend_demo</code>.</p>
-        <p></p>
-        <p>To create a presentation you just need to write a command file <code>commands.txt</code> like this:</p>
-        <p></p>
-        <pre class="code" title="">[TEXT] 
+/* Stop bottom of bage fading out */
+.bottom {
+  padding-bottom: 65px;
+}
+
+/* --------------------------------------------- */
+  
+a {
+  color: var(--c-text);
+}
+  
+
+/* Media Queries
+--------------------------------------------- */
+
+@media all and (max-width : 768px) {
+
+.content2 {
+  max-width: 90vw;
+}
+
+svg {
+	max-width: 100vw;
+	padding: 10px;
+}
+
+.nav-content {
+  display: flex;
+}
+
+nav { margin: 0; }
+
+
+}
+
+@media all and (max-width : 349px) {
+  nav ul li {
+    display: block;
+    width: 100%;
+  }
+  .nav-content {
+  min-height: 240px; /* 60 (per box) * 4 */
+  }
+}
+
+.preOuter {
+  border: 2px solid var(--c-text);
+  padding: 0px 15px 0px 15px;
+  background-color: #222;
+  overflow-x: auto;
+  scrollbar-color: #eee #222;
+}
+
+pre {
+font-family: courier new; font-size: 16px; line-height: 28.8px; 300ch 28.8px ; background-repeat: no-repeat;color: transparent; background-size: 300ch 28.8px; background-clip: text;
+}
+
+</style>
+</head>
+<body>
+<input id="dark-mode" class="dark-mode-checkbox" hidden type="checkbox">
+<div class="container">
+<nav>
+  <input type="checkbox" id="drop">
+  <label for="drop" class="toggle" id="menu"><span id="menu-content">Menu</span></label>
+  <div class="nav-content">
+  <ul class="menu">
+    <li><a href="#">Home</a></li>
+    <li> 
+      <!-- First Tier Drop Down -->
+      <input type="checkbox" id="drop-1">
+      <label for="drop-1" class="toggle"><a href="#projects">Projects</a></label>
+      <ul>
+        <li><a href="#website">This Website</a></li>
+        <li><a href="#backend-demos">Backend Demo Tool</a></li>
+        <li><a href="#fsharp-neural-network">F# Neural Network</a></li>
+      </ul>
+    </li>
+    <li><a href="CV-Josh-Jennings.html" target="_blank">CV</a></li>
+    <li><label for="dark-mode" title="Toggle light mode (if supported)" class="page-button">Theme</label></li>
+    </div>
+</nav>
+
+  <section class="content">
+  <section class="header">
+<svg width="600" height="78" viewBox="-5 -5 700 80" xmlns="http://www.w3.org/2000/svg"><path d="M352 22.1V3.7h8v18.4q0 13.157 2.314 40.004a1304.6 1304.6 0 0 0 .086.996l6.1-30h5l6.1 30q2.4-27.6 2.4-41V3.7h8v18.4q0 16.564-7.575 54.478a928.037 928.037 0 0 1-.125.622h-5.1L371 45.9l-6.2 31.3h-5.1a743.937 743.937 0 0 1-3.369-17.844q-2.836-16.196-3.815-27.158A115.36 115.36 0 0 1 352 22.1ZM160 77.2h-8V3.7h8v28.1a2.74 2.74 0 0 0 .202-.356 2.253 2.253 0 0 0 .098-.244q2.3-4 5.8-6a13.982 13.982 0 0 1 5.117-1.658 17.814 17.814 0 0 1 2.283-.142q4.2 0 7.3 1.8 3.5 2 5.8 6a23.784 23.784 0 0 1 2.496 6.466q.678 2.881.848 6.241A45.517 45.517 0 0 1 190 46.2v31h-8v-31a28.409 28.409 0 0 0-.323-4.416q-.371-2.352-1.166-4.299a15.163 15.163 0 0 0-.811-1.685q-1.5-2.7-3.9-4a9.134 9.134 0 0 0-3.647-1.143A11.333 11.333 0 0 0 171 30.6a10.363 10.363 0 0 0-2.774.359 8.793 8.793 0 0 0-2.026.841 9.755 9.755 0 0 0-2.66 2.24 13.032 13.032 0 0 0-1.24 1.76q-1.906 3.315-2.233 8.279A32.346 32.346 0 0 0 160 46.2v31Zm-58.3-11 7.5-2.4a10.388 10.388 0 0 0 .62 1.463 11.812 11.812 0 0 0 .18.337q1.3 2.3 3.7 3.6 2.439 1.394 6.016 1.573a21.609 21.609 0 0 0 1.084.027 21.315 21.315 0 0 0 3.222-.229q1.693-.259 3.092-.812a10.993 10.993 0 0 0 1.386-.659q1.9-1.1 2.8-2.7a6.09 6.09 0 0 0 .762-2.432 7.556 7.556 0 0 0 .038-.768q0-1.9-1-3.6a7.689 7.689 0 0 0-2.049-2.352 9.709 9.709 0 0 0-.951-.648 9.546 9.546 0 0 0-1.603-.724q-1.77-.63-4.46-1.03a47.839 47.839 0 0 0-1.937-.246 50.219 50.219 0 0 1-3.848-.581q-4.191-.813-6.652-2.219-3.6-2.1-5.6-5.6a15.529 15.529 0 0 1-2.098-7.726 18.283 18.283 0 0 1-.002-.274 15.21 15.21 0 0 1 .473-3.863A12.603 12.603 0 0 1 103.6 31.3q1.8-3.1 5.3-5.1 4.402-2.516 10.823-2.771a37.158 37.158 0 0 1 1.477-.029 30.063 30.063 0 0 1 5.118.412q2.905.502 5.288 1.616a17.313 17.313 0 0 1 1.294.672q3.8 2.2 6 6 .9 1.5 1.4 3.1l-7.5 2.4a10.388 10.388 0 0 0-.62-1.462 11.812 11.812 0 0 0-.18-.338q-1.3-2.3-3.7-3.6-2.439-1.394-6.016-1.573a21.609 21.609 0 0 0-1.084-.027 21.315 21.315 0 0 0-3.222.229q-1.693.259-3.092.812a10.993 10.993 0 0 0-1.386.659q-1.9 1.1-2.8 2.7a6.09 6.09 0 0 0-.762 2.432 7.556 7.556 0 0 0-.038.768q0 1.9 1 3.6a7.689 7.689 0 0 0 2.049 2.352 9.709 9.709 0 0 0 .951.648 9.546 9.546 0 0 0 1.603.724q1.77.63 4.46 1.03a47.839 47.839 0 0 0 1.937.246 62.198 62.198 0 0 1 .108.012q6.919.804 10.392 2.788 3.6 2.1 5.6 5.6a15.529 15.529 0 0 1 2.098 7.726 18.283 18.283 0 0 1 .002.274 15.21 15.21 0 0 1-.473 3.863A12.603 12.603 0 0 1 138.4 70.1q-1.8 3.1-5.3 5.1-4.402 2.516-10.823 2.771A37.158 37.158 0 0 1 120.8 78a30.063 30.063 0 0 1-5.118-.412q-2.905-.502-5.288-1.616a17.313 17.313 0 0 1-1.294-.672q-3.8-2.2-6-6-.9-1.5-1.4-3.1Zm150 0 7.5-2.4a10.388 10.388 0 0 0 .62 1.463 11.812 11.812 0 0 0 .18.337q1.3 2.3 3.7 3.6 2.439 1.394 6.016 1.573a21.609 21.609 0 0 0 1.084.027 21.315 21.315 0 0 0 3.222-.229q1.693-.259 3.092-.812a10.993 10.993 0 0 0 1.386-.659q1.9-1.1 2.8-2.7a6.09 6.09 0 0 0 .762-2.432 7.556 7.556 0 0 0 .038-.768q0-1.9-1-3.6a7.689 7.689 0 0 0-2.049-2.352 9.709 9.709 0 0 0-.951-.648 9.546 9.546 0 0 0-1.603-.724q-1.77-.63-4.46-1.03a47.839 47.839 0 0 0-1.937-.246 50.219 50.219 0 0 1-3.848-.581q-4.191-.813-6.652-2.219-3.6-2.1-5.6-5.6a15.529 15.529 0 0 1-2.098-7.726 18.283 18.283 0 0 1-.002-.274 15.21 15.21 0 0 1 .473-3.863A12.603 12.603 0 0 1 253.6 31.3q1.8-3.1 5.3-5.1 4.402-2.516 10.823-2.771a37.158 37.158 0 0 1 1.477-.029 30.063 30.063 0 0 1 5.118.412q2.905.502 5.288 1.616a17.313 17.313 0 0 1 1.294.672q3.8 2.2 6 6 .9 1.5 1.4 3.1l-7.5 2.4a10.388 10.388 0 0 0-.62-1.462 11.812 11.812 0 0 0-.18-.338q-1.3-2.3-3.7-3.6-2.439-1.394-6.016-1.573a21.609 21.609 0 0 0-1.084-.027 21.315 21.315 0 0 0-3.222.229q-1.693.259-3.092.812a10.993 10.993 0 0 0-1.386.659q-1.9 1.1-2.8 2.7a6.09 6.09 0 0 0-.762 2.432 7.556 7.556 0 0 0-.038.768q0 1.9 1 3.6a7.689 7.689 0 0 0 2.049 2.352 9.709 9.709 0 0 0 .951.648 9.546 9.546 0 0 0 1.603.724q1.77.63 4.46 1.03a47.839 47.839 0 0 0 1.937.246 62.198 62.198 0 0 1 .108.012q6.919.804 10.392 2.788 3.6 2.1 5.6 5.6a15.529 15.529 0 0 1 2.098 7.726 18.283 18.283 0 0 1 .002.274 15.21 15.21 0 0 1-.473 3.863A12.603 12.603 0 0 1 288.4 70.1q-1.8 3.1-5.3 5.1-4.402 2.516-10.823 2.771A37.158 37.158 0 0 1 270.8 78a30.063 30.063 0 0 1-5.118-.412q-2.905-.502-5.288-1.616a17.313 17.313 0 0 1-1.294-.672q-3.8-2.2-6-6-.9-1.5-1.4-3.1Zm250 0 7.5-2.4a10.388 10.388 0 0 0 .62 1.463 11.812 11.812 0 0 0 .18.337q1.3 2.3 3.7 3.6 2.439 1.394 6.016 1.573a21.609 21.609 0 0 0 1.084.027 21.315 21.315 0 0 0 3.222-.229q1.693-.259 3.092-.812a10.993 10.993 0 0 0 1.386-.659q1.9-1.1 2.8-2.7a6.09 6.09 0 0 0 .762-2.432 7.556 7.556 0 0 0 .038-.768q0-1.9-1-3.6a7.689 7.689 0 0 0-2.049-2.352 9.709 9.709 0 0 0-.951-.648 9.546 9.546 0 0 0-1.603-.724q-1.77-.63-4.46-1.03a47.839 47.839 0 0 0-1.937-.246 50.219 50.219 0 0 1-3.848-.581q-4.191-.813-6.652-2.219-3.6-2.1-5.6-5.6a15.529 15.529 0 0 1-2.098-7.726 18.283 18.283 0 0 1-.002-.274 15.21 15.21 0 0 1 .473-3.863A12.603 12.603 0 0 1 503.6 31.3q1.8-3.1 5.3-5.1 4.402-2.516 10.823-2.771a37.158 37.158 0 0 1 1.477-.029 30.063 30.063 0 0 1 5.118.412q2.905.502 5.288 1.616a17.313 17.313 0 0 1 1.294.672q3.8 2.2 6 6 .9 1.5 1.4 3.1l-7.5 2.4a10.388 10.388 0 0 0-.62-1.462 11.812 11.812 0 0 0-.18-.338q-1.3-2.3-3.7-3.6-2.439-1.394-6.016-1.573a21.609 21.609 0 0 0-1.084-.027 21.315 21.315 0 0 0-3.222.229q-1.693.259-3.092.812a10.993 10.993 0 0 0-1.386.659q-1.9 1.1-2.8 2.7a6.09 6.09 0 0 0-.762 2.432 7.556 7.556 0 0 0-.038.768q0 1.9 1 3.6a7.689 7.689 0 0 0 2.049 2.352 9.709 9.709 0 0 0 .951.648 9.546 9.546 0 0 0 1.603.724q1.77.63 4.46 1.03a47.839 47.839 0 0 0 1.937.246 62.198 62.198 0 0 1 .108.012q6.919.804 10.392 2.788 3.6 2.1 5.6 5.6a15.529 15.529 0 0 1 2.098 7.726 18.283 18.283 0 0 1 .002.274 15.21 15.21 0 0 1-.473 3.863A12.603 12.603 0 0 1 538.4 70.1q-1.8 3.1-5.3 5.1-4.402 2.516-10.823 2.771A37.158 37.158 0 0 1 520.8 78a30.063 30.063 0 0 1-5.118-.412q-2.905-.502-5.288-1.616a17.313 17.313 0 0 1-1.294-.672q-3.8-2.2-6-6-.9-1.5-1.4-3.1ZM612 31.4h-10.9v-7.2H612V3.7h8v20.5h16.1v7.2H620v26.4a24.889 24.889 0 0 0 .258 3.695q.299 1.986.943 3.627A12.789 12.789 0 0 0 622 66.8a9.204 9.204 0 0 0 1.245 1.715A7.108 7.108 0 0 0 625 69.9a6.248 6.248 0 0 0 2.264.803 8.238 8.238 0 0 0 1.286.097 7.846 7.846 0 0 0 1.801-.198 6.086 6.086 0 0 0 1.749-.702 11.793 11.793 0 0 0 1.075-.762 14.131 14.131 0 0 0 .525-.438q2.631-2.631 3.262-7.34A21.649 21.649 0 0 0 637.1 60l7.8 1.7a22.409 22.409 0 0 1-1.241 5.46 19.308 19.308 0 0 1-1.459 3.09 16.195 16.195 0 0 1-3.352 4.086A14.742 14.742 0 0 1 636.5 76a14.405 14.405 0 0 1-5.35 1.824 18.604 18.604 0 0 1-2.6.176 17.469 17.469 0 0 1-4.2-.484A13.951 13.951 0 0 1 620.6 76a15.451 15.451 0 0 1-5.418-5.241 18.34 18.34 0 0 1-.282-.459q-2.9-5-2.9-12.5V31.4ZM0 61.7l7.8-1.5q.3 3 1.8 5.5a10.229 10.229 0 0 0 2.025 2.587A9.186 9.186 0 0 0 13.3 69.5a9.971 9.971 0 0 0 3.517 1.173 12.829 12.829 0 0 0 1.833.127 12.05 12.05 0 0 0 2.506-.249A9.045 9.045 0 0 0 23.9 69.5a9.494 9.494 0 0 0 3.336-3.194 11.52 11.52 0 0 0 .364-.606q1.9-3.2 1.9-8V10.9H16V3.7h21.5v54a27.763 27.763 0 0 1-.536 5.586A20.565 20.565 0 0 1 34.7 69.4q-2.3 4-6.2 6.2a17.996 17.996 0 0 1-6.156 2.116A23.793 23.793 0 0 1 18.6 78a22.793 22.793 0 0 1-5.014-.527A17.555 17.555 0 0 1 8.7 75.6q-3.9-2.2-6.2-6.2-2-3.5-2.5-7.7Zm460 15.5h-8V3.7h8v28.1a2.74 2.74 0 0 0 .202-.356 2.253 2.253 0 0 0 .098-.244q2.3-4 5.8-6a13.982 13.982 0 0 1 5.117-1.658 17.814 17.814 0 0 1 2.283-.142q4.5 0 7.9 2a15.875 15.875 0 0 1 4.988 4.502A19.73 19.73 0 0 1 487.5 31.6a23.719 23.719 0 0 1 2.462 6.493q.838 3.673.838 8.107v9a38.847 38.847 0 0 1-.464 6.178q-.556 3.448-1.778 6.29A21.382 21.382 0 0 1 487.5 69.8a18.022 18.022 0 0 1-3.014 3.886A15.284 15.284 0 0 1 481.4 76a14.424 14.424 0 0 1-5.456 1.842A18.363 18.363 0 0 1 473.5 78q-4.2 0-7.4-1.8-3.5-2-5.8-6a2.74 2.74 0 0 1-.202-.356A2.253 2.253 0 0 1 460 69.6v7.6Zm-58.8-22v-9q0-7.344 2.63-12.55a20.192 20.192 0 0 1 .57-1.05q2.5-4.4 6.7-6.8a17.996 17.996 0 0 1 6.156-2.116A23.793 23.793 0 0 1 421 23.4a22.793 22.793 0 0 1 5.014.527A17.555 17.555 0 0 1 430.9 25.8a18.497 18.497 0 0 1 6.199 5.993 22.052 22.052 0 0 1 .501.807q3.2 5.5 3.2 13.6v8.1h-31.6v.9a24.26 24.26 0 0 0 .351 4.241q.441 2.48 1.434 4.504a14.211 14.211 0 0 0 .515.955q1.7 2.9 4.2 4.4a10.321 10.321 0 0 0 3.516 1.289 14.016 14.016 0 0 0 2.484.211q3.5 0 6-1.5a11.383 11.383 0 0 0 3.931-3.654 13.821 13.821 0 0 0 .469-.746 12.108 12.108 0 0 0 1.294-2.86 14.092 14.092 0 0 0 .206-.74l7.3 2.9q-.7 2.3-1.9 4.3-2.6 4.4-6.8 6.9a18.337 18.337 0 0 1-6.164 2.234A24.661 24.661 0 0 1 421.7 78a24.1 24.1 0 0 1-5.012-.498A18.09 18.09 0 0 1 411.2 75.4q-4.2-2.5-6.8-6.8a22.775 22.775 0 0 1-2.587-6.947q-.613-2.997-.613-6.453Zm250 0v-9q0-7.344 2.63-12.55a20.192 20.192 0 0 1 .57-1.05q2.5-4.4 6.7-6.8a17.996 17.996 0 0 1 6.156-2.116A23.793 23.793 0 0 1 671 23.4a22.793 22.793 0 0 1 5.014.527A17.555 17.555 0 0 1 680.9 25.8a18.497 18.497 0 0 1 6.199 5.993 22.052 22.052 0 0 1 .501.807q3.2 5.5 3.2 13.6v8.1h-31.6v.9a24.26 24.26 0 0 0 .351 4.241q.441 2.48 1.434 4.504a14.211 14.211 0 0 0 .515.955q1.7 2.9 4.2 4.4a10.321 10.321 0 0 0 3.516 1.289 14.016 14.016 0 0 0 2.484.211q3.5 0 6-1.5a11.383 11.383 0 0 0 3.931-3.654 13.821 13.821 0 0 0 .469-.746 12.108 12.108 0 0 0 1.294-2.86 14.092 14.092 0 0 0 .206-.74l7.3 2.9q-.7 2.3-1.9 4.3-2.6 4.4-6.8 6.9a18.337 18.337 0 0 1-6.164 2.234A24.661 24.661 0 0 1 671.7 78a24.1 24.1 0 0 1-5.012-.498A18.09 18.09 0 0 1 661.2 75.4q-4.2-2.5-6.8-6.8a22.775 22.775 0 0 1-2.587-6.947q-.613-2.997-.613-6.453Zm-62.7 22h-35V70h14.2V31.4h-12.8v-7.2h20.8V70h12.8v7.2Zm-537.3-22v-9q0-7.344 2.63-12.55a20.192 20.192 0 0 1 .57-1.05q2.5-4.4 6.7-6.8a17.996 17.996 0 0 1 6.156-2.116A23.793 23.793 0 0 1 71 23.4a22.793 22.793 0 0 1 5.014.527A17.555 17.555 0 0 1 80.9 25.8a18.497 18.497 0 0 1 6.199 5.993 22.052 22.052 0 0 1 .501.807q3.2 5.5 3.2 13.6v9q0 7.344-2.63 12.55a20.192 20.192 0 0 1-.57 1.05q-2.5 4.4-6.7 6.8a17.996 17.996 0 0 1-6.156 2.116A23.793 23.793 0 0 1 71 78a22.793 22.793 0 0 1-5.014-.527A17.555 17.555 0 0 1 61.1 75.6a18.497 18.497 0 0 1-6.199-5.993 22.052 22.052 0 0 1-.501-.807q-3.2-5.5-3.2-13.6Zm8-9v9a26.576 26.576 0 0 0 .31 4.183q.535 3.349 1.99 5.817a12.504 12.504 0 0 0 2.085 2.739A10.79 10.79 0 0 0 65.6 69.5a9.923 9.923 0 0 0 3.363 1.146A13.028 13.028 0 0 0 71 70.8a12.492 12.492 0 0 0 2.73-.286A9.687 9.687 0 0 0 76.4 69.5a9.965 9.965 0 0 0 3.071-2.71A12.967 12.967 0 0 0 80.5 65.2q2.075-3.609 2.278-8.847A29.818 29.818 0 0 0 82.8 55.2v-9a26.576 26.576 0 0 0-.31-4.183q-.535-3.349-1.99-5.817a12.504 12.504 0 0 0-2.085-2.739A10.79 10.79 0 0 0 76.4 31.9a9.923 9.923 0 0 0-3.363-1.146A13.028 13.028 0 0 0 71 30.6a12.492 12.492 0 0 0-2.73.286A9.687 9.687 0 0 0 65.6 31.9a9.965 9.965 0 0 0-3.071 2.71A12.967 12.967 0 0 0 61.5 36.2q-2.075 3.609-2.278 8.847A29.818 29.818 0 0 0 59.2 46.2Zm400.8 0v9a28.409 28.409 0 0 0 .323 4.416q.371 2.352 1.166 4.299a15.163 15.163 0 0 0 .811 1.685q1.5 2.7 3.9 4a9.042 9.042 0 0 0 3.218 1.083 11.691 11.691 0 0 0 1.682.117 11.778 11.778 0 0 0 2.908-.346 9.681 9.681 0 0 0 2.392-.954 9.965 9.965 0 0 0 3.071-2.71 12.967 12.967 0 0 0 1.029-1.59q2.075-3.609 2.278-8.847a29.818 29.818 0 0 0 .022-1.153v-9a26.576 26.576 0 0 0-.31-4.183q-.535-3.349-1.99-5.817a12.504 12.504 0 0 0-2.085-2.739A10.79 10.79 0 0 0 476.4 31.9a10.033 10.033 0 0 0-3.756-1.208 12.674 12.674 0 0 0-1.544-.092 11.037 11.037 0 0 0-2.587.291 8.769 8.769 0 0 0-2.313.909 9.755 9.755 0 0 0-2.66 2.24 13.032 13.032 0 0 0-1.24 1.76q-1.906 3.315-2.233 8.279A32.346 32.346 0 0 0 460 46.2ZM216.6 0h8.8q0 16.2-.6 32.2h-7.6q-.6-16.1-.6-32.2Zm192.6 46.2v.9h23.6v-.9a26.576 26.576 0 0 0-.31-4.183q-.535-3.349-1.99-5.817a12.504 12.504 0 0 0-2.085-2.739A10.79 10.79 0 0 0 426.4 31.9a9.923 9.923 0 0 0-3.363-1.146A13.028 13.028 0 0 0 421 30.6a12.492 12.492 0 0 0-2.73.286 9.687 9.687 0 0 0-2.67 1.014 9.965 9.965 0 0 0-3.071 2.71 12.967 12.967 0 0 0-1.029 1.59q-2.075 3.609-2.278 8.847a29.818 29.818 0 0 0-.022 1.153Zm250 0v.9h23.6v-.9a26.576 26.576 0 0 0-.31-4.183q-.535-3.349-1.99-5.817a12.504 12.504 0 0 0-2.085-2.739A10.79 10.79 0 0 0 676.4 31.9a9.923 9.923 0 0 0-3.363-1.146A13.028 13.028 0 0 0 671 30.6a12.492 12.492 0 0 0-2.73.286 9.687 9.687 0 0 0-2.67 1.014 9.965 9.965 0 0 0-3.071 2.71 12.967 12.967 0 0 0-1.029 1.59q-2.075 3.609-2.278 8.847a29.818 29.818 0 0 0-.022 1.153ZM564.8 8.7a9.934 9.934 0 0 0 0 .055q.011 1.964.8 3.345.7 1.3 2 2a5.474 5.474 0 0 0 1.778.731A7.4 7.4 0 0 0 571 15q2 0 3.4-.9 1.3-.7 2-2a5.252 5.252 0 0 0 .029-.051q.44-.79.629-1.768A8.331 8.331 0 0 0 577.2 8.7a9.934 9.934 0 0 0 0-.055q-.011-1.964-.8-3.345-.7-1.3-2-2-1.326-.853-3.191-.853a8.357 8.357 0 0 0-.209.003q-.875.022-1.635.187a6.183 6.183 0 0 0-1.765.663q-1.3.7-2 2a5.252 5.252 0 0 0-.029.051q-.44.79-.629 1.768A8.331 8.331 0 0 0 564.8 8.7Z"/></svg>
+</section>
+<div class="content2">
+<div class="page" id="projects">
+<div class="page-header">
+<h2>Projects</h2>
+    <p>
+This page provides links to some of the projects I have worked on and written up. They are mostly dumb but I had fun making them:
+</p>
+<ul>
+  <li><a href="#website">This Website</a></li>
+  <li><a href="#backend-demos">Backend Demo Tool</a></li>
+  <li><a href="#fsharp-neural-network">F# Neural Network</a></li>
+</ul>
+<p>More projects can be found on my <a href="https://github.com/joshjennings98">GitHub page</a>.</p>
+</div>
+<div class="bottom"></div></div>
+<div class="page" id="website">
+<div class="page-header">
+<h2>This Website</h2>
+</div>
+<p>The goal of this website was to create an interactive static website using on HTML and CSS, no JavaScript. I had recently read <a href="https://briankoberlein.com/tech/quiet-web/">an article about the quiet web</a> which inspired me to try and create an interesting website that satisfied the requirements laid out in the blog post:</p>
+<ul>
+<li>Exclude any page that has ads.</li>
+<li>Remove them if they use Google Analytics or Google Fonts.</li>
+<li>Remove them if they use scripts or trackers.</li>
+</ul>
+<p>These are arbitrary requirements but it seemed like an interesting challenge. On top of this, in the event that CSS was disabled, I also wanted my website to retain most of it's usability.</p>
+<p>I am not one for frontend development and none of the previous versions of my site have used a JavaScript framework, however, in a previous iteration of my website I had a script that would allow you to change the theme between light mode and dark mode. I enjoyed this gimicky feature and wanted to keep that functionality.</p>
+<h3>Re-implementing theme toggle using only CSS</h3>
+<p>The main feature that I wanted to emulate using CSS was a light mode toggle. I wanted to be able to click a button and have the colour scheme change. With JavaScript I would watch for a checkbox and have an <code>onchange</code> event that makes the colour changes. Since this relies on JavaScript, this approach is not possible. So using only CSS we need some way to:</p>
+<ul>
+<li>Know that a checkbox has been checked.</li>
+<li>If the user was previously in a dark mode the page should become light or vice versa.</li>
+<li>This needs to be dynamic and not just occur on page load but any time a user checks the checkbox.</li>
+</ul>
+<p>Luckily, CSS has <a href="https://developer.mozilla.org/en-US/docs/Web/CSS/Pseudo-classes">pseudo-classes</a>. These are keywords that are attached to a selector and specify a state of the selected element, for example <code>:hover</code> is triggered when an element is hovered over. There exists the <a href="https://developer.mozilla.org/en-US/docs/Web/CSS/:checked"><code>:checked</code> pseudo-class</a> which can be used to change the style of a checkbox or radio button based on whether or not it is checked. This satisfies the goal of making the change dynamic and controllable by the user.</p>
+<p>However, there is a problem. CSS stands for Cascading Style Sheets. Styling in CSS will only apply to descendants of the the DOM node for the element (if the styling doesn't only affect the specific element i.e. <code>margin</code> will only affect the current element, but <code>font-family</code> will apply to the descendants). In either case, the inheritance only goes down the DOM tree and we cannot affect the properties of any parent elements.</p>
+<p>We can have some degree of control over which descendants are affected by the styling through the use of the <a href="https://developer.mozilla.org/en-US/docs/Web/CSS/General_sibling_combinator">general sibling combinator</a>. This seperates two seletors and matches all instances of the second element that appear anywhere after the first element that share the same parent element. For example, the following would match all span elements that come after the paragraph element in the DOM tree:</p>
+<div class="preOuter">
+<pre><span style="background: linear-gradient(to right, white 0ch, #66d9ef 0ch, #66d9ef 2ch, white 2ch, white 4ch, #66d9ef 4ch, #66d9ef 9ch, white 9ch, white 300ch); -webkit-background-clip: text">p ~ span {</span>
+<span style="background: linear-gradient(to right, white 0ch, white 0ch, white 7ch, #ae81ff 7ch, #ae81ff 13ch, white 13ch, white 300ch); -webkit-background-clip: text">  color: red;</span>
+<span style="background: linear-gradient(to right, white 0ch, white 0ch, white 300ch); -webkit-background-clip: text">}</span>
+</pre></div>
+<p>From the <a href="https://developer.mozilla.org/en-US/docs/Web/CSS/General_sibling_combinator#html">general sibling combinator docs</a> we can see how this would work:</p>
+<div class="preOuter">
+<pre><span style="background: linear-gradient(to right, white 0ch, #f92672 0ch, #f92672 0ch, #f92672 0ch, #f92672 9ch, white 9ch, white 300ch); -webkit-background-clip: text">&lt;article&gt;</span>
+<span style="background: linear-gradient(to right, white 0ch, white 0ch, white 2ch, #f92672 2ch, #f92672 2ch, #f92672 2ch, #f92672 8ch, white 8ch, white 64ch, #f92672 64ch, #f92672 64ch, #f92672 64ch, #f92672 71ch, white 71ch, white 300ch); -webkit-background-clip: text">  &lt;span&gt;This is not red because it appears before any paragraph.&lt;/span&gt;</span>
+<span style="background: linear-gradient(to right, white 0ch, white 0ch, white 2ch, #f92672 2ch, #f92672 2ch, #f92672 2ch, #f92672 5ch, white 5ch, white 25ch, #f92672 25ch, #f92672 25ch, #f92672 25ch, #f92672 29ch, white 29ch, white 300ch); -webkit-background-clip: text">  &lt;p&gt;Here is a paragraph.&lt;/p&gt;</span>
+<span style="background: linear-gradient(to right, white 0ch, white 0ch, white 2ch, #f92672 2ch, #f92672 2ch, #f92672 2ch, #f92672 8ch, white 8ch, white 26ch, #f92672 26ch, #f92672 26ch, #f92672 26ch, #f92672 33ch, white 33ch, white 300ch); -webkit-background-clip: text">  &lt;code&gt;Here is some code.&lt;/code&gt;</span>
+<span style="background: linear-gradient(to right, white 0ch, white 0ch, white 2ch, #f92672 2ch, #f92672 2ch, #f92672 2ch, #f92672 8ch, white 8ch, white 300ch); -webkit-background-clip: text">  &lt;span&gt;</span>
+<span style="background: linear-gradient(to right, white 0ch, white 0ch, white 300ch); -webkit-background-clip: text">    This span is red because it appears after the paragraph, even though there</span>
+<span style="background: linear-gradient(to right, white 0ch, white 0ch, white 300ch); -webkit-background-clip: text">    are other nodes in between</span>
+<span style="background: linear-gradient(to right, white 0ch, white 0ch, white 2ch, #f92672 2ch, #f92672 2ch, #f92672 2ch, #f92672 9ch, white 9ch, white 300ch); -webkit-background-clip: text">  &lt;/span&gt;</span>
+<span style="background: linear-gradient(to right, white 0ch, white 0ch, white 2ch, #f92672 2ch, #f92672 2ch, #f92672 2ch, #f92672 5ch, white 5ch, white 38ch, #f92672 38ch, #f92672 38ch, #f92672 38ch, #f92672 42ch, white 42ch, white 300ch); -webkit-background-clip: text">  &lt;p&gt;Whatever it may be, keep smiling.&lt;/p&gt;</span>
+<span style="background: linear-gradient(to right, white 0ch, white 0ch, white 2ch, #f92672 2ch, #f92672 2ch, #f92672 2ch, #f92672 6ch, white 6ch, white 15ch, #f92672 15ch, #f92672 15ch, #f92672 15ch, #f92672 20ch, white 20ch, white 300ch); -webkit-background-clip: text">  &lt;h1&gt;Dream big&lt;/h1&gt;</span>
+<span style="background: linear-gradient(to right, white 0ch, white 0ch, white 2ch, #f92672 2ch, #f92672 2ch, #f92672 2ch, #f92672 8ch, white 8ch, white 300ch); -webkit-background-clip: text">  &lt;span&gt;</span>
+<span style="background: linear-gradient(to right, white 0ch, white 0ch, white 300ch); -webkit-background-clip: text">    Doesn&#039;t matter how many or what kind of nodes are in between, all spans from</span>
+<span style="background: linear-gradient(to right, white 0ch, white 0ch, white 300ch); -webkit-background-clip: text">    the same parent after a paragraph are red.</span>
+<span style="background: linear-gradient(to right, white 0ch, white 0ch, white 2ch, #f92672 2ch, #f92672 2ch, #f92672 2ch, #f92672 9ch, white 9ch, white 300ch); -webkit-background-clip: text">  &lt;/span&gt;</span>
+<span style="background: linear-gradient(to right, white 0ch, #f92672 0ch, #f92672 0ch, #f92672 0ch, #f92672 10ch, white 10ch, white 300ch); -webkit-background-clip: text">&lt;/article&gt;</span>
+<span style="background: linear-gradient(to right, white 0ch, #f92672 0ch, #f92672 0ch, #f92672 0ch, #f92672 6ch, white 6ch, white 300ch); -webkit-background-clip: text">&lt;span&gt;</span>
+<span style="background: linear-gradient(to right, white 0ch, white 0ch, white 300ch); -webkit-background-clip: text">  This span is not red because it doesn&#039;t share a parent with a paragraph</span>
+<span style="background: linear-gradient(to right, white 0ch, #f92672 0ch, #f92672 0ch, #f92672 0ch, #f92672 7ch, white 7ch, white 300ch); -webkit-background-clip: text">&lt;/span&gt;</span>
+</pre></div>
+<p>How does this help us? Well, since we can style elements based on the pseudo-class selectors, the CSS can be modified to change based on the checked state of a checkbox. Say we have a class for the checkbox called <code>.dark-mode-checkbox</code>, we can do the following and change the font for siblings of an element based on whether the checkbox is checked:</p>
+<div class="preOuter">
+<pre><span style="background: linear-gradient(to right, white 0ch, #66d9ef 0ch, #66d9ef 9ch, white 9ch, white 300ch); -webkit-background-clip: text">.content {</span>
+<span style="background: linear-gradient(to right, white 0ch, white 0ch, white 13ch, #ae81ff 13ch, #ae81ff 21ch, white 21ch, white 300ch); -webkit-background-clip: text">  font-family: Serif;</span>
+<span style="background: linear-gradient(to right, white 0ch, white 0ch, white 300ch); -webkit-background-clip: text">}</span>
+<span style="background: linear-gradient(to right, white 0ch, #66d9ef 0ch, #66d9ef 28ch, white 28ch, white 30ch, #66d9ef 30ch, #66d9ef 41ch, white 41ch, white 300ch); -webkit-background-clip: text">.dark-mode-checkbox:checked ~ .container {</span>
+<span style="background: linear-gradient(to right, white 0ch, white 0ch, white 13ch, #ae81ff 13ch, #ae81ff 25ch, white 25ch, white 300ch); -webkit-background-clip: text">  font-family: Monospace;</span>
+<span style="background: linear-gradient(to right, white 0ch, white 0ch, white 300ch); -webkit-background-clip: text">}</span>
+</pre></div>
+<p>And in the HTML do something like this:</p>
+<div class="preOuter">
+<pre><span style="background: linear-gradient(to right, white 0ch, #f92672 0ch, #f92672 0ch, #f92672 0ch, #f92672 7ch, white 7ch, white 14ch, #66d9ef 14ch, #66d9ef 20ch, #ae81ff 20ch, #ae81ff 40ch, white 40ch, white 41ch, #66d9ef 41ch, #66d9ef 44ch, #ae81ff 44ch, #ae81ff 55ch, white 55ch, white 56ch, #66d9ef 56ch, #66d9ef 61ch, #ae81ff 61ch, #ae81ff 71ch, white 71ch, white 300ch); -webkit-background-clip: text">&lt;input hidden class=&quot;dark-mode-checkbox&quot; id=&quot;dark-mode&quot; type=&quot;checkbox&quot;&gt;</span>
+<span style="background: linear-gradient(to right, white 0ch, #f92672 0ch, #f92672 0ch, #f92672 0ch, #f92672 5ch, #66d9ef 5ch, #66d9ef 11ch, #ae81ff 11ch, #ae81ff 22ch, white 22ch, white 300ch); -webkit-background-clip: text">&lt;div class=&quot;container&quot;&gt;</span>
+<span style="background: linear-gradient(to right, white 0ch, white 0ch, white 2ch, #f92672 2ch, #f92672 2ch, #f92672 2ch, #f92672 9ch, #66d9ef 9ch, #66d9ef 15ch, #ae81ff 15ch, #ae81ff 32ch, white 32ch, white 33ch, #66d9ef 33ch, #66d9ef 37ch, #ae81ff 37ch, #ae81ff 48ch, white 48ch, white 65ch, #f92672 65ch, #f92672 65ch, #f92672 65ch, #f92672 73ch, white 73ch, white 300ch); -webkit-background-clip: text">  &lt;label class=&quot;dark-mode-label&quot; for=&quot;dark-mode&quot;&gt;Toggle Dark Mode&lt;/label&gt;</span>
+<span style="background: linear-gradient(to right, white 0ch, white 0ch, white 300ch); -webkit-background-clip: text">  ...</span>
+<span style="background: linear-gradient(to right, white 0ch, #f92672 0ch, #f92672 0ch, #f92672 0ch, #f92672 6ch, white 6ch, white 300ch); -webkit-background-clip: text">&lt;/div&gt;</span>
+</pre></div>
+<p>You can see that the checkbox and the container are siblings. This is important as we wouldn't be able to have the content as a descendant of the checkbox due to the nature of inputs. One strange thing it does mean, is that we have the label for the button not be a parent or sibling of the checkbox. This is not an issue as we use the <code>for</code> attribute.</p>
+<p>Now that we have the general technique, we can utilise it for the dark mode.</p>
+<div class="preOuter">
+<pre><span style="background: linear-gradient(to right, white 0ch, #66d9ef 0ch, #66d9ef 6ch, white 6ch, white 300ch); -webkit-background-clip: text">:root {</span>
+<span style="background: linear-gradient(to right, white 0ch, white 0ch, white 10ch, #ae81ff 10ch, #ae81ff 20ch, white 20ch, white 300ch); -webkit-background-clip: text">  --c-text: #3c3836;</span>
+<span style="background: linear-gradient(to right, white 0ch, white 0ch, white 16ch, #ae81ff 16ch, #ae81ff 26ch, white 26ch, white 300ch); -webkit-background-clip: text">  --c-background: #fbf1c7;</span>
+<span style="background: linear-gradient(to right, white 0ch, white 0ch, white 15ch, #ae81ff 15ch, #ae81ff 25ch, white 25ch, white 300ch); -webkit-background-clip: text">  --c-dark-text: #ebdbb2;</span>
+<span style="background: linear-gradient(to right, white 0ch, white 0ch, white 21ch, #ae81ff 21ch, #ae81ff 31ch, white 31ch, white 300ch); -webkit-background-clip: text">  --c-dark-background: #282828;</span>
+<span style="background: linear-gradient(to right, white 0ch, white 0ch, white 300ch); -webkit-background-clip: text">}</span>
+<span style="background: linear-gradient(to right, white 0ch, #78dce8 0ch, #78dce8 7ch, white 7ch, white 8ch, #66d9ef 8ch, #66d9ef 30ch, white 30ch, white 300ch); -webkit-background-clip: text">@media (prefers-color-scheme: dark) {</span>
+<span style="background: linear-gradient(to right, white 0ch, white 0ch, white 2ch, #66d9ef 2ch, #66d9ef 8ch, white 8ch, white 300ch); -webkit-background-clip: text">  :root {</span>
+<span style="background: linear-gradient(to right, white 0ch, white 0ch, white 12ch, #ae81ff 12ch, #ae81ff 22ch, white 22ch, white 300ch); -webkit-background-clip: text">    --c-text: #ebdbb2;</span>
+<span style="background: linear-gradient(to right, white 0ch, white 0ch, white 18ch, #ae81ff 18ch, #ae81ff 28ch, white 28ch, white 300ch); -webkit-background-clip: text">    --c-background: #282828;</span>
+<span style="background: linear-gradient(to right, white 0ch, white 0ch, white 17ch, #ae81ff 17ch, #ae81ff 27ch, white 27ch, white 300ch); -webkit-background-clip: text">    --c-dark-text: #3c3836;</span>
+<span style="background: linear-gradient(to right, white 0ch, white 0ch, white 23ch, #ae81ff 23ch, #ae81ff 33ch, white 33ch, white 300ch); -webkit-background-clip: text">    --c-dark-background: #fbf1c7;</span>
+<span style="background: linear-gradient(to right, white 0ch, white 0ch, white 300ch); -webkit-background-clip: text">  }</span>
+<span style="background: linear-gradient(to right, white 0ch, white 0ch, white 300ch); -webkit-background-clip: text">}</span>
+<span style="background: linear-gradient(to right, white 0ch, #66d9ef 0ch, #66d9ef 28ch, white 28ch, white 30ch, #66d9ef 30ch, #66d9ef 41ch, white 41ch, white 300ch); -webkit-background-clip: text">.dark-mode-checkbox:checked ~ .container {</span>
+<span style="background: linear-gradient(to right, white 0ch, white 0ch, white 10ch, #ae81ff 10ch, #ae81ff 31ch, white 31ch, white 300ch); -webkit-background-clip: text">  --c-text: var(--c-dark-text);</span>
+<span style="background: linear-gradient(to right, white 0ch, white 0ch, white 16ch, #ae81ff 16ch, #ae81ff 43ch, white 43ch, white 300ch); -webkit-background-clip: text">  --c-background: var(--c-dark-background);</span>
+<span style="background: linear-gradient(to right, white 0ch, white 0ch, white 300ch); -webkit-background-clip: text">}</span>
+<span style="background: linear-gradient(to right, white 0ch, #66d9ef 0ch, #66d9ef 11ch, white 11ch, white 300ch); -webkit-background-clip: text">.container {</span>
+<span style="background: linear-gradient(to right, white 0ch, white 0ch, white 7ch, #ae81ff 7ch, #ae81ff 23ch, white 23ch, white 300ch); -webkit-background-clip: text">  color: var(--c-text);</span>
+<span style="background: linear-gradient(to right, white 0ch, white 0ch, white 18ch, #ae81ff 18ch, #ae81ff 40ch, white 40ch, white 300ch); -webkit-background-clip: text">  background-color: var(--c-background);</span>
+<span style="background: linear-gradient(to right, white 0ch, white 0ch, white 300ch); -webkit-background-clip: text">}</span>
+</pre></div>
+<p>We use <a href="https://developer.mozilla.org/en-US/docs/Web/CSS/Using_CSS_custom_properties">CSS variables</a> and change them based on whether the checkbox is checked. We can then reference these variables in the CSS (such as when we set the background and text colour) to update the colours accordingly.</p>
+<p>We can also utilise <a href="https://developer.mozilla.org/en-US/docs/Web/CSS/@media/prefers-color-scheme"><code>prefers-color-scheme</code></a> to detect whether the initial colour scheme should be light or dark. Since we can use generic terminalogy in our labels, we can treat the light mode as the dark mode for users who initially requested the dark mode. There is this neat <a href="https://codepen.io/kleinfreund/pen/NmpKZM">codepen demo</a> for determining whether your web browser supports this and what defaults to. This all means that the website will be the correct mode for users and they won't have to click the checkbox to toggle the theme. This ultimately makes the whole approach with the checkbox pointless, but this whole website is an exercise in pointlessness so I am doing it anyway. It also led to some interesting problems that I got to solve, I will go over theses in the next few sections.</p>
+<p>One more problem arises. The checkbox is not part of the content and so it is unaffected by the styling. We cannot make it part of the container because it will never be able to affect the styling of it's parent. Luckily, since the label that you can click doesn't have to be a sibling of the checkbox itself, we can just hide the actual checkbox. Since the label can be clicked and we used the <code>for</code> attribute, it should still be accessible.</p>
+<h3>Storing theme across pages</h3>
+<p>Now there is a theme I can toggle without JavaScript (yay), but if I go to another page on the website, the theme resets. This is because there is no state stored between pages. If I were using JavaScript then I could use <code>localStorage</code> to store a flag that lets the website know which theme should be used. You could do this with three lines of JavaScript. Unfortunately, I want to do it with zero lines of JavaScript which sadly isn't possible. There is no way to access the <code>localStorage</code> without JavaScript or JQuery (or maybe some fancy HTML5 or something). This is a limitation of CSS, there is literally no way to solve this. You cannot persist the theme information across pages.</p>
+<p>Luckily there is a solution. Have the entire website in just one page, this way there is nothing to persist across pages because there are no pages. The website can act as if there are multiple pages whilst actually having only one page, this can be done using the power of CSS and radio buttons. In the previous section we went over the <code>:checked</code> psuedo-class for checkboxes. Another input type also has it's own <code>:checked</code> psuedo-class: radio buttons. Radio buttons allow you to select one option from a set of multiple options. You can select only one option at a time which means that we can use the radio button to control what page we are on. Then we can use the <code>:checked</code> pseudo-class to either show or hide sections on the website depending on the 'page' that has been chosen:</p>
+<div class="preOuter">
+<pre><span style="background: linear-gradient(to right, white 0ch, white 0ch, white 16ch, #66d9ef 16ch, #66d9ef 26ch, white 26ch, white 300ch); -webkit-background-clip: text">.page1, .page2, .homepage {</span>
+<span style="background: linear-gradient(to right, white 0ch, white 0ch, white 9ch, #ae81ff 9ch, #ae81ff 16ch, white 16ch, white 300ch); -webkit-background-clip: text">  display: none;</span>
+<span style="background: linear-gradient(to right, white 0ch, white 0ch, white 300ch); -webkit-background-clip: text">}</span>
+<span style="background: linear-gradient(to right, white 0ch, #66d9ef 0ch, #66d9ef 25ch, white 25ch, white 27ch, #66d9ef 27ch, #66d9ef 37ch, white 37ch, white 39ch, #66d9ef 39ch, #66d9ef 55ch, white 55ch, white 300ch); -webkit-background-clip: text">#homepage-button:checked ~ .homepage { display: block; }</span>
+<span style="background: linear-gradient(to right, white 0ch, #66d9ef 0ch, #66d9ef 22ch, white 22ch, white 24ch, #66d9ef 24ch, #66d9ef 31ch, white 31ch, white 33ch, #66d9ef 33ch, #66d9ef 49ch, white 49ch, white 300ch); -webkit-background-clip: text">#page1-button:checked ~ .page1 { display: block; }</span>
+<span style="background: linear-gradient(to right, white 0ch, #66d9ef 0ch, #66d9ef 22ch, white 22ch, white 24ch, #66d9ef 24ch, #66d9ef 31ch, white 31ch, white 33ch, #66d9ef 33ch, #66d9ef 49ch, white 49ch, white 300ch); -webkit-background-clip: text">#page2-button:checked ~ .page2 { display: block; }</span>
+</pre></div>
+<p>By default all the pages will be hidden, and then when a radio button is selected, it will override the default styling and set the display to <code>block</code> making the section visible. Since we will want the main page of the website to be visible, we can make the homepage radio button the value that is checked by default.</p>
+<div class="preOuter">
+<pre><span style="background: linear-gradient(to right, white 0ch, #f92672 0ch, #f92672 0ch, #f92672 0ch, #f92672 7ch, #66d9ef 7ch, #66d9ef 12ch, #ae81ff 12ch, #ae81ff 19ch, white 19ch, white 20ch, #66d9ef 20ch, #66d9ef 26ch, #ae81ff 26ch, #ae81ff 33ch, white 33ch, white 34ch, #66d9ef 34ch, #66d9ef 37ch, #ae81ff 37ch, #ae81ff 54ch, white 54ch, white 300ch); -webkit-background-clip: text">&lt;input type=&quot;radio&quot; class=&quot;radio&quot; id=&quot;homepage-button&quot; checked&gt;</span>
+<span style="background: linear-gradient(to right, white 0ch, #f92672 0ch, #f92672 0ch, #f92672 0ch, #f92672 7ch, #66d9ef 7ch, #66d9ef 12ch, #ae81ff 12ch, #ae81ff 19ch, white 19ch, white 20ch, #66d9ef 20ch, #66d9ef 26ch, #ae81ff 26ch, #ae81ff 33ch, white 33ch, white 34ch, #66d9ef 34ch, #66d9ef 37ch, #ae81ff 37ch, #ae81ff 51ch, white 51ch, white 300ch); -webkit-background-clip: text">&lt;input type=&quot;radio&quot; class=&quot;radio&quot; id=&quot;page1-button&quot;&gt;</span>
+<span style="background: linear-gradient(to right, white 0ch, #f92672 0ch, #f92672 0ch, #f92672 0ch, #f92672 7ch, #66d9ef 7ch, #66d9ef 12ch, #ae81ff 12ch, #ae81ff 19ch, white 19ch, white 20ch, #66d9ef 20ch, #66d9ef 26ch, #ae81ff 26ch, #ae81ff 33ch, white 33ch, white 34ch, #66d9ef 34ch, #66d9ef 37ch, #ae81ff 37ch, #ae81ff 51ch, white 51ch, white 300ch); -webkit-background-clip: text">&lt;input type=&quot;radio&quot; class=&quot;radio&quot; id=&quot;page2-button&quot;&gt;</span>
+</pre></div>
+<p>This is all good, except radio buttons don't look like page links. We want this webpage to look like a normal website, users should be able to interact with it like they would any other website and a set of radio buttons to switch pages looks a bit stupid. To solve this, we will use a simialr technique that we used with the theme toggle, we will hide the radio buttons themselves and rely on the button labels. We can make the radio button labels by styling them so they have underlines and so that when a user hovers over them, the mouse pointer changes. This way a user will never know they aren't actual links and from an accessability standpoint we will make sure to have good labels. We can make links stay the same colour if they have been visited (I never liked them changing colour) and then the page switch buttons will be indistinguishable from normal links.</p>
+<div class="preOuter">
+<pre><span style="background: linear-gradient(to right, white 0ch, #66d9ef 0ch, #66d9ef 13ch, white 13ch, white 300ch); -webkit-background-clip: text">.page-button {</span>
+<span style="background: linear-gradient(to right, white 0ch, white 0ch, white 8ch, #ae81ff 8ch, #ae81ff 18ch, white 18ch, white 300ch); -webkit-background-clip: text">  cursor: pointer;</span>
+<span style="background: linear-gradient(to right, white 0ch, white 0ch, white 17ch, #ae81ff 17ch, #ae81ff 29ch, white 29ch, white 300ch); -webkit-background-clip: text">  text-decoration: underline;</span>
+<span style="background: linear-gradient(to right, white 0ch, white 0ch, white 300ch); -webkit-background-clip: text">}</span>
+<span style="background: linear-gradient(to right, white 0ch, white 0ch, white 16ch, #66d9ef 16ch, #66d9ef 26ch, white 26ch, white 300ch); -webkit-background-clip: text">.page1, .page2, .homepage {</span>
+<span style="background: linear-gradient(to right, white 0ch, white 0ch, white 9ch, #ae81ff 9ch, #ae81ff 16ch, white 16ch, white 300ch); -webkit-background-clip: text">  display: none;</span>
+<span style="background: linear-gradient(to right, white 0ch, white 0ch, white 300ch); -webkit-background-clip: text">}</span>
+<span style="background: linear-gradient(to right, white 0ch, #66d9ef 0ch, #66d9ef 25ch, white 25ch, white 27ch, #66d9ef 27ch, #66d9ef 37ch, white 37ch, white 39ch, #66d9ef 39ch, #66d9ef 55ch, white 55ch, white 300ch); -webkit-background-clip: text">#homepage-button:checked ~ .homepage { display: block; }</span>
+<span style="background: linear-gradient(to right, white 0ch, #66d9ef 0ch, #66d9ef 22ch, white 22ch, white 24ch, #66d9ef 24ch, #66d9ef 31ch, white 31ch, white 33ch, #66d9ef 33ch, #66d9ef 49ch, white 49ch, white 300ch); -webkit-background-clip: text">#page1-button:checked ~ .page1 { display: block; }</span>
+<span style="background: linear-gradient(to right, white 0ch, #66d9ef 0ch, #66d9ef 22ch, white 22ch, white 24ch, #66d9ef 24ch, #66d9ef 31ch, white 31ch, white 33ch, #66d9ef 33ch, #66d9ef 49ch, white 49ch, white 300ch); -webkit-background-clip: text">#page2-button:checked ~ .page2 { display: block; }</span>
+<span style="background: linear-gradient(to right, white 0ch, #66d9ef 0ch, #66d9ef 2ch, white 2ch, white 300ch); -webkit-background-clip: text">a {</span>
+<span style="background: linear-gradient(to right, white 0ch, white 0ch, white 7ch, #ae81ff 7ch, #ae81ff 23ch, white 23ch, white 300ch); -webkit-background-clip: text">  color: var(--c-text);</span>
+<span style="background: linear-gradient(to right, white 0ch, white 0ch, white 300ch); -webkit-background-clip: text">}</span>
+</pre></div>
+<p>This is combined with the following HTML:</p>
+<div class="preOuter">
+<pre><span style="background: linear-gradient(to right, white 0ch, #f92672 0ch, #f92672 0ch, #f92672 0ch, #f92672 7ch, #66d9ef 7ch, #66d9ef 11ch, #ae81ff 11ch, #ae81ff 28ch, white 28ch, white 29ch, #66d9ef 29ch, #66d9ef 35ch, #ae81ff 35ch, #ae81ff 48ch, white 48ch, white 53ch, #f92672 53ch, #f92672 53ch, #f92672 53ch, #f92672 61ch, white 61ch, white 300ch); -webkit-background-clip: text">&lt;label for=&quot;homepage-button&quot; class=&quot;page-button&quot;&gt;Home&lt;/label&gt;</span>
+<span style="background: linear-gradient(to right, white 0ch, #f92672 0ch, #f92672 0ch, #f92672 0ch, #f92672 7ch, #66d9ef 7ch, #66d9ef 11ch, #ae81ff 11ch, #ae81ff 25ch, white 25ch, white 26ch, #66d9ef 26ch, #66d9ef 32ch, #ae81ff 32ch, #ae81ff 45ch, white 45ch, white 52ch, #f92672 52ch, #f92672 52ch, #f92672 52ch, #f92672 60ch, white 60ch, white 300ch); -webkit-background-clip: text">&lt;label for=&quot;page1-button&quot; class=&quot;page-button&quot;&gt;Page 1&lt;/label&gt;</span>
+<span style="background: linear-gradient(to right, white 0ch, #f92672 0ch, #f92672 0ch, #f92672 0ch, #f92672 7ch, #66d9ef 7ch, #66d9ef 11ch, #ae81ff 11ch, #ae81ff 25ch, white 25ch, white 26ch, #66d9ef 26ch, #66d9ef 32ch, #ae81ff 32ch, #ae81ff 45ch, white 45ch, white 52ch, #f92672 52ch, #f92672 52ch, #f92672 52ch, #f92672 60ch, white 60ch, white 300ch); -webkit-background-clip: text">&lt;label for=&quot;page2-button&quot; class=&quot;page-button&quot;&gt;Page 2&lt;/label&gt;</span>
+<span style="background: linear-gradient(to right, white 0ch, #f92672 0ch, #f92672 0ch, #f92672 0ch, #f92672 7ch, #66d9ef 7ch, #66d9ef 12ch, #ae81ff 12ch, #ae81ff 19ch, white 19ch, white 20ch, #66d9ef 20ch, #66d9ef 26ch, #ae81ff 26ch, #ae81ff 33ch, white 33ch, white 34ch, #66d9ef 34ch, #66d9ef 37ch, #ae81ff 37ch, #ae81ff 54ch, white 54ch, white 300ch); -webkit-background-clip: text">&lt;input type=&quot;radio&quot; class=&quot;radio&quot; id=&quot;homepage-button&quot; checked hidden&gt;</span>
+<span style="background: linear-gradient(to right, white 0ch, #f92672 0ch, #f92672 0ch, #f92672 0ch, #f92672 7ch, #66d9ef 7ch, #66d9ef 12ch, #ae81ff 12ch, #ae81ff 19ch, white 19ch, white 20ch, #66d9ef 20ch, #66d9ef 26ch, #ae81ff 26ch, #ae81ff 33ch, white 33ch, white 34ch, #66d9ef 34ch, #66d9ef 37ch, #ae81ff 37ch, #ae81ff 51ch, white 51ch, white 300ch); -webkit-background-clip: text">&lt;input type=&quot;radio&quot; class=&quot;radio&quot; id=&quot;page1-button&quot; hidden&gt;</span>
+<span style="background: linear-gradient(to right, white 0ch, #f92672 0ch, #f92672 0ch, #f92672 0ch, #f92672 7ch, #66d9ef 7ch, #66d9ef 12ch, #ae81ff 12ch, #ae81ff 19ch, white 19ch, white 20ch, #66d9ef 20ch, #66d9ef 26ch, #ae81ff 26ch, #ae81ff 33ch, white 33ch, white 34ch, #66d9ef 34ch, #66d9ef 37ch, #ae81ff 37ch, #ae81ff 51ch, white 51ch, white 300ch); -webkit-background-clip: text">&lt;input type=&quot;radio&quot; class=&quot;radio&quot; id=&quot;page2-button&quot; hidden&gt;</span>
+</pre></div>
+<p>A nice thing about having a single webpage and using the radio buttons is that the website is extremely responsive as there are no HTTP requests between page switches since we have all the 'pages' all the time. This could cause problems in the future if there were a lot of pages and the website became very large. However, this would only affect the initial page load and once loaded you would have a quick and snappy website. There are many websites outhere that have multi-megabyte pages as they load in all the image, scripts, and styles yet they remain responsive so I am confident this website would as well.</p>
+<p>A problem with this is that if we add a page we need to make changes to the CSS to add the new rule for which page to show and hide. This can be solved by tempalting the CSS when generating the website or it will be solved as a side effect of what we do in the next section.</p>
+<h3>Having usable URLs</h3>
+<p>We almost have a fully functional website that behaves as if there are multiple pages whilst actually only having one page. Unfortunately, there is yet another issue. You can only choose the pages via the radio buttons, you can't go to a specific page via a URL. This means you cannot share a page, a problem if the site is used as a blog or a portfolio. This is because you cannot set radio buttons based on the contents of the URL (well as usual, you could do if you were willing to use JavaScript, but I am not). Without this feature the website is basically unusable, I want to be able to link to specific pages from other pages or even from other websites. Luckily, there is a solution!</p>
+<p>This problem can be solved by replacing the radio buttons with links. But wait, then we won't be able to use the <code>:checked</code> pseudo-class. Yes, that is true, but luckily there is another pseudo-class we can use: the <a href="https://developer.mozilla.org/en-US/docs/Web/CSS/:target"><code>:target</code> pseudo-class</a>! This pseudo-class represents an element with an id matching the URL's <a href="https://en.wikipedia.org/wiki/URI_fragment">fragment</a>. This is a string of characters that refers to a resource that is subordinate to another resource. For URLs, the fragment is the last part of a URL preceded by the <code>#</code>. It is usually used for identifying a portion of a document so that you can jump to a particular heading. We choose this over the query of the URL so that the pseudo-class can be used. Some other examples of how the fragment can be used, such as a pure CSS light box or table of contents, can be found in <a href="https://developer.mozilla.org/en-US/docs/Web/CSS/:target#examples">the Mozilla web docs</a>.</p>
+<p>In our case we have behavior similar to the radio buttons. We will hide all pages and then depending on which id is targeted, we will unhide that page:</p>
+<div class="preOuter">
+<pre><span style="background: linear-gradient(to right, white 0ch, white 0ch, white 9ch, #66d9ef 9ch, #66d9ef 15ch, white 15ch, white 300ch); -webkit-background-clip: text">.homepage.page {</span>
+<span style="background: linear-gradient(to right, white 0ch, white 0ch, white 2ch, #66d9ef 2ch, #66d9ef 18ch, lightgrey 18ch, lightgrey 60ch, white 60ch, white 300ch); -webkit-background-clip: text">  display: block; /* The homepage is displayed by default */</span>
+<span style="background: linear-gradient(to right, white 0ch, white 0ch, white 300ch); -webkit-background-clip: text">}</span>
+<span style="background: linear-gradient(to right, white 0ch, #66d9ef 0ch, #66d9ef 6ch, white 6ch, white 300ch); -webkit-background-clip: text">.page {</span>
+<span style="background: linear-gradient(to right, white 0ch, white 0ch, white 9ch, #ae81ff 9ch, #ae81ff 16ch, white 16ch, white 300ch); -webkit-background-clip: text">  display: none;</span>
+<span style="background: linear-gradient(to right, white 0ch, white 0ch, white 300ch); -webkit-background-clip: text">}</span>
+<span style="background: linear-gradient(to right, white 0ch, #66d9ef 0ch, #66d9ef 13ch, white 13ch, white 300ch); -webkit-background-clip: text">.page:target {</span>
+<span style="background: linear-gradient(to right, white 0ch, white 0ch, white 2ch, #66d9ef 2ch, #66d9ef 18ch, lightgrey 18ch, lightgrey 62ch, white 62ch, white 300ch); -webkit-background-clip: text">  display: block; /* When an id is targeted, show that page */</span>
+<span style="background: linear-gradient(to right, white 0ch, white 0ch, white 300ch); -webkit-background-clip: text">}</span>
+<span style="background: linear-gradient(to right, white 0ch, #66d9ef 0ch, #66d9ef 13ch, white 13ch, white 24ch, #66d9ef 24ch, #66d9ef 30ch, white 30ch, white 300ch); -webkit-background-clip: text">.page:target ~ .homepage.page {</span>
+<span style="background: linear-gradient(to right, white 0ch, white 0ch, white 2ch, #66d9ef 2ch, #66d9ef 17ch, lightgrey 17ch, lightgrey 64ch, white 64ch, white 300ch); -webkit-background-clip: text">  display: none; /* When an id is targeted, hide the homepage */</span>
+<span style="background: linear-gradient(to right, white 0ch, white 0ch, white 300ch); -webkit-background-clip: text">}</span>
+</pre></div>
+<p>There is a difference vs the radio button version, that being that we have explicit behavior for the homepage. Since the default is that there is no fragment, we want to make sure that the homepage is shown if there is no fragment. We can't have a default fragment as that would make the URL messy. We therefore use the power of the General sibling combinator again to have the homepage show by default then hide if any other sibling page is selected. This means that the individual pages of the website can be accessed by doing <code>https://website.com#page</code>! Due to the nature of the combinators, we need to make sure that the homepage is the final section of the website since we want to hide it if a page is selected and we can only affect elements that come after the current DOM element.</p>
+<p>To specify links to the pages within the website, we just have to create links to them like you would in a table of contents:</p>
+<div class="preOuter">
+<pre><span style="background: linear-gradient(to right, white 0ch, #f92672 0ch, #f92672 0ch, #f92672 0ch, #f92672 3ch, #66d9ef 3ch, #66d9ef 8ch, #ae81ff 8ch, #ae81ff 16ch, white 16ch, white 23ch, #f92672 23ch, #f92672 23ch, #f92672 23ch, #f92672 27ch, white 27ch, white 300ch); -webkit-background-clip: text">&lt;a href=&quot;#page1&quot;&gt;Page 1&lt;/a&gt;</span>
+<span style="background: linear-gradient(to right, white 0ch, #f92672 0ch, #f92672 0ch, #f92672 0ch, #f92672 3ch, #66d9ef 3ch, #66d9ef 8ch, #ae81ff 8ch, #ae81ff 16ch, white 16ch, white 23ch, #f92672 23ch, #f92672 23ch, #f92672 23ch, #f92672 27ch, white 27ch, white 300ch); -webkit-background-clip: text">&lt;a href=&quot;#page2&quot;&gt;Page 2&lt;/a&gt;</span>
+<span style="background: linear-gradient(to right, white 0ch, #f92672 0ch, #f92672 0ch, #f92672 0ch, #f92672 5ch, #66d9ef 5ch, #66d9ef 11ch, #ae81ff 11ch, #ae81ff 17ch, white 17ch, white 18ch, #66d9ef 18ch, #66d9ef 21ch, #ae81ff 21ch, #ae81ff 28ch, #f92672 28ch, #f92672 30ch, white 30ch, white 300ch); -webkit-background-clip: text">&lt;div class=&quot;page&quot; id=&quot;page1&quot;/&gt;</span>
+<span style="background: linear-gradient(to right, white 0ch, #f92672 0ch, #f92672 0ch, #f92672 0ch, #f92672 5ch, #66d9ef 5ch, #66d9ef 11ch, #ae81ff 11ch, #ae81ff 17ch, white 17ch, white 18ch, #66d9ef 18ch, #66d9ef 21ch, #ae81ff 21ch, #ae81ff 28ch, #f92672 28ch, #f92672 30ch, white 30ch, white 300ch); -webkit-background-clip: text">&lt;div class=&quot;page&quot; id=&quot;page2&quot;/&gt;</span>
+</pre></div>
+<p>An issue with this is that when you go to a heading via a fragment, it shifts the page downwards so that the heading is at the top of the page. This is fine if we were using the fragments with what they were designed for but it is a bit annoying as we want to be able to see the website header on each 'page'. To solve this we do a bit of a hacky solution, we add some invisible content before every element that gets targeted by a fragment, effectively pushing the actual content down the page by a fixed amount. it is a bit messy but it works.</p>
+<div class="preOuter">
+<pre><span style="background: linear-gradient(to right, white 0ch, #66d9ef 0ch, #66d9ef 16ch, white 16ch, white 300ch); -webkit-background-clip: text">:target::before {</span>
+<span style="background: linear-gradient(to right, white 0ch, white 0ch, white 9ch, #ae81ff 9ch, #ae81ff 14ch, white 14ch, white 300ch); -webkit-background-clip: text">  content: &quot;&quot;;</span>
+<span style="background: linear-gradient(to right, white 0ch, white 0ch, white 9ch, #ae81ff 9ch, #ae81ff 17ch, white 17ch, white 300ch); -webkit-background-clip: text">  display: block;</span>
+<span style="background: linear-gradient(to right, white 0ch, white 0ch, white 2ch, #66d9ef 2ch, #66d9ef 18ch, lightgrey 18ch, lightgrey 42ch, white 42ch, white 300ch); -webkit-background-clip: text">  height: 1000px; /* Fixed header height*/</span>
+<span style="background: linear-gradient(to right, white 0ch, white 0ch, white 2ch, #66d9ef 2ch, #66d9ef 23ch, lightgrey 23ch, lightgrey 57ch, white 57ch, white 300ch); -webkit-background-clip: text">  margin: -1000px 0 0; /* Negative fixed header height */</span>
+<span style="background: linear-gradient(to right, white 0ch, white 0ch, white 300ch); -webkit-background-clip: text">}</span>
+</pre></div>
+<p>And with that, we have a fully usable single-page website that behaves like it has multiple pages and has a theme toggle and uses no JavaScript. Obviously this is isn't viable for every website, but it was a fun idea to mess about with and the result is something I am quite happy with. It has all the features I want in a website without the bloat (although it uses slightly complex CSS that probably doesn't function on some browsers). Even if CSS is fully disabled, the website remains usable, it isn't as nice to use but is still completely functional. The fact it is just a single page of HTML and a bit of CSS means that it should be easily trasnsportable across web hosts with very little work when migrating. Now we just need a way to add content and deploy it!</p>
+<h3>Code Generation</h3>
+<p>I implemented my own static site generator. Since my website is basically a single page application, I only ned to populate the <code>index.html</code> file. I use Go with it's powerful templating to fill the relevant sections of the <code>index.html</code> with content that has been parsed from markdown files. This means that if I want to add a page, I just add a markdown file, and the website will automatically regenerate the <code>index.html</code> when I push the change to GitHub. This is done with a simple CI workflow. GitHub pages then handles the deployment of the actual website, this is discuessed in the section below.</p>
+<p>The Go code is not interesting. It is written with only standard library modules. It reads the markdown from the markdown directory, converts it into HTML using regex to convert the various markdown tags into their HTML equivalent, and then populates the templates for the <code>index.html</code> and <code>404.html</code> pages. Since there is only one page to really think about, the code is kept relatively simple.</p>
+<p>The index template <a href="https://github.com/joshjennings98/joshjennings98.github.io/blob/master/templates/index.html.tmpl">can be found here</a>, whilst the Go program for populating the template <a href="https://github.com/joshjennings98/joshjennings98.github.io/blob/master/main.go">can be found here</a>.</p>
+<p>The workflow to run the program in CI is very simple. It uses GitHub actions to checkout the repo, and if there are changes to the markdown or templates then it will regenerate the index and commit the changes back to the repository. There is also a similar workflow that is used for generating my CV. In this case, the CV is kept as a <code>yaml</code> file and then a python script is used to turn it into HTML.</p>
+<p>The CI workflows <a href="https://github.com/joshjennings98/joshjennings98.github.io/tree/master/.github/workflows">can be found here</a>.</p>
+<h3>Deployment using GitHub Pages</h3>
+<p>I don't want to spend money so I host the website with GitHub pages. This is particularly nice since I am hosting the repository on GitHub so deployments are trivial.</p>
+<p>You can use GitHub pages with fancy <a href="https://jekyllrb.com/">Jekyll</a> setups but that probably involves some JavaScript which I don't want (also I prefer <a href="https://gohugo.io/">Hugo</a> if I use a static site generator that isn't my own). Instead I just use my own static site generator that populates the <code>index.html.template</code> as talked about in the previous section. This makes the deployments very simple as there is only one page, it is as simple as the <a href="https://pages.github.com/">hello world example for github pages</a>. Since this is hosted on GitHub I don't even have to worry about CI for the actual deplyoment as it is handled by GitHub.</p>
+<p>Unfortunately I can't have just one page, I need a 404 page so that users can still navigate my website if they go to a wrong page. Again, because this is GitHub pages, this is very simple. You just need to create a <code>404.html</code> and have it at the root of the repo, no need for special files like a <code>.htaccess</code>. You can create a tempalte for the 404 page and populate it like the index so that the website looks consistent and all the links can be accessed easily from the 404 page.</p>
+<p>If you want to use a custom domain with GitHub pages, that is also relatively simple, you just need to add a CNAME record to your reopository. This involves two steps:</p>
+<ul>
+<li>Adding a CNAME record file to your repository.</li>
+<li>Creating a CNAME record with your DNS provider.</li>
+</ul>
+<p>The CNAME record file contains the domain you want to use for your website. A CNAME record is used to specify that a domain name is an alias for another domain. This basically acts as a redirect so a custom dmain name can be used. The target domain must have an A address record. The A address record is used to map a domain to it's corresponding IP where the werbsite is hosted.</p>
+<p>To create the CNAME record itself, you must go to your DNS provider and create a CNAME record that points the domain to the GitHub pages URL (in my case joshjenning98.github.io). This is a different process for different DNS provders. In my case I used Google domains (for the <code>.dev</code> top level domain) for which the information on setting up a CNAME record can be found <a href="https://support.google.com/a/answer/47283?hl=en#zippy=%2Cstep-get-your-unique-cname-record%2Cstep-add-the-cname-record-to-your-domains-dns-records">on this page</a>. If you want to enforce HTTPS (a requirement for <code>.dev</code>) you must aso go to the GitHub pages setting and have "Enforce HTTPS" enabled.</p>
+<h3>Acknowledgements</h3>
+<p>A lot of inspiration was taked from <a href="https://kleinfreund.de/css-only-dark-mode/">this blog post</a> on CSS-only dark mode for the initial work on reimplementing the theme toggle without JavaScript.</p>
+<p>This <a href="https://codepen.io/finnhvman">person on codepen</a> has a lot of amazing CSS only stuff available that make this website seem like a toy. They also have some cool SVG stuff like this <a href="https://codepen.io/finnhvman/pen/jOQvYaz">gas giant</a> that I want to include on my website somehow.</p>
+<h3>Github</h3>
+<p>The full project can be viewed on <a href="https://github.com/joshjennings98/joshjennings98.github.io">GitHub</a>.</p>
+<div class="bottom"><a href="#website">Back to top.</a></div></div>
+<div class="page" id="backend-demos">
+<div class="page-header">
+<h2>Backend Demo Tool</h2></div>
+<p>This is a small <a href="https://flask.palletsprojects.com/en/2.3.x/">Flask</a> application that makes it easier to demonstrate backend features.</p>
+<p>Frontend developers have a much easier time of it when it comes to demonstrating their work. It is easy to see what they've done and they can make it look as interesting as they want. In comparison, trying to demo a backend API or tool is rarely interesting to watch. It usually involves a lot of text, ends up with the presenter pulling out a terminal to show commands on the fly, searching their command history and hoping they do everything in the right order. All this to get some JSON or similarly uninteresting output.</p>
+<p>This project is an attempt to try and improve that situation and make backend demos simpler and more engaging. To do this, a python application was created that reads a simple text file containing information to present and generates a web server with Flask. The data for each slide is exposed as JSON via endpoints and with a simple <code>index.html</code> and some JavaScript, the tool is able to create a simple presentation that is shown in the browser and can be clicked through like a PowerPoint presentation.</p>
+<p>The advantage this provides is that python can be to execute pre-written commands and stream the results back to the webserver and expose it via an iframe that is then embedded into a slide. This allows you to easily demonstrate commands without having to open a terminal. It also means you can plan the exact order of the commands and not worry about mixing them up. A side effect of running the presentation in the browser is that you can easily have links that open up in new tabs which can be useful to show the result of any executed commands, this is useful as you can just share the web browser during a meeting instead of having to switch between PowerPoint, a terminal, and a web browser.</p>
+<p>This application lends itself to a presentation method similar to the <a href="https://en.wikipedia.org/wiki/Takahashi_method">Takahashi method</a> where you have a concise slides with very little text. The created presentations are more complex than the Taskahashi method but it is still purposefully designed to keep things simple by only having one type of content per slide, be that text, a command output, or something else.</p>
+<p>The result is that with this application backend demos should be much easier to create and run whilst also being slightly more engaging.</p>
+<h3>Features</h3>
+<ul>
+<li>A presentation is uses just a simple text file.</li>
+<li>A slide can contain one of: text, an executed command, a code block, or an image and are delimted by the tags: <code>[TEXT]</code>, <code>[COMMAND]</code>, <code>[CODE]</code>, and <code>[IMAGE]</code>.</li>
+<li>Executed commands will stream output to be shown in the slide.</li>
+<li>The command that is executed is shown above the command output.</li>
+<li>Correctly renders commands that span multiple lines.</li>
+<li>Optionally run command every few seconds like <code>watch</code>.</li>
+<li>Code blocks are automatically highlighted using <a href="https://highlightjs.org/">hightlight.js</a>.</li>
+<li>Text slides will add text line by line like a PowerPoint presentation with animations.</li>
+<li>Left click or right arrow to go forwards, right click or left arrow to go backwards.</li>
+<li>When going backwards previously rendered text is handled properly and slides don't reset.</li>
+<li>Extremely easy to use and share via screen sharing.</li>
+<li>Configurable CSS if you desire to change the look.</li>
+<li>Jump to any slide via a drop down menu.</li>
+</ul>
+<h3>Usage</h3>
+<p>The tool is not on PyPi so to install it you will need to <a href="https://github.com/joshjennings98/backend-demo">clone the repository</a>. Once this is done <code>cd</code> into the base directory and run <code>pip install .</code> to install it as <code>backend_demo</code>.</p>
+<p>To create a presentation you just need to write a command file <code>commands.txt</code> like this:</p>
+<div class="preOuter">
+<pre style="color: white">[TEXT] 
 This is a slide
-
 [COMMAND] 
 ping -c 4 google.com
-
 [TEXT] 
 I am another text slide
 with multiple lines
-
 [IMAGE]
 https://upload.wikimedia.org/wikipedia/en/7/73/Hyperion_cover.jpg
-
 [CODE]
 def main():
-    print("I am a code block")
-    print("I will be automatically syntax highlighted with hightlight.js")
-
+    print(&quot;I am a code block&quot;)
+    print(&quot;I will be automatically syntax highlighted with hightlight.js&quot;)
 [COMMAND]
 echo commands \
 spanning \
@@ -367,316 +722,249 @@ multiple \
 lines \
 are \
 handled
-</pre>
-        <p></p>
-        <p>To present a presentation, pass the command file as an argument to <code>backend_demo</code>:</p>
-        <p></p>
-        <pre class="code" title="">backend_demo commands.txt
-</pre>
-        <p></p>
-        <p><i>Currently, all the commands are run in a sub shell on you machine so be careful with what you execute.</i></p>
-        <p></p>
-        <h2>Github Repository</h2>
-        <p></p>
-        <p>The full project can be viewed on <a href="https://github.com/joshjennings98/backend-demo">GitHub</a>.</p>
-        <div><a href="#backend-demo-tool">Back to top.</a></div>
-      </div>
-      <div class="page" id="f-neural-network">
-        <div class="page-header">
-          <h2>F# Neural Network</h2>
-        </div>
-        <p></p>
-        <p>A small F# library that allows for the creation of scalable fully-connected neural networks. It was developed for and built entirely using F#.</p>
-        <p></p>
-        <h3>Usage</h3>
-        <p></p>
-        <h4>Defining a network</h4>
-        <p></p>
-        <p>Networks can be specified using the following format. Any number of layers are supported. Provided they align, the dimensions can be as large as desired.</p>
-        <p></p>
-        <pre class="fsharpcode" title="fsharp">let network = [
-    {inputDims = 3; outputDims = 5; activation = Sigmoid};
-    {inputDims = 5; outputDims = 6; activation = Sigmoid};
-    {inputDims = 6; outputDims = 2; activation = Sigmoid};
-]
-</pre>
-        <p></p>
-        <p>You can choose from multiple different activation functions including:</p>
-        <p></p>
-        <ul><li> Relu
-</li>
-<li> Sigmoid
-</li>
-<li> Tanh
-</li>
-<li> Softmax
-</li>
-<li> Leaky Relu
-</li>
-<li> Elu
-</li>
-<li> Selu
-</li>
-<li> Softsign
-</li>
-<li> Softplus
-</li>
-<li> Exponential
-</li>
-<li> Hard Sigmoid
-</li>
-<li> Linear
-
-</li></ul>
-        <h4>Training a network</h4>
-        <p></p>
-        <p>Input data is provided in the form of a list of inputs, and a list of labels corresponding to each input.</p>
-        <p></p>
-        <pre class="fsharpcode" title="fsharp">(* Inputs *)
-let data = [
-    [0.5; 1.0; 0.2];
-    [0.1; 0.7; 1.0];
-    [1.0; 0.1; 0.1];
-    [0.0; 0.34; 0.8];
-    [0.6; 0.1; 0.3]
-]
-
-(* Labels *)
-let labels = [
-    [1.0; 1.0];
-    [0.0; 1.0];
-    [0.0; 0.0];
-    [1.0; 0.0];
-    [0.0; 1.0];
-]
-</pre>
-        <p></p>
-        <p>To train and run the network, see the code snippets below:</p>
-        <p></p>
-        <pre class="fsharpcode" title="fsharp">(* trainNetwork architecture labels data learning-rate loss iterations *)
-let model = trainNetwork network labels data 0.05 MSE 100000
-</pre>
-        <p></p>
-        <p>Currently, the following loss functions are avaliable:</p>
-        <p></p>
-        <ul><li> Mean Square Error
-</li>
-<li> Cross Entropy
-</li>
-<li> Mean Absolute Error
-
-</li></ul>
-        <h4>Running a trained network</h4>
-        <p></p>
-        <p>A single run of the network can be specified as follows:</p>
-        <p></p>
-        <pre class="fsharpcode" title="fsharp">(* runNetwork model input architecture *)
-runNetwork model [0.1; 0.8; 0.4] network (* [0.90643753; 0.99834754] *)
-</pre>
-        <p></p>
-        <p>We can test multiple inputs by using a loop:</p>
-        <p></p>
-        <pre class="fsharpcode" title="fsharp">for idx in List.init (List.length data) id do
-    printfn "Input: %A" data.[idx]
-    printfn "Output: %A" (runNetwork model data.[idx] network)
-</pre>
-        <p></p>
-        <p>This will print the following:</p>
-        <p></p>
-        <pre class="code" title="">Input: [0.5; 1.0; 0.2]
+</pre></div>
+<p>To present a presentation, pass the command file as an argument to <code>backend_demo</code>:</p>
+<div class="preOuter">
+<pre style="color: white">backend_demo commands.txt
+</pre></div>
+<p><i>Currently, all the commands are run in a sub shell on you machine so be careful with what you execute.</i></p>
+<h3>Github Repository</h3>
+<p>The full project can be viewed on <a href="https://github.com/joshjennings98/backend-demo">GitHub</a>.</p>
+<div class="bottom"><a href="#backend-demos">Back to top.</a></div></div>
+<div class="page" id="fsharp-neural-network">
+<div class="page-header">
+<h2>F# Neural Network</h2></div>
+<p>A small F# library that allows for the creation of scalable fully-connected neural networks. It was developed for and built entirely using F#.</p>
+<h3>Usage</h3>
+<h4>Defining a network</h4>
+<p>Networks can be specified using the following format. Any number of layers are supported. Provided they align, the dimensions can be as large as desired.</p>
+<div class="preOuter">
+<pre><span style="background: linear-gradient(to right, white 0ch, #66d9ef 0ch, #66d9ef 4ch, white 4ch, white 12ch, #f92672 12ch, #f92672 13ch, white 13ch, white 300ch); -webkit-background-clip: text">let network = [</span>
+<span style="background: linear-gradient(to right, white 0ch, white 0ch, white 15ch, #f92672 15ch, #f92672 16ch, white 16ch, white 17ch, #A7C 17ch, #A7C 18ch, white 18ch, white 31ch, #f92672 31ch, #f92672 32ch, white 32ch, white 33ch, #A7C 33ch, #A7C 34ch, white 34ch, white 47ch, #f92672 47ch, #f92672 48ch, white 48ch, white 300ch); -webkit-background-clip: text">    {inputDims = 3; outputDims = 5; activation = Sigmoid};</span>
+<span style="background: linear-gradient(to right, white 0ch, white 0ch, white 15ch, #f92672 15ch, #f92672 16ch, white 16ch, white 17ch, #A7C 17ch, #A7C 18ch, white 18ch, white 31ch, #f92672 31ch, #f92672 32ch, white 32ch, white 33ch, #A7C 33ch, #A7C 34ch, white 34ch, white 47ch, #f92672 47ch, #f92672 48ch, white 48ch, white 300ch); -webkit-background-clip: text">    {inputDims = 5; outputDims = 6; activation = Sigmoid};</span>
+<span style="background: linear-gradient(to right, white 0ch, white 0ch, white 15ch, #f92672 15ch, #f92672 16ch, white 16ch, white 17ch, #A7C 17ch, #A7C 18ch, white 18ch, white 31ch, #f92672 31ch, #f92672 32ch, white 32ch, white 33ch, #A7C 33ch, #A7C 34ch, white 34ch, white 47ch, #f92672 47ch, #f92672 48ch, white 48ch, white 300ch); -webkit-background-clip: text">    {inputDims = 6; outputDims = 2; activation = Sigmoid};</span>
+<span style="background: linear-gradient(to right, white 0ch, white 0ch, white 300ch); -webkit-background-clip: text">]</span>
+</pre></div>
+<p>You can choose from multiple different activation functions including:</p>
+<ul>
+<li>Relu</li>
+<li>Sigmoid</li>
+<li>Tanh</li>
+<li>Softmax</li>
+<li>Leaky Relu</li>
+<li>Elu</li>
+<li>Selu</li>
+<li>Softsign</li>
+<li>Softplus</li>
+<li>Exponential</li>
+<li>Hard Sigmoid</li>
+<li>Linear</li>
+</ul>
+<h4>Training a network</h4>
+<p>Input data is provided in the form of a list of inputs, and a list of labels corresponding to each input.</p>
+<div class="preOuter">
+<pre><span style="background: linear-gradient(to right, white 0ch, lightgrey 0ch, lightgrey 12ch, white 12ch, white 300ch); -webkit-background-clip: text">(* Inputs *)</span>
+<span style="background: linear-gradient(to right, white 0ch, #66d9ef 0ch, #66d9ef 4ch, white 4ch, white 9ch, #f92672 9ch, #f92672 10ch, white 10ch, white 300ch); -webkit-background-clip: text">let data = [</span>
+<span style="background: linear-gradient(to right, white 0ch, white 0ch, white 5ch, #A7C 5ch, #A7C 8ch, white 8ch, white 10ch, #A7C 10ch, #A7C 13ch, white 13ch, white 15ch, #A7C 15ch, #A7C 18ch, white 18ch, white 300ch); -webkit-background-clip: text">    [0.5; 1.0; 0.2];</span>
+<span style="background: linear-gradient(to right, white 0ch, white 0ch, white 5ch, #A7C 5ch, #A7C 8ch, white 8ch, white 10ch, #A7C 10ch, #A7C 13ch, white 13ch, white 15ch, #A7C 15ch, #A7C 18ch, white 18ch, white 300ch); -webkit-background-clip: text">    [0.1; 0.7; 1.0];</span>
+<span style="background: linear-gradient(to right, white 0ch, white 0ch, white 5ch, #A7C 5ch, #A7C 8ch, white 8ch, white 10ch, #A7C 10ch, #A7C 13ch, white 13ch, white 15ch, #A7C 15ch, #A7C 18ch, white 18ch, white 300ch); -webkit-background-clip: text">    [1.0; 0.1; 0.1];</span>
+<span style="background: linear-gradient(to right, white 0ch, white 0ch, white 5ch, #A7C 5ch, #A7C 8ch, white 8ch, white 10ch, #A7C 10ch, #A7C 14ch, white 14ch, white 16ch, #A7C 16ch, #A7C 19ch, white 19ch, white 300ch); -webkit-background-clip: text">    [0.0; 0.34; 0.8];</span>
+<span style="background: linear-gradient(to right, white 0ch, white 0ch, white 5ch, #A7C 5ch, #A7C 8ch, white 8ch, white 10ch, #A7C 10ch, #A7C 13ch, white 13ch, white 15ch, #A7C 15ch, #A7C 18ch, white 18ch, white 300ch); -webkit-background-clip: text">    [0.6; 0.1; 0.3]</span>
+<span style="background: linear-gradient(to right, white 0ch, white 0ch, white 300ch); -webkit-background-clip: text">]</span>
+<span style="background: linear-gradient(to right, white 0ch, lightgrey 0ch, lightgrey 12ch, white 12ch, white 300ch); -webkit-background-clip: text">(* Labels *)</span>
+<span style="background: linear-gradient(to right, white 0ch, #66d9ef 0ch, #66d9ef 4ch, white 4ch, white 11ch, #f92672 11ch, #f92672 12ch, white 12ch, white 300ch); -webkit-background-clip: text">let labels = [</span>
+<span style="background: linear-gradient(to right, white 0ch, white 0ch, white 5ch, #A7C 5ch, #A7C 8ch, white 8ch, white 10ch, #A7C 10ch, #A7C 13ch, white 13ch, white 300ch); -webkit-background-clip: text">    [1.0; 1.0];</span>
+<span style="background: linear-gradient(to right, white 0ch, white 0ch, white 5ch, #A7C 5ch, #A7C 8ch, white 8ch, white 10ch, #A7C 10ch, #A7C 13ch, white 13ch, white 300ch); -webkit-background-clip: text">    [0.0; 1.0];</span>
+<span style="background: linear-gradient(to right, white 0ch, white 0ch, white 5ch, #A7C 5ch, #A7C 8ch, white 8ch, white 10ch, #A7C 10ch, #A7C 13ch, white 13ch, white 300ch); -webkit-background-clip: text">    [0.0; 0.0];</span>
+<span style="background: linear-gradient(to right, white 0ch, white 0ch, white 5ch, #A7C 5ch, #A7C 8ch, white 8ch, white 10ch, #A7C 10ch, #A7C 13ch, white 13ch, white 300ch); -webkit-background-clip: text">    [1.0; 0.0];</span>
+<span style="background: linear-gradient(to right, white 0ch, white 0ch, white 5ch, #A7C 5ch, #A7C 8ch, white 8ch, white 10ch, #A7C 10ch, #A7C 13ch, white 13ch, white 300ch); -webkit-background-clip: text">    [0.0; 1.0];</span>
+<span style="background: linear-gradient(to right, white 0ch, white 0ch, white 300ch); -webkit-background-clip: text">]</span>
+</pre></div>
+<p>To train and run the network, see the code snippets below:</p>
+<div class="preOuter">
+<pre><span style="background: linear-gradient(to right, white 0ch, lightgrey 0ch, lightgrey 73ch, white 73ch, white 300ch); -webkit-background-clip: text">(* trainNetwork architecture labels data learning-rate loss iterations *)</span>
+<span style="background: linear-gradient(to right, white 0ch, #66d9ef 0ch, #66d9ef 4ch, white 4ch, white 10ch, #f92672 10ch, #f92672 11ch, white 11ch, white 45ch, #A7C 45ch, #A7C 49ch, white 49ch, white 54ch, #A7C 54ch, #A7C 55ch, white 55ch, white 300ch); -webkit-background-clip: text">let model = trainNetwork network labels data 0.05 MSE 100000</span>
+</pre></div>
+<p>Currently, the following loss functions are avaliable:</p>
+<ul>
+<li>Mean Square Error</li>
+<li>Cross Entropy</li>
+<li>Mean Absolute Error</li>
+</ul>
+<h4>Running a trained network</h4>
+<p>A single run of the network can be specified as follows:</p>
+<div class="preOuter">
+<pre><span style="background: linear-gradient(to right, white 0ch, lightgrey 0ch, lightgrey 41ch, white 41ch, white 300ch); -webkit-background-clip: text">(* runNetwork model input architecture *)</span>
+<span style="background: linear-gradient(to right, white 0ch, white 0ch, white 18ch, #A7C 18ch, #A7C 21ch, white 21ch, white 23ch, #A7C 23ch, #A7C 26ch, white 26ch, white 28ch, #A7C 28ch, #A7C 31ch, white 31ch, white 41ch, lightgrey 41ch, lightgrey 71ch, white 71ch, white 300ch); -webkit-background-clip: text">runNetwork model [0.1; 0.8; 0.4] network (* [0.90643753; 0.99834754] *)</span>
+</pre></div>
+<p>We can test multiple inputs by using a loop:</p>
+<div class="preOuter">
+<pre><span style="background: linear-gradient(to right, white 0ch, #78dce8 0ch, #78dce8 4ch, white 4ch, white 7ch, #78dce8 7ch, #78dce8 11ch, #7E7 11ch, #7E7 15ch, white 15ch, white 22ch, #7E7 22ch, #7E7 26ch, white 26ch, white 300ch); -webkit-background-clip: text">for idx in List.init (List.length data) id do</span>
+<span style="background: linear-gradient(to right, white 0ch, white 0ch, white 4ch, #fd971f 4ch, #fd971f 11ch, white 11ch, white 18ch, #f92672 18ch, #f92672 19ch, white 19ch, white 300ch); -webkit-background-clip: text">    printfn &quot;Input: %A&quot; data.[idx]</span>
+<span style="background: linear-gradient(to right, white 0ch, white 0ch, white 4ch, #fd971f 4ch, #fd971f 11ch, white 11ch, white 19ch, #f92672 19ch, #f92672 20ch, white 20ch, white 300ch); -webkit-background-clip: text">    printfn &quot;Output: %A&quot; (runNetwork model data.[idx] network)</span>
+</pre></div>
+<p>This will print the following:</p>
+<div class="preOuter">
+<pre style="color: white">Input: [0.5; 1.0; 0.2]
 Output: [0.9748251802; 0.9991071572]
-
 Input: [0.1; 0.7; 1.0]
 Output: [0.04458155893; 0.9556900964]
-
 Input: [1.0; 0.1; 0.1]
 Output: [1.150921027e-05; 0.03353754142]
-
 Input: [0.0; 0.34; 0.8]
 Output: [0.9681691113; 0.03517992806]
-
 Input: [0.6; 0.1; 0.3]
 Output: [0.003145187104; 0.9791424116]
-</pre>
-        <p></p>
-        <p>These match up with the labels specified earlier.</p>
-        <p></p>
-        <h3>How it works</h3>
-        <p></p>
-        <h4>Forward Propagation</h4>
-        <p></p>
-        <p>A single forward propagation though a layer just involves multiplying the inputs to the layer with the layer weights (their dot product). After this, they are summed and the bias added before having the activation layer for that function applied.</p>
-        <p></p>
-        <pre class="fsharpcode" title="fsharp">let forwardSingleLayer (bias : float) (weights : float list list) (inputs : float list) (activation : Activation) : float list =
-    weights
-    |&gt; List.map (fun list -&gt; List.map2 ( * ) list inputs)
-    |&gt; List.map (fun list -&gt; List.sum list + bias)
-    |&gt; activateLayer activation
-</pre>
-        <p></p>
-        <p>The activateLayer function takes an activation and maps the corresponding activation function across the list before returning it. A small part of this function can be see below:</p>
-        <p></p>
-        <pre class="fsharpcode" title="fsharp">let activateLayer (activation : Activation) (input : float list) : float list =
-    match activation with
-    | Sigmoid -&gt;
-        List.map (fun x -&gt; 1.0 / (1.0 + exp(-x))) input
-    | Relu -&gt;
-        List.map (fun x -&gt; max x 0.0) input
-</pre>
-        <p></p>
-        <p>The full forward propagation is slightly more complex. It first creates an empty list the size of the network. It folds though the epty list using the accumulator to store the intermediate activated and unactivated output of all layers. It then adds an extra layer containing only 1.0s to the end of the forward propagated output. This makes it easier when doing back propagation.</p>
-        <p></p>
-        <pre class="fsharpcode" title="fsharp">let forwardFull (parameters : Parameters) (inputs : float list) (layers : Layer list) : float list list =
-    List.init layers.Length id
-    |&gt; List.fold (fun (acc : float list list) index -&gt;
-        let biases, weights, activation =
-            parameters.biases.[index], parameters.weights.[index], layers.[index].activation
-        [forwardSingleLayer biases weights acc.[0] activation] @ acc)
-            [inputs]
-    |&gt; List.append [List.init (List.last layers).outputDims float]
-</pre>
-        <p></p>
-        <h4>Calculating Error</h4>
-        <p></p>
-        <p>To calculate the error in the output, the output of forward propagation and the target output are passed to a function that calculated the loss.</p>
-        <p></p>
-        <pre class="fsharpcode" title="fsharp">let getOverallError (targetOutputs : float list) (actualOutputs : float list) (loss : Loss) : float =
-    actualOutputs
-    |&gt; List.map2 (lossFunction loss targetOutputs.Length) targetOutputs
-    |&gt; List.sum
-</pre>
-        <p></p>
-        <p>Similarly to the activation functions, the loss functions are supplied using pattern matching In this case however, they return a function that can be applied wherever the particular value required instead of taking an returning a list. Part of lossFunction can be seen below:</p>
-        <p></p>
-        <pre class="fsharpcode" title="fsharp">let lossFunction (loss : Loss) (n : int) : float -&gt; float -&gt; float =
-    match loss with
-    | MSE -&gt;
-        fun actual target -&gt;
-            (1.0 / (n |&gt; float)) * (actual - target) ** 2.0
-    | MAE -&gt;
-        fun actual target -&gt;
-            (1.0 / (n |&gt; float)) * (abs (actual - target))
-</pre>
-        <p></p>
-        <h4>Back Propagation</h4>
-        <p></p>
-        <p>Back propagation is more complex than the forward version. We first calculate the intermidate output sums. For the output layer, the only thing that needs to be done is for the derivatve of the loss function to applied to the outputs. For the hidden layers, the individual deltas for each node in the previous layer are found. Afterwards, the layer weights are taken and multiplied by their corresponding deltas. The values coming into each node are then summed.</p>
-        <p></p>
-        <p>The new weights are then calculated. This is simpler. The derivative of the activation function is found and then multiplied by the corresponding output delta sum. This is then multipliued by the output od of the previous layer resulting in a value corresponding to <code>learningRate * delta * outPrev</code>. This value is then subtracted from the corresponding weight as back propagation is defined.</p>
-        <p></p>
-        <p>The new weights and intermediate output deltas are then returned.</p>
-        <p></p>
-        <pre class="fsharpcode" title="fsharp">let backPropSingleLayer (targetOutputs : float list) (loss : Loss) (learningRate : float) (backPropPart : float list) (layerIndex : int) (forwardPropParts : float list list) (allWeights : float list list list) (layers : Layer list) : float list list * float list =
-
-    let intermediateOutputDeltaSum =
-        if layerIndex = 0
-        then (* Output layer *)
-            forwardPropParts.[layerIndex + 1]
-            |&gt; List.map2 (dLossFunction loss targetOutputs.Length) backPropPart
-        else (* Hidden layers *)
-            List.init forwardPropParts.[layerIndex + 1].Length (fun _ -&gt;
-                forwardPropParts.[layerIndex]
-                |&gt; dActivateLayer layers.[layerIndex - 1].activation
-                |&gt; List.map2 ( * ) backPropPart)
-            |&gt; List.mapi (fun index1 deltas -&gt;
-                allWeights.[layerIndex]
-                |&gt; List.mapi (fun index2 weights -&gt; weights.[index1] * deltas.[index2]))
-            |&gt; List.map List.sum
-
-    let newWeights =
-        forwardPropParts.[layerIndex + 1]
-        |&gt; dActivateLayer layers.[layerIndex].activation
-        |&gt; List.map2 ( * ) intermediateOutputDeltaSum
-        |&gt; List.map (fun delta -&gt;
-            forwardPropParts.[layerIndex + 2]
-            |&gt; List.map (fun out -&gt; learningRate * delta * out))
-        |&gt; List.map2 (List.map2 (-)) allWeights.[layerIndex + 1]
-
-    newWeights, intermediateOutputDeltaSum
-</pre>
-        <p></p>
-        <p>The full back propagation invloved first reversing the parameters. This makes it easier to work on as we start from the final layer and work towards the input.</p>
-        <p></p>
-        <p>The next step is to fold through the network from the outer layer and calculate all the new values for each weight using <code>backPropSingleLayer</code>. This is then added to a list containing each layer and acts as the accumulator.</p>
-        <p></p>
-        <pre class="fsharpcode" title="fsharp">let backPropFull (layers : Layer list) (parameters : Parameters) (targetOutputs : float list list) (learningRate : float) (loss : Loss) (forwardPropParts : float list list) : (float list list * float list) list =
-
-    let weights =
-        List.rev parameters.weights
-
-    List.init (layers.Length) id
-    |&gt; List.fold (fun acc index -&gt;
-        let targetOutputs =
-            acc.[0]
-            |&gt; fst
-            |&gt; List.map List.sum
-
-        let backPropPart = snd acc.[0]
-
-        let backPropOutput =
-            backPropSingleLayer targetOutputs loss learningRate backPropPart index forwardPropParts weights layers
-
-        [backPropOutput] @ acc)
-            [targetOutputs, (List.concat targetOutputs)]
-</pre>
-        <p></p>
-        <p>The derivatives of the activations and loss functions are very similar to the normal counter parts. Parts of the <code>dActivateLayer</code> and <code>dLossFunction</code> can be seen below:</p>
-        <p></p>
-        <pre class="fsharpcode" title="fsharp">let dActivateLayer (activation : Activation) (input : float list) : float list =
-    match activation with
-    | Sigmoid -&gt;
-        List.map (fun x -&gt; x * (1.0 - x)) input
-    | Relu -&gt;
-        List.map (fun x -&gt; if x &gt; 0.0 then 1.0 else 0.0) input
-
-let dLossFunction (loss : Loss) (n : int) : float -&gt; float -&gt; float =
-    match loss with
-    | MSE -&gt;
-    fun actual target -&gt;
-    (2.0 / (n |&gt; float)) * (actual - target) * -1.0
-    | MAE -&gt;
-    fun target actual -&gt;
-        if actual &gt; target then 1.0 else -1.0
-</pre>
-        <p></p>
-        <h4>Training</h4>
-        <p></p>
-        <p>Training the network is a fairly simple recursive function that continually picks a random sample of the data set and carries out forwards and backwards propagation using the sample for any number of iterations. A simplified version of the function (initialisation and printing etc. removed) can be seen below:</p>
-        <p></p>
-        <pre class="fsharpcode" title="fsharp">let rec train (parameters : Parameters) (model : Layer list) (maxIterations : int) (iterations : int) =
-    let idx = System.Random().Next(0, List.length targetOutputs)
-
-    let fullSingle =
-        forwardFull parameters inputs.[idx] architecture
-        |&gt; backPropFull architecture parameters targets.[idx] learningRate loss
-        |&gt; weightUpdate parameters
-
-    train fullSingle model maxIterations (iterations + 1)
-
-(* This is called like below *)
-train initial architecture iterations 0
-</pre>
-        <p></p>
-        <h3>Bugs</h3>
-        <p></p>
-        <p>Be careful with the chosen parameters. The networks can die easily if the chosen parameters cause weigths to overflow and become NaN, alternatively the network won’t learn the data set correctly.</p>
-        <p></p>
-        <h3>GitHub</h3>
-        <p></p>
-        <p>The full project can be viewed on <a href="https://github.com/joshjennings98/fsharp-neural-network">GitHub</a>.</p>
-        <div><a href="#f-neural-network">Back to top.</a></div>
-      </div>
-      <div class="homepage page" id="homepage">
-        <h2>About Me</h2>
-        <p>My name is Josh Jennings and I'm a backend software engineer at Arm. I work in the Online Tools Group where I help develop and maintain <a href="https://www.keil.arm.com/">keil.arm.com</a> as well as the backend services that power the <a href="https://studio.keil.arm.com/">Keil Studio Cloud</a> online IDE for embedded developers. My areas of expertise are in backend web development using Go and Python as well as the use of Kubernetes in orchestrating scalable cloud services.</p>
-        <ul>
-          <li>My GitHub is available <a href="https://github.com/joshjennings98">here</a>.</li>
-          <li>My LinkedIn is available <a href="https://www.linkedin.com/in/josh-jennings-41a17213a/">here</a>.</li>
-          <li>A copy of my CV is available <a href="CV-Josh-Jennings.html">here</a>.</li>
-          <li>I can be contacted via <a href="mailto:josh@joshj.dev">email</a>.</li>
-        </ul>
-        <p>This website is where I document my (mostly dumb) projects. It was made with no JavaScript, only HTML and CSS (you can read more about that <a href="#this-website">here</a>). You can toggle the theme between dark and light using the <label for="dark-mode" title="Toggle dark mode (if supported)" class="page-button"><u>Theme</u></label> button in the top left corner. This website is also single page, elements are hidden based on CSS rules. You can view the other pages at the links<span class="big">&nbsp;on the left</span><span class="small">&nbsp;at the top</span>.</p>
-       </div>
+</pre></div>
+<p>These match up with the labels specified earlier.</p>
+<h3>How it works</h3>
+<h4>Forward Propagation</h4>
+<p>A single forward propagation though a layer just involves multiplying the inputs to the layer with the layer weights (their dot product). After this, they are summed and the bias added before having the activation layer for that function applied.</p>
+<div class="preOuter">
+<pre><span style="background: linear-gradient(to right, white 0ch, #66d9ef 0ch, #66d9ef 4ch, white 4ch, white 29ch, #f92672 29ch, #f92672 30ch, #fd971f 30ch, #fd971f 36ch, white 36ch, white 47ch, #f92672 47ch, #f92672 48ch, #fd971f 48ch, #fd971f 64ch, white 64ch, white 74ch, #f92672 74ch, #f92672 75ch, #fd971f 75ch, #fd971f 86ch, white 86ch, white 100ch, #f92672 100ch, #f92672 101ch, white 101ch, white 114ch, #f92672 114ch, #f92672 115ch, #fd971f 115ch, #fd971f 126ch, white 126ch, white 127ch, #f92672 127ch, #f92672 128ch, white 128ch, white 300ch); -webkit-background-clip: text">let forwardSingleLayer (bias : float) (weights : float list list) (inputs : float list) (activation : Activation) : float list =</span>
+<span style="background: linear-gradient(to right, white 0ch, white 0ch, white 300ch); -webkit-background-clip: text">    weights</span>
+<span style="background: linear-gradient(to right, white 0ch, white 0ch, white 4ch, #f92672 4ch, #f92672 6ch, white 6ch, white 7ch, #7E7 7ch, #7E7 11ch, white 11ch, white 17ch, #7E7 17ch, #7E7 20ch, #fd971f 20ch, #fd971f 25ch, white 25ch, white 26ch, #f92672 26ch, #f92672 28ch, white 28ch, white 29ch, #7E7 29ch, #7E7 33ch, white 33ch, white 34ch, #A7C 34ch, #A7C 38ch, white 38ch, white 44ch, #fd971f 44ch, #fd971f 49ch, white 49ch, white 300ch); -webkit-background-clip: text">    |&gt; List.map (fun list -&gt; List.map2 ( * ) list inputs)</span>
+<span style="background: linear-gradient(to right, white 0ch, white 0ch, white 4ch, #f92672 4ch, #f92672 6ch, white 6ch, white 7ch, #7E7 7ch, #7E7 11ch, white 11ch, white 17ch, #7E7 17ch, #7E7 20ch, #fd971f 20ch, #fd971f 25ch, white 25ch, white 26ch, #f92672 26ch, #f92672 28ch, white 28ch, white 29ch, #7E7 29ch, #7E7 33ch, white 33ch, white 37ch, #fd971f 37ch, #fd971f 42ch, white 42ch, white 300ch); -webkit-background-clip: text">    |&gt; List.map (fun list -&gt; List.sum list + bias)</span>
+<span style="background: linear-gradient(to right, white 0ch, white 0ch, white 4ch, #f92672 4ch, #f92672 6ch, white 6ch, white 300ch); -webkit-background-clip: text">    |&gt; activateLayer activation</span>
+</pre></div>
+<p>The activateLayer function takes an activation and maps the corresponding activation function across the list before returning it. A small part of this function can be see below:</p>
+<div class="preOuter">
+<pre><span style="background: linear-gradient(to right, white 0ch, #66d9ef 0ch, #66d9ef 4ch, white 4ch, white 30ch, #f92672 30ch, #f92672 31ch, white 31ch, white 51ch, #f92672 51ch, #f92672 52ch, #fd971f 52ch, #fd971f 63ch, white 63ch, white 65ch, #f92672 65ch, #f92672 66ch, #fd971f 66ch, #fd971f 77ch, white 77ch, white 78ch, #f92672 78ch, #f92672 79ch, white 79ch, white 300ch); -webkit-background-clip: text">let activateLayer (activation : Activation) (input : float list) : float list =</span>
+<span style="background: linear-gradient(to right, white 0ch, white 0ch, white 3ch, #66d9ef 3ch, #66d9ef 10ch, white 10ch, white 300ch); -webkit-background-clip: text">    match activation with</span>
+<span style="background: linear-gradient(to right, white 0ch, white 0ch, white 4ch, #f92672 4ch, #f92672 5ch, white 5ch, white 14ch, #f92672 14ch, #f92672 16ch, white 16ch, white 300ch); -webkit-background-clip: text">    | Sigmoid -&gt;</span>
+<span style="background: linear-gradient(to right, white 0ch, white 0ch, white 8ch, #7E7 8ch, #7E7 12ch, white 12ch, white 18ch, #7E7 18ch, #7E7 21ch, white 21ch, white 24ch, #f92672 24ch, #f92672 26ch, white 26ch, white 27ch, #A7C 27ch, #A7C 30ch, white 30ch, white 34ch, #A7C 34ch, #A7C 37ch, white 37ch, white 300ch); -webkit-background-clip: text">        List.map (fun x -&gt; 1.0 / (1.0 + exp(-x))) input</span>
+<span style="background: linear-gradient(to right, white 0ch, white 0ch, white 4ch, #f92672 4ch, #f92672 5ch, white 5ch, white 11ch, #f92672 11ch, #f92672 13ch, white 13ch, white 300ch); -webkit-background-clip: text">    | Relu -&gt;</span>
+<span style="background: linear-gradient(to right, white 0ch, white 0ch, white 8ch, #7E7 8ch, #7E7 12ch, white 12ch, white 18ch, #7E7 18ch, #7E7 21ch, white 21ch, white 24ch, #f92672 24ch, #f92672 26ch, white 26ch, white 33ch, #A7C 33ch, #A7C 36ch, white 36ch, white 300ch); -webkit-background-clip: text">        List.map (fun x -&gt; max x 0.0) input</span>
+</pre></div>
+<p>The full forward propagation is slightly more complex. It first creates an empty list the size of the network. It folds though the epty list using the accumulator to store the intermediate activated and unactivated output of all layers. It then adds an extra layer containing only 1.0s to the end of the forward propagated output. This makes it easier when doing back propagation.</p>
+<div class="preOuter">
+<pre><span style="background: linear-gradient(to right, white 0ch, #66d9ef 0ch, #66d9ef 4ch, white 4ch, white 28ch, #f92672 28ch, #f92672 29ch, white 29ch, white 50ch, #f92672 50ch, #f92672 51ch, #fd971f 51ch, #fd971f 62ch, white 62ch, white 72ch, #f92672 72ch, #f92672 73ch, white 73ch, white 79ch, #fd971f 79ch, #fd971f 84ch, white 84ch, white 86ch, #f92672 86ch, #f92672 87ch, #fd971f 87ch, #fd971f 103ch, white 103ch, white 104ch, #f92672 104ch, #f92672 105ch, white 105ch, white 300ch); -webkit-background-clip: text">let forwardFull (parameters : Parameters) (inputs : float list) (layers : Layer list) : float list list =</span>
+<span style="background: linear-gradient(to right, white 0ch, white 0ch, white 4ch, #7E7 4ch, #7E7 8ch, white 8ch, white 300ch); -webkit-background-clip: text">    List.init layers.Length id</span>
+<span style="background: linear-gradient(to right, white 0ch, white 0ch, white 4ch, #f92672 4ch, #f92672 6ch, white 6ch, white 7ch, #7E7 7ch, #7E7 11ch, white 11ch, white 18ch, #7E7 18ch, #7E7 21ch, white 21ch, white 27ch, #f92672 27ch, #f92672 28ch, #fd971f 28ch, #fd971f 44ch, white 44ch, white 52ch, #f92672 52ch, #f92672 54ch, white 54ch, white 300ch); -webkit-background-clip: text">    |&gt; List.fold (fun (acc : float list list) index -&gt;</span>
+<span style="background: linear-gradient(to right, white 0ch, white 0ch, white 7ch, #66d9ef 7ch, #66d9ef 12ch, white 12ch, white 40ch, #f92672 40ch, #f92672 41ch, white 41ch, white 300ch); -webkit-background-clip: text">        let biases, weights, activation =</span>
+<span style="background: linear-gradient(to right, white 0ch, white 0ch, white 300ch); -webkit-background-clip: text">            parameters.biases.[index], parameters.weights.[index], layers.[index].activation</span>
+<span style="background: linear-gradient(to right, white 0ch, white 0ch, white 48ch, #A7C 48ch, #A7C 49ch, white 49ch, white 63ch, #f92672 63ch, #f92672 64ch, white 64ch, white 300ch); -webkit-background-clip: text">        [forwardSingleLayer biases weights acc.[0] activation] @ acc)</span>
+<span style="background: linear-gradient(to right, white 0ch, white 0ch, white 300ch); -webkit-background-clip: text">            [inputs]</span>
+<span style="background: linear-gradient(to right, white 0ch, white 0ch, white 4ch, #f92672 4ch, #f92672 6ch, white 6ch, white 7ch, #7E7 7ch, #7E7 11ch, white 11ch, white 20ch, #7E7 20ch, #7E7 24ch, white 24ch, white 31ch, #7E7 31ch, #7E7 35ch, white 35ch, white 59ch, #fd971f 59ch, #fd971f 65ch, white 65ch, white 300ch); -webkit-background-clip: text">    |&gt; List.append [List.init (List.last layers).outputDims float]</span>
+</pre></div>
+<h4>Calculating Error</h4>
+<p>To calculate the error in the output, the output of forward propagation and the target output are passed to a function that calculated the loss.</p>
+<div class="preOuter">
+<pre><span style="background: linear-gradient(to right, white 0ch, #66d9ef 0ch, #66d9ef 4ch, white 4ch, white 35ch, #f92672 35ch, #f92672 36ch, #fd971f 36ch, #fd971f 47ch, white 47ch, white 64ch, #f92672 64ch, #f92672 65ch, #fd971f 65ch, #fd971f 76ch, white 76ch, white 84ch, #f92672 84ch, #f92672 85ch, white 85ch, white 92ch, #f92672 92ch, #f92672 93ch, #fd971f 93ch, #fd971f 99ch, white 99ch, white 100ch, #f92672 100ch, #f92672 101ch, white 101ch, white 300ch); -webkit-background-clip: text">let getOverallError (targetOutputs : float list) (actualOutputs : float list) (loss : Loss) : float =</span>
+<span style="background: linear-gradient(to right, white 0ch, white 0ch, white 300ch); -webkit-background-clip: text">    actualOutputs</span>
+<span style="background: linear-gradient(to right, white 0ch, white 0ch, white 4ch, #f92672 4ch, #f92672 6ch, white 6ch, white 7ch, #7E7 7ch, #7E7 11ch, white 11ch, white 12ch, #A7C 12ch, #A7C 16ch, white 16ch, white 300ch); -webkit-background-clip: text">    |&gt; List.map2 (lossFunction loss targetOutputs.Length) targetOutputs</span>
+<span style="background: linear-gradient(to right, white 0ch, white 0ch, white 4ch, #f92672 4ch, #f92672 6ch, white 6ch, white 7ch, #7E7 7ch, #7E7 11ch, white 11ch, white 300ch); -webkit-background-clip: text">    |&gt; List.sum</span>
+</pre></div>
+<p>Similarly to the activation functions, the loss functions are supplied using pattern matching In this case however, they return a function that can be applied wherever the particular value required instead of taking an returning a list. Part of lossFunction can be seen below:</p>
+<div class="preOuter">
+<pre><span style="background: linear-gradient(to right, white 0ch, #66d9ef 0ch, #66d9ef 4ch, white 4ch, white 23ch, #f92672 23ch, #f92672 24ch, white 24ch, white 34ch, #f92672 34ch, #f92672 35ch, #fd971f 35ch, #fd971f 39ch, white 39ch, white 41ch, #f92672 41ch, #f92672 42ch, #fd971f 42ch, #fd971f 48ch, white 48ch, white 49ch, #f92672 49ch, #f92672 51ch, #fd971f 51ch, #fd971f 57ch, white 57ch, white 58ch, #f92672 58ch, #f92672 60ch, #fd971f 60ch, #fd971f 66ch, white 66ch, white 67ch, #f92672 67ch, #f92672 68ch, white 68ch, white 300ch); -webkit-background-clip: text">let lossFunction (loss : Loss) (n : int) : float -&gt; float -&gt; float =</span>
+<span style="background: linear-gradient(to right, white 0ch, white 0ch, white 3ch, #66d9ef 3ch, #66d9ef 10ch, white 10ch, white 300ch); -webkit-background-clip: text">    match loss with</span>
+<span style="background: linear-gradient(to right, white 0ch, white 0ch, white 4ch, #f92672 4ch, #f92672 5ch, white 5ch, white 10ch, #f92672 10ch, #f92672 12ch, white 12ch, white 300ch); -webkit-background-clip: text">    | MSE -&gt;</span>
+<span style="background: linear-gradient(to right, white 0ch, white 0ch, white 7ch, #78dce8 7ch, #78dce8 12ch, white 12ch, white 26ch, #f92672 26ch, #f92672 28ch, white 28ch, white 300ch); -webkit-background-clip: text">        fun actual target -&gt;</span>
+<span style="background: linear-gradient(to right, white 0ch, white 0ch, white 13ch, #A7C 13ch, #A7C 16ch, white 16ch, white 22ch, #f92672 22ch, #f92672 24ch, #fd971f 24ch, #fd971f 30ch, white 30ch, white 56ch, #A7C 56ch, #A7C 57ch, white 57ch, white 300ch); -webkit-background-clip: text">            (1.0 / (n |&gt; float)) * (actual - target) ** 2.0</span>
+<span style="background: linear-gradient(to right, white 0ch, white 0ch, white 4ch, #f92672 4ch, #f92672 5ch, white 5ch, white 10ch, #f92672 10ch, #f92672 12ch, white 12ch, white 300ch); -webkit-background-clip: text">    | MAE -&gt;</span>
+<span style="background: linear-gradient(to right, white 0ch, white 0ch, white 7ch, #78dce8 7ch, #78dce8 12ch, white 12ch, white 26ch, #f92672 26ch, #f92672 28ch, white 28ch, white 300ch); -webkit-background-clip: text">        fun actual target -&gt;</span>
+<span style="background: linear-gradient(to right, white 0ch, white 0ch, white 13ch, #A7C 13ch, #A7C 16ch, white 16ch, white 22ch, #f92672 22ch, #f92672 24ch, #fd971f 24ch, #fd971f 30ch, white 30ch, white 300ch); -webkit-background-clip: text">            (1.0 / (n |&gt; float)) * (abs (actual - target))</span>
+</pre></div>
+<h4>Back Propagation</h4>
+<p>Back propagation is more complex than the forward version. We first calculate the intermidate output sums. For the output layer, the only thing that needs to be done is for the derivatve of the loss function to applied to the outputs. For the hidden layers, the individual deltas for each node in the previous layer are found. Afterwards, the layer weights are taken and multiplied by their corresponding deltas. The values coming into each node are then summed.</p>
+<p>The new weights are then calculated. This is simpler. The derivative of the activation function is found and then multiplied by the corresponding output delta sum. This is then multipliued by the output od of the previous layer resulting in a value corresponding to <code>learningRate <i> delta </i> outPrev</code>. This value is then subtracted from the corresponding weight as back propagation is defined.</p>
+<p>The new weights and intermediate output deltas are then returned.</p>
+<div class="preOuter">
+<pre><span style="background: linear-gradient(to right, white 0ch, #66d9ef 0ch, #66d9ef 4ch, white 4ch, white 39ch, #f92672 39ch, #f92672 40ch, #fd971f 40ch, #fd971f 51ch, white 51ch, white 59ch, #f92672 59ch, #f92672 60ch, white 60ch, white 81ch, #f92672 81ch, #f92672 82ch, #fd971f 82ch, #fd971f 88ch, white 88ch, white 104ch, #f92672 104ch, #f92672 105ch, #fd971f 105ch, #fd971f 116ch, white 116ch, white 130ch, #f92672 130ch, #f92672 131ch, #fd971f 131ch, #fd971f 135ch, white 135ch, white 155ch, #f92672 155ch, #f92672 156ch, #fd971f 156ch, #fd971f 172ch, white 172ch, white 186ch, #f92672 186ch, #f92672 187ch, #fd971f 187ch, #fd971f 208ch, white 208ch, white 218ch, #f92672 218ch, #f92672 219ch, white 219ch, white 225ch, #fd971f 225ch, #fd971f 230ch, white 230ch, white 232ch, #f92672 232ch, #f92672 233ch, #fd971f 233ch, #fd971f 249ch, white 249ch, white 251ch, #fd971f 251ch, #fd971f 262ch, white 262ch, white 263ch, #f92672 263ch, #f92672 264ch, white 264ch, white 300ch); -webkit-background-clip: text">let backPropSingleLayer (targetOutputs : float list) (loss : Loss) (learningRate : float) (backPropPart : float list) (layerIndex : int) (forwardPropParts : float list list) (allWeights : float list list list) (layers : Layer list) : float list list * float list =</span>
+<span style="background: linear-gradient(to right, white 0ch, white 0ch, white 3ch, #66d9ef 3ch, #66d9ef 8ch, white 8ch, white 35ch, #f92672 35ch, #f92672 36ch, white 36ch, white 300ch); -webkit-background-clip: text">    let intermediateOutputDeltaSum =</span>
+<span style="background: linear-gradient(to right, white 0ch, white 0ch, white 7ch, #78dce8 7ch, #78dce8 11ch, white 11ch, white 22ch, #f92672 22ch, #f92672 23ch, white 23ch, white 300ch); -webkit-background-clip: text">        if layerIndex = 0</span>
+<span style="background: linear-gradient(to right, white 0ch, white 0ch, white 7ch, #78dce8 7ch, #78dce8 13ch, lightgrey 13ch, lightgrey 31ch, white 31ch, white 300ch); -webkit-background-clip: text">        then (* Output layer *)</span>
+<span style="background: linear-gradient(to right, white 0ch, white 0ch, white 43ch, #A7C 43ch, #A7C 44ch, white 44ch, white 300ch); -webkit-background-clip: text">            forwardPropParts.[layerIndex + 1]</span>
+<span style="background: linear-gradient(to right, white 0ch, white 0ch, white 12ch, #f92672 12ch, #f92672 14ch, white 14ch, white 15ch, #7E7 15ch, #7E7 19ch, white 19ch, white 20ch, #A7C 20ch, #A7C 24ch, white 24ch, white 300ch); -webkit-background-clip: text">            |&gt; List.map2 (dLossFunction loss targetOutputs.Length) backPropPart</span>
+<span style="background: linear-gradient(to right, white 0ch, white 0ch, white 7ch, #78dce8 7ch, #78dce8 13ch, lightgrey 13ch, lightgrey 32ch, white 32ch, white 300ch); -webkit-background-clip: text">        else (* Hidden layers *)</span>
+<span style="background: linear-gradient(to right, white 0ch, white 0ch, white 12ch, #7E7 12ch, #7E7 16ch, white 16ch, white 53ch, #A7C 53ch, #A7C 54ch, white 54ch, white 64ch, #7E7 64ch, #7E7 67ch, white 67ch, white 70ch, #f92672 70ch, #f92672 72ch, white 72ch, white 300ch); -webkit-background-clip: text">            List.init forwardPropParts.[layerIndex + 1].Length (fun _ -&gt;</span>
+<span style="background: linear-gradient(to right, white 0ch, white 0ch, white 300ch); -webkit-background-clip: text">                forwardPropParts.[layerIndex]</span>
+<span style="background: linear-gradient(to right, white 0ch, white 0ch, white 16ch, #f92672 16ch, #f92672 18ch, white 18ch, white 55ch, #A7C 55ch, #A7C 56ch, white 56ch, white 300ch); -webkit-background-clip: text">                |&gt; dActivateLayer layers.[layerIndex - 1].activation</span>
+<span style="background: linear-gradient(to right, white 0ch, white 0ch, white 16ch, #f92672 16ch, #f92672 18ch, white 18ch, white 19ch, #7E7 19ch, #7E7 23ch, white 23ch, white 24ch, #A7C 24ch, #A7C 28ch, white 28ch, white 300ch); -webkit-background-clip: text">                |&gt; List.map2 ( * ) backPropPart)</span>
+<span style="background: linear-gradient(to right, white 0ch, white 0ch, white 12ch, #f92672 12ch, #f92672 14ch, white 14ch, white 15ch, #7E7 15ch, #7E7 19ch, white 19ch, white 26ch, #7E7 26ch, #7E7 29ch, white 29ch, white 30ch, #A7C 30ch, #A7C 36ch, white 36ch, white 44ch, #f92672 44ch, #f92672 46ch, white 46ch, white 300ch); -webkit-background-clip: text">            |&gt; List.mapi (fun index1 deltas -&gt;</span>
+<span style="background: linear-gradient(to right, white 0ch, white 0ch, white 300ch); -webkit-background-clip: text">                allWeights.[layerIndex]</span>
+<span style="background: linear-gradient(to right, white 0ch, white 0ch, white 16ch, #f92672 16ch, #f92672 18ch, white 18ch, white 19ch, #7E7 19ch, #7E7 23ch, white 23ch, white 30ch, #7E7 30ch, #7E7 33ch, white 33ch, white 34ch, #A7C 34ch, #A7C 40ch, white 40ch, white 49ch, #f92672 49ch, #f92672 51ch, white 51ch, white 61ch, #A7C 61ch, #A7C 67ch, white 67ch, white 79ch, #A7C 79ch, #A7C 85ch, white 85ch, white 300ch); -webkit-background-clip: text">                |&gt; List.mapi (fun index2 weights -&gt; weights.[index1] * deltas.[index2]))</span>
+<span style="background: linear-gradient(to right, white 0ch, white 0ch, white 12ch, #f92672 12ch, #f92672 14ch, white 14ch, white 15ch, #7E7 15ch, #7E7 19ch, white 19ch, white 24ch, #7E7 24ch, #7E7 28ch, white 28ch, white 300ch); -webkit-background-clip: text">            |&gt; List.map List.sum</span>
+<span style="background: linear-gradient(to right, white 0ch, white 0ch, white 3ch, #66d9ef 3ch, #66d9ef 8ch, white 8ch, white 19ch, #f92672 19ch, #f92672 20ch, white 20ch, white 300ch); -webkit-background-clip: text">    let newWeights =</span>
+<span style="background: linear-gradient(to right, white 0ch, white 0ch, white 39ch, #A7C 39ch, #A7C 40ch, white 40ch, white 300ch); -webkit-background-clip: text">        forwardPropParts.[layerIndex + 1]</span>
+<span style="background: linear-gradient(to right, white 0ch, white 0ch, white 8ch, #f92672 8ch, #f92672 10ch, white 10ch, white 300ch); -webkit-background-clip: text">        |&gt; dActivateLayer layers.[layerIndex].activation</span>
+<span style="background: linear-gradient(to right, white 0ch, white 0ch, white 8ch, #f92672 8ch, #f92672 10ch, white 10ch, white 11ch, #7E7 11ch, #7E7 15ch, white 15ch, white 16ch, #A7C 16ch, #A7C 20ch, white 20ch, white 26ch, #fd971f 26ch, #fd971f 30ch, white 30ch, white 300ch); -webkit-background-clip: text">        |&gt; List.map2 ( * ) intermediateOutputDeltaSum</span>
+<span style="background: linear-gradient(to right, white 0ch, white 0ch, white 8ch, #f92672 8ch, #f92672 10ch, white 10ch, white 11ch, #7E7 11ch, #7E7 15ch, white 15ch, white 21ch, #7E7 21ch, #7E7 24ch, white 24ch, white 31ch, #f92672 31ch, #f92672 33ch, white 33ch, white 300ch); -webkit-background-clip: text">        |&gt; List.map (fun delta -&gt;</span>
+<span style="background: linear-gradient(to right, white 0ch, white 0ch, white 43ch, #A7C 43ch, #A7C 44ch, white 44ch, white 300ch); -webkit-background-clip: text">            forwardPropParts.[layerIndex + 2]</span>
+<span style="background: linear-gradient(to right, white 0ch, white 0ch, white 12ch, #f92672 12ch, #f92672 14ch, white 14ch, white 15ch, #7E7 15ch, #7E7 19ch, white 19ch, white 25ch, #7E7 25ch, #7E7 28ch, white 28ch, white 33ch, #f92672 33ch, #f92672 35ch, white 35ch, white 300ch); -webkit-background-clip: text">            |&gt; List.map (fun out -&gt; learningRate * delta * out))</span>
+<span style="background: linear-gradient(to right, white 0ch, white 0ch, white 8ch, #f92672 8ch, #f92672 10ch, white 10ch, white 11ch, #7E7 11ch, #7E7 15ch, white 15ch, white 16ch, #A7C 16ch, #A7C 20ch, white 20ch, white 22ch, #7E7 22ch, #7E7 26ch, white 26ch, white 27ch, #A7C 27ch, #A7C 31ch, white 31ch, white 62ch, #A7C 62ch, #A7C 63ch, white 63ch, white 300ch); -webkit-background-clip: text">        |&gt; List.map2 (List.map2 (-)) allWeights.[layerIndex + 1]</span>
+<span style="background: linear-gradient(to right, white 0ch, white 0ch, white 15ch, #fd971f 15ch, #fd971f 19ch, white 19ch, white 300ch); -webkit-background-clip: text">    newWeights, intermediateOutputDeltaSum</span>
+</pre></div>
+<p>The full back propagation invloved first reversing the parameters. This makes it easier to work on as we start from the final layer and work towards the input.</p>
+<p>The next step is to fold through the network from the outer layer and calculate all the new values for each weight using <code>backPropSingleLayer</code>. This is then added to a list containing each layer and acts as the accumulator.</p>
+<div class="preOuter">
+<pre><span style="background: linear-gradient(to right, white 0ch, #66d9ef 0ch, #66d9ef 4ch, white 4ch, white 25ch, #f92672 25ch, #f92672 26ch, white 26ch, white 32ch, #fd971f 32ch, #fd971f 37ch, white 37ch, white 51ch, #f92672 51ch, #f92672 52ch, white 52ch, white 80ch, #f92672 80ch, #f92672 81ch, #fd971f 81ch, #fd971f 97ch, white 97ch, white 113ch, #f92672 113ch, #f92672 114ch, #fd971f 114ch, #fd971f 120ch, white 120ch, white 128ch, #f92672 128ch, #f92672 129ch, white 129ch, white 154ch, #f92672 154ch, #f92672 155ch, #fd971f 155ch, #fd971f 171ch, white 171ch, white 173ch, #f92672 173ch, #f92672 174ch, white 174ch, white 181ch, #fd971f 181ch, #fd971f 191ch, white 191ch, white 193ch, #fd971f 193ch, #fd971f 204ch, white 204ch, white 205ch, #fd971f 205ch, #fd971f 210ch, white 210ch, white 211ch, #f92672 211ch, #f92672 212ch, white 212ch, white 300ch); -webkit-background-clip: text">let backPropFull (layers : Layer list) (parameters : Parameters) (targetOutputs : float list list) (learningRate : float) (loss : Loss) (forwardPropParts : float list list) : (float list list * float list) list =</span>
+<span style="background: linear-gradient(to right, white 0ch, white 0ch, white 3ch, #66d9ef 3ch, #66d9ef 8ch, white 8ch, white 16ch, #f92672 16ch, #f92672 17ch, white 17ch, white 300ch); -webkit-background-clip: text">    let weights =</span>
+<span style="background: linear-gradient(to right, white 0ch, white 0ch, white 8ch, #7E7 8ch, #7E7 12ch, white 12ch, white 300ch); -webkit-background-clip: text">        List.rev parameters.weights</span>
+<span style="background: linear-gradient(to right, white 0ch, white 0ch, white 4ch, #7E7 4ch, #7E7 8ch, white 8ch, white 300ch); -webkit-background-clip: text">    List.init (layers.Length) id</span>
+<span style="background: linear-gradient(to right, white 0ch, white 0ch, white 4ch, #f92672 4ch, #f92672 6ch, white 6ch, white 7ch, #7E7 7ch, #7E7 11ch, white 11ch, white 18ch, #7E7 18ch, #7E7 21ch, white 21ch, white 32ch, #f92672 32ch, #f92672 34ch, white 34ch, white 300ch); -webkit-background-clip: text">    |&gt; List.fold (fun acc index -&gt;</span>
+<span style="background: linear-gradient(to right, white 0ch, white 0ch, white 7ch, #66d9ef 7ch, #66d9ef 12ch, white 12ch, white 26ch, #f92672 26ch, #f92672 27ch, white 27ch, white 300ch); -webkit-background-clip: text">        let targetOutputs =</span>
+<span style="background: linear-gradient(to right, white 0ch, white 0ch, white 17ch, #A7C 17ch, #A7C 18ch, white 18ch, white 300ch); -webkit-background-clip: text">            acc.[0]</span>
+<span style="background: linear-gradient(to right, white 0ch, white 0ch, white 12ch, #f92672 12ch, #f92672 14ch, white 14ch, white 300ch); -webkit-background-clip: text">            |&gt; fst</span>
+<span style="background: linear-gradient(to right, white 0ch, white 0ch, white 12ch, #f92672 12ch, #f92672 14ch, white 14ch, white 15ch, #7E7 15ch, #7E7 19ch, white 19ch, white 24ch, #7E7 24ch, #7E7 28ch, white 28ch, white 300ch); -webkit-background-clip: text">            |&gt; List.map List.sum</span>
+<span style="background: linear-gradient(to right, white 0ch, white 0ch, white 7ch, #66d9ef 7ch, #66d9ef 12ch, white 12ch, white 25ch, #f92672 25ch, #f92672 26ch, white 26ch, white 36ch, #A7C 36ch, #A7C 37ch, white 37ch, white 300ch); -webkit-background-clip: text">        let backPropPart = snd acc.[0]</span>
+<span style="background: linear-gradient(to right, white 0ch, white 0ch, white 7ch, #66d9ef 7ch, #66d9ef 12ch, white 12ch, white 27ch, #f92672 27ch, #f92672 28ch, white 28ch, white 300ch); -webkit-background-clip: text">        let backPropOutput =</span>
+<span style="background: linear-gradient(to right, white 0ch, white 0ch, white 300ch); -webkit-background-clip: text">            backPropSingleLayer targetOutputs loss learningRate backPropPart index forwardPropParts weights layers</span>
+<span style="background: linear-gradient(to right, white 0ch, white 0ch, white 25ch, #f92672 25ch, #f92672 26ch, white 26ch, white 300ch); -webkit-background-clip: text">        [backPropOutput] @ acc)</span>
+<span style="background: linear-gradient(to right, white 0ch, white 0ch, white 29ch, #7E7 29ch, #7E7 33ch, white 33ch, white 300ch); -webkit-background-clip: text">            [targetOutputs, (List.concat targetOutputs)]</span>
+</pre></div>
+<p>The derivatives of the activations and loss functions are very similar to the normal counter parts. Parts of the <code>dActivateLayer</code> and <code>dLossFunction</code> can be seen below:</p>
+<div class="preOuter">
+<pre><span style="background: linear-gradient(to right, white 0ch, #66d9ef 0ch, #66d9ef 4ch, white 4ch, white 31ch, #f92672 31ch, #f92672 32ch, white 32ch, white 52ch, #f92672 52ch, #f92672 53ch, #fd971f 53ch, #fd971f 64ch, white 64ch, white 66ch, #f92672 66ch, #f92672 67ch, #fd971f 67ch, #fd971f 78ch, white 78ch, white 79ch, #f92672 79ch, #f92672 80ch, white 80ch, white 300ch); -webkit-background-clip: text">let dActivateLayer (activation : Activation) (input : float list) : float list =</span>
+<span style="background: linear-gradient(to right, white 0ch, white 0ch, white 3ch, #66d9ef 3ch, #66d9ef 10ch, white 10ch, white 300ch); -webkit-background-clip: text">    match activation with</span>
+<span style="background: linear-gradient(to right, white 0ch, white 0ch, white 4ch, #f92672 4ch, #f92672 5ch, white 5ch, white 14ch, #f92672 14ch, #f92672 16ch, white 16ch, white 300ch); -webkit-background-clip: text">    | Sigmoid -&gt;</span>
+<span style="background: linear-gradient(to right, white 0ch, white 0ch, white 8ch, #7E7 8ch, #7E7 12ch, white 12ch, white 18ch, #7E7 18ch, #7E7 21ch, white 21ch, white 24ch, #f92672 24ch, #f92672 26ch, white 26ch, white 32ch, #A7C 32ch, #A7C 35ch, white 35ch, white 300ch); -webkit-background-clip: text">        List.map (fun x -&gt; x * (1.0 - x)) input</span>
+<span style="background: linear-gradient(to right, white 0ch, white 0ch, white 4ch, #f92672 4ch, #f92672 5ch, white 5ch, white 11ch, #f92672 11ch, #f92672 13ch, white 13ch, white 300ch); -webkit-background-clip: text">    | Relu -&gt;</span>
+<span style="background: linear-gradient(to right, white 0ch, white 0ch, white 8ch, #7E7 8ch, #7E7 12ch, white 12ch, white 18ch, #7E7 18ch, #7E7 21ch, white 21ch, white 24ch, #f92672 24ch, #f92672 26ch, #78dce8 26ch, #78dce8 30ch, white 30ch, white 32ch, #f92672 32ch, #f92672 33ch, white 33ch, white 34ch, #A7C 34ch, #A7C 37ch, #78dce8 37ch, #78dce8 43ch, #A7C 43ch, #A7C 46ch, #78dce8 46ch, #78dce8 52ch, #A7C 52ch, #A7C 55ch, white 55ch, white 300ch); -webkit-background-clip: text">        List.map (fun x -&gt; if x &gt; 0.0 then 1.0 else 0.0) input</span>
+<span style="background: linear-gradient(to right, white 0ch, #66d9ef 0ch, #66d9ef 4ch, white 4ch, white 24ch, #f92672 24ch, #f92672 25ch, white 25ch, white 35ch, #f92672 35ch, #f92672 36ch, #fd971f 36ch, #fd971f 40ch, white 40ch, white 42ch, #f92672 42ch, #f92672 43ch, #fd971f 43ch, #fd971f 49ch, white 49ch, white 50ch, #f92672 50ch, #f92672 52ch, #fd971f 52ch, #fd971f 58ch, white 58ch, white 59ch, #f92672 59ch, #f92672 61ch, #fd971f 61ch, #fd971f 67ch, white 67ch, white 68ch, #f92672 68ch, #f92672 69ch, white 69ch, white 300ch); -webkit-background-clip: text">let dLossFunction (loss : Loss) (n : int) : float -&gt; float -&gt; float =</span>
+<span style="background: linear-gradient(to right, white 0ch, white 0ch, white 3ch, #66d9ef 3ch, #66d9ef 10ch, white 10ch, white 300ch); -webkit-background-clip: text">    match loss with</span>
+<span style="background: linear-gradient(to right, white 0ch, white 0ch, white 4ch, #f92672 4ch, #f92672 5ch, white 5ch, white 10ch, #f92672 10ch, #f92672 12ch, white 12ch, white 300ch); -webkit-background-clip: text">    | MSE -&gt;</span>
+<span style="background: linear-gradient(to right, white 0ch, white 0ch, white 3ch, #78dce8 3ch, #78dce8 8ch, white 8ch, white 22ch, #f92672 22ch, #f92672 24ch, white 24ch, white 300ch); -webkit-background-clip: text">    fun actual target -&gt;</span>
+<span style="background: linear-gradient(to right, white 0ch, white 0ch, white 5ch, #A7C 5ch, #A7C 8ch, white 8ch, white 14ch, #f92672 14ch, #f92672 16ch, #fd971f 16ch, #fd971f 22ch, white 22ch, white 48ch, #A7C 48ch, #A7C 49ch, white 49ch, white 300ch); -webkit-background-clip: text">    (2.0 / (n |&gt; float)) * (actual - target) * -1.0</span>
+<span style="background: linear-gradient(to right, white 0ch, white 0ch, white 4ch, #f92672 4ch, #f92672 5ch, white 5ch, white 10ch, #f92672 10ch, #f92672 12ch, white 12ch, white 300ch); -webkit-background-clip: text">    | MAE -&gt;</span>
+<span style="background: linear-gradient(to right, white 0ch, white 0ch, white 3ch, #78dce8 3ch, #78dce8 8ch, white 8ch, white 22ch, #f92672 22ch, #f92672 24ch, white 24ch, white 300ch); -webkit-background-clip: text">    fun target actual -&gt;</span>
+<span style="background: linear-gradient(to right, white 0ch, white 0ch, white 7ch, #78dce8 7ch, #78dce8 11ch, white 11ch, white 18ch, #f92672 18ch, #f92672 19ch, white 19ch, white 26ch, #78dce8 26ch, #78dce8 32ch, #A7C 32ch, #A7C 35ch, #78dce8 35ch, #78dce8 41ch, white 41ch, white 42ch, #A7C 42ch, #A7C 43ch, white 43ch, white 300ch); -webkit-background-clip: text">        if actual &gt; target then 1.0 else -1.0</span>
+</pre></div>
+<h4>Training</h4>
+<p>Training the network is a fairly simple recursive function that continually picks a random sample of the data set and carries out forwards and backwards propagation using the sample for any number of iterations. A simplified version of the function (initialisation and printing etc. removed) can be seen below:</p>
+<div class="preOuter">
+<pre><span style="background: linear-gradient(to right, white 0ch, #66d9ef 0ch, #66d9ef 4ch, white 4ch, white 26ch, #f92672 26ch, #f92672 27ch, white 27ch, white 47ch, #f92672 47ch, #f92672 48ch, white 48ch, white 54ch, #fd971f 54ch, #fd971f 59ch, white 59ch, white 76ch, #f92672 76ch, #f92672 77ch, #fd971f 77ch, #fd971f 81ch, white 81ch, white 95ch, #f92672 95ch, #f92672 96ch, #fd971f 96ch, #fd971f 100ch, white 100ch, white 102ch, #f92672 102ch, #f92672 103ch, white 103ch, white 300ch); -webkit-background-clip: text">let rec train (parameters : Parameters) (model : Layer list) (maxIterations : int) (iterations : int) =</span>
+<span style="background: linear-gradient(to right, white 0ch, white 0ch, white 3ch, #66d9ef 3ch, #66d9ef 8ch, white 8ch, white 12ch, #f92672 12ch, #f92672 13ch, white 13ch, white 14ch, #fd971f 14ch, #fd971f 27ch, white 27ch, white 35ch, #A7C 35ch, #A7C 36ch, white 36ch, white 38ch, #7E7 38ch, #7E7 42ch, white 42ch, white 300ch); -webkit-background-clip: text">    let idx = System.Random().Next(0, List.length targetOutputs)</span>
+<span style="background: linear-gradient(to right, white 0ch, white 0ch, white 3ch, #66d9ef 3ch, #66d9ef 8ch, white 8ch, white 19ch, #f92672 19ch, #f92672 20ch, white 20ch, white 300ch); -webkit-background-clip: text">    let fullSingle =</span>
+<span style="background: linear-gradient(to right, white 0ch, white 0ch, white 300ch); -webkit-background-clip: text">        forwardFull parameters inputs.[idx] architecture</span>
+<span style="background: linear-gradient(to right, white 0ch, white 0ch, white 8ch, #f92672 8ch, #f92672 10ch, white 10ch, white 300ch); -webkit-background-clip: text">        |&gt; backPropFull architecture parameters targets.[idx] learningRate loss</span>
+<span style="background: linear-gradient(to right, white 0ch, white 0ch, white 8ch, #f92672 8ch, #f92672 10ch, white 10ch, white 300ch); -webkit-background-clip: text">        |&gt; weightUpdate parameters</span>
+<span style="background: linear-gradient(to right, white 0ch, white 0ch, white 55ch, #A7C 55ch, #A7C 56ch, white 56ch, white 300ch); -webkit-background-clip: text">    train fullSingle model maxIterations (iterations + 1)</span>
+<span style="background: linear-gradient(to right, white 0ch, lightgrey 0ch, lightgrey 31ch, white 31ch, white 300ch); -webkit-background-clip: text">(* This is called like below *)</span>
+<span style="background: linear-gradient(to right, white 0ch, white 0ch, white 38ch, #A7C 38ch, #A7C 39ch, white 39ch, white 300ch); -webkit-background-clip: text">train initial architecture iterations 0</span>
+</pre></div>
+<h3>Bugs</h3>
+<p>Be careful with the chosen parameters. The networks can die easily if the chosen parameters cause weigths to overflow and become NaN, alternatively the network won’t learn the data set correctly.</p>
+<h3>GitHub</h3>
+<p>The full project can be viewed on <a href="https://github.com/joshjennings98/fsharp-neural-network">GitHub</a>.</p>
+<div class="bottom"><a href="#fsharp-neural-network">Back to top.</a></div></div>
+    <div class="homepage page" id="homepage">
+<h2>About Me</h2>
+<p>My name is Josh Jennings and I'm a backend software engineer at Arm. I work in the Online Tools Group where I help develop and maintain <a href="https://www.keil.arm.com/">keil.arm.com</a> as well as the backend services that power the <a href="https://studio.keil.arm.com/">Keil Studio Cloud</a> online IDE for embedded developers. My areas of expertise are in backend web development using Go and Python as well as the use of Kubernetes in orchestrating scalable cloud services.</p>
+<ul>
+<li>My GitHub is available <a href="https://github.com/joshjennings98">here</a>.</li>
+<li>My LinkedIn is available <a href="https://www.linkedin.com/in/josh-jennings-41a17213a/">here</a>.</li>
+<li>A copy of my CV is available <a href="CV-Josh-Jennings.html">here</a>.</li>
+<li>I can be contacted via <a href="mailto:josh@joshj.dev">email</a>.</li>
+</ul>
+<p>This website is where I document my (mostly dumb) projects. It was made with no JavaScript, only HTML and CSS (you can read more about that <a href="#website">here</a>). You can toggle the theme between dark and light using the <label for="dark-mode" title="Toggle dark mode (if supported)" class="page-button"><u>Theme</u></label> button. This website is also single page, elements are hidden based on CSS rules. You can view the other pages via the links at the top.</p>
+</div>
     </div>
-  </div>
+  </section>
+  <section class="lighth">
+    <section class="lightv"></section>
+  </section>
+</div>
 </body>
+</html>
