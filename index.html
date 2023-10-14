@@ -347,14 +347,16 @@ nav a:hover,
   justify-content: flex-end;
 }
   
-.toggle:hover { 
-  background-color: var(--c-alternative); 
-  cursor: pointer; 
-    user-select: none;
-   text-decoration: underline;
-  text-decoration-thickness: 2px;
-    text-decoration-color: var(--c-dark-background);
-  text-underline-offset: 5px;
+@media not all and (pointer: coarse) { /* no hover on touch devices */
+  .toggle:hover { 
+    background-color: var(--c-alternative); 
+    cursor: pointer; 
+      user-select: none;
+     text-decoration: underline;
+    text-decoration-thickness: 2px;
+      text-decoration-color: var(--c-dark-background);
+    text-underline-offset: 5px;
+  }
 }
 
 #menu {
