@@ -328,13 +328,15 @@ nav a:hover,
  user-select: none;
   }
   
-nav a:hover, nav label:hover {
- text-decoration: underline;
-  text-decoration-thickness: 2px;
-    text-decoration-color: var(--c-dark-background);
-  text-underline-offset: 5px;
+@media not all and (pointer: coarse) { /* no hover on touch devices */
+  nav a:hover, nav label:hover {
+   text-decoration: underline;
+    text-decoration-thickness: 2px;
+      text-decoration-color: var(--c-dark-background);
+    text-underline-offset: 5px;
+  }
 }
-  
+ 
 .toggle {
   display: inline-flex;
   padding: 0 20px;
