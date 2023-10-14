@@ -102,13 +102,15 @@ body {
   width: 250%;
   perspective: 100px;
   max-height: 300px;  
+  min-height: 300px;
   overflow: hidden;
 }
 
 /* max height will be either 300px or if that is greater than 20% then 20% */
 @media (max-height: 1500px) {
   .lighth {
-    max-height: 20%;
+    max-height: 20%;    
+    min-height: 20%;
   }
 }
 
@@ -196,7 +198,7 @@ p {
   text-align: justify;
   text-justify: inter-word;
   position: relative;
-  z-index: -10;
+  z-index: 400;
 }
 
  /* Hide scrollbar for Chrome, Safari and Opera */
@@ -394,6 +396,7 @@ nav a:hover, nav label:hover {
   
 a {
   color: var(--c-text);
+  z-index: 500;
 }
   
 
