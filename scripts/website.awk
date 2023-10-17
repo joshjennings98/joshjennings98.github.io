@@ -41,7 +41,7 @@ BEGIN {
     }
     print "</ul>"
     print "</li>"
-    print "<li><a href=\"CV-Josh-Jennings.html\" target=\"_blank\">CV</a></li>"
+    print "<li><a href=\"cv.html\" target=\"_blank\">CV</a></li>"
     print "<li><label for=\"dark-mode\" title=\"Toggle light mode (if supported)\" class=\"page-button\">Theme</label></li>"
     print "</div>"
     print "</nav>"
