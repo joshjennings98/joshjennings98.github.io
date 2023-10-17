@@ -44,8 +44,10 @@
   box-sizing: border-box
 }
 
-body {
+body, html {
+  height: 100%;
   margin: 0;
+  overflow: hidden;
 }
 
 .container {
@@ -92,9 +94,13 @@ body {
   overflow: scroll;
   position: relative;
 }
+
 .content2 {
-  max-width: 800px; 
+  width: 100%;
+  padding-left: calc((100vw - 800px) / 2);
+  padding-right: calc((100vw - 800px) / 2);
 }
+
 .lighth {
   position: relative;
   background-color: var(--c-background);
