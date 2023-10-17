@@ -1,4 +1,4 @@
-## This Website
+# This Website
 
 The goal of this website was to create an interactive static website using on HTML and CSS, no JavaScript. I had recently read [an article about the quiet web](https://briankoberlein.com/tech/quiet-web/) which inspired me to try and create an interesting website that satisfied the requirements laid out in the blog post:
 
@@ -10,7 +10,7 @@ These are arbitrary requirements but it seemed like an interesting challenge. On
 
 I am not one for frontend development and none of the previous versions of my site have used a JavaScript framework, however, in a previous iteration of my website I had a script that would allow you to change the theme between light mode and dark mode. I enjoyed this gimicky feature and wanted to keep that functionality.
 
-### Re-implementing theme toggle using only CSS
+## Re-implementing theme toggle using only CSS
 
 The main feature that I wanted to emulate using CSS was a light mode toggle. I wanted to be able to click a button and have the colour scheme change. With JavaScript I would watch for a checkbox and have an `onchange` event that makes the colour changes. Since this relies on JavaScript, this approach is not possible. So using only CSS we need some way to:
 
@@ -114,7 +114,7 @@ We can also utilise [`prefers-color-scheme`](https://developer.mozilla.org/en-US
 
 One more problem arises. The checkbox is not part of the content and so it is unaffected by the styling. We cannot make it part of the container because it will never be able to affect the styling of it's parent. Luckily, since the label that you can click doesn't have to be a sibling of the checkbox itself, we can just hide the actual checkbox. Since the label can be clicked and we used the `for` attribute, it should still be accessible.
 
-### Storing theme across pages
+## Storing theme across pages
 
 Now there is a theme I can toggle without JavaScript (yay), but if I go to another page on the website, the theme resets. This is because there is no state stored between pages. If I were using JavaScript then I could use `localStorage` to store a flag that lets the website know which theme should be used. You could do this with three lines of JavaScript. Unfortunately, I want to do it with zero lines of JavaScript which sadly isn't possible. There is no way to access the `localStorage` without JavaScript or JQuery (or maybe some fancy HTML5 or something). This is a limitation of CSS, there is literally no way to solve this. You cannot persist the theme information across pages.
 
@@ -159,6 +159,8 @@ a {
 }
 ```
 
+This is combined with the following HTML:
+
 ```html
 <label for="homepage-button" class="page-button">Home</label>
 <label for="page1-button" class="page-button">Page 1</label>
@@ -173,7 +175,7 @@ A nice thing about having a single webpage and using the radio buttons is that t
 
 A problem with this is that if we add a page we need to make changes to the CSS to add the new rule for which page to show and hide. This can be solved by tempalting the CSS when generating the website or it will be solved as a side effect of what we do in the next section.
 
-### Having usable URLs
+## Having usable URLs
 
 We almost have a fully functional website that behaves as if there are multiple pages whilst actually only having one page. Unfortunately, there is yet another issue. You can only choose the pages via the radio buttons, you can't go to a specific page via a URL. This means you cannot share a page, a problem if the site is used as a blog or a portfolio. This is because you cannot set radio buttons based on the contents of the URL (well as usual, you could do if you were willing to use JavaScript, but I am not). Without this feature the website is basically unusable, I want to be able to link to specific pages from other pages or even from other websites. Luckily, there is a solution!
 
@@ -224,7 +226,7 @@ An issue with this is that when you go to a heading via a fragment, it shifts th
 
 And with that, we have a fully usable single-page website that behaves like it has multiple pages and has a theme toggle and uses no JavaScript. Obviously this is isn't viable for every website, but it was a fun idea to mess about with and the result is something I am quite happy with. It has all the features I want in a website without the bloat (although it uses slightly complex CSS that probably doesn't function on some browsers). Even if CSS is fully disabled, the website remains usable, it isn't as nice to use but is still completely functional. The fact it is just a single page of HTML and a bit of CSS means that it should be easily trasnsportable across web hosts with very little work when migrating. Now we just need a way to add content and deploy it!
 
-### Code Generation
+## Code Generation
 
 I implemented my own static site generator. Since my website is basically a single page application, I only ned to populate the `index.html` file. I use Go with it's powerful templating to fill the relevant sections of the `index.html` with content that has been parsed from markdown files. This means that if I want to add a page, I just add a markdown file, and the website will automatically regenerate the `index.html` when I push the change to GitHub. This is done with a simple CI workflow. GitHub pages then handles the deployment of the actual website, this is discuessed in the section below.
 
@@ -236,7 +238,7 @@ The workflow to run the program in CI is very simple. It uses GitHub actions to 
 
 The CI workflows [can be found here](https://github.com/joshjennings98/joshjennings98.github.io/tree/master/.github/workflows).
 
-### Deployment using GitHub Pages
+## Deployment using GitHub Pages
 
 I don't want to spend money so I host the website with GitHub pages. This is particularly nice since I am hosting the repository on GitHub so deployments are trivial.
 
@@ -252,12 +254,12 @@ The CNAME record file contains the domain you want to use for your website. A CN
 
 To create the CNAME record itself, you must go to your DNS provider and create a CNAME record that points the domain to the GitHub pages URL (in my case joshjenning98.github.io). This is a different process for different DNS provders. In my case I used Google domains (for the `.dev` top level domain) for which the information on setting up a CNAME record can be found [on this page](https://support.google.com/a/answer/47283?hl=en#zippy=%2Cstep-get-your-unique-cname-record%2Cstep-add-the-cname-record-to-your-domains-dns-records). If you want to enforce HTTPS (a requirement for `.dev`) you must aso go to the GitHub pages setting and have "Enforce HTTPS" enabled.
 
-### Acknowledgements
+## Acknowledgements
 
 A lot of inspiration was taked from [this blog post](https://kleinfreund.de/css-only-dark-mode/) on CSS-only dark mode for the initial work on reimplementing the theme toggle without JavaScript.
 
 This [person on codepen](https://codepen.io/finnhvman) has a lot of amazing CSS only stuff available that make this website seem like a toy. They also have some cool SVG stuff like this [gas giant](https://codepen.io/finnhvman/pen/jOQvYaz) that I want to include on my website somehow.
 
-### Github
+## Github
 
 The full project can be viewed on [GitHub](https://github.com/joshjennings98/joshjennings98.github.io).

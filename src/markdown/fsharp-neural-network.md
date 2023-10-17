@@ -1,10 +1,10 @@
-## F# Neural Network
+# F# Neural Network
 
 A small F# library that allows for the creation of scalable fully-connected neural networks. It was developed for and built entirely using F#.
 
-### Usage
+## Usage
 
-#### Defining a network
+### Defining a network
 
 Networks can be specified using the following format. Any number of layers are supported. Provided they align, the dimensions can be as large as desired.
 
@@ -31,7 +31,7 @@ You can choose from multiple different activation functions including:
 * Hard Sigmoid
 * Linear
 
-#### Training a network
+### Training a network
 
 Input data is provided in the form of a list of inputs, and a list of labels corresponding to each input.
 
@@ -68,7 +68,7 @@ Currently, the following loss functions are avaliable:
 * Cross Entropy
 * Mean Absolute Error
 
-#### Running a trained network
+### Running a trained network
 
 A single run of the network can be specified as follows:
 
@@ -106,9 +106,9 @@ Output: [0.003145187104; 0.9791424116]
 
 These match up with the labels specified earlier.
 
-### How it works
+## How it works
 
-#### Forward Propagation
+### Forward Propagation
 
 A single forward propagation though a layer just involves multiplying the inputs to the layer with the layer weights (their dot product). After this, they are summed and the bias added before having the activation layer for that function applied.
 
@@ -144,7 +144,7 @@ let forwardFull (parameters : Parameters) (inputs : float list) (layers : Layer 
     |> List.append [List.init (List.last layers).outputDims float]
 ```
 
-#### Calculating Error
+### Calculating Error
 
 To calculate the error in the output, the output of forward propagation and the target output are passed to a function that calculated the loss.
 
@@ -168,7 +168,7 @@ let lossFunction (loss : Loss) (n : int) : float -> float -> float =
             (1.0 / (n |> float)) * (abs (actual - target))
 ```
 
-#### Back Propagation
+### Back Propagation
 
 Back propagation is more complex than the forward version. We first calculate the intermidate output sums. For the output layer, the only thing that needs to be done is for the derivatve of the loss function to applied to the outputs. For the hidden layers, the individual deltas for each node in the previous layer are found. Afterwards, the layer weights are taken and multiplied by their corresponding deltas. The values coming into each node are then summed.
 
@@ -252,7 +252,7 @@ let dLossFunction (loss : Loss) (n : int) : float -> float -> float =
         if actual > target then 1.0 else -1.0
 ```
 
-#### Training
+### Training
 
 Training the network is a fairly simple recursive function that continually picks a random sample of the data set and carries out forwards and backwards propagation using the sample for any number of iterations. A simplified version of the function (initialisation and printing etc. removed) can be seen below:
 
@@ -271,10 +271,10 @@ let rec train (parameters : Parameters) (model : Layer list) (maxIterations : in
 train initial architecture iterations 0
 ```
 
-### Bugs
+## Bugs
 
 Be careful with the chosen parameters. The networks can die easily if the chosen parameters cause weigths to overflow and become NaN, alternatively the network won’t learn the data set correctly.
 
-### GitHub
+## GitHub
 
 The full project can be viewed on [GitHub](https://github.com/joshjennings98/fsharp-neural-network).

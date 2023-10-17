@@ -3,17 +3,27 @@ name: Build CV
 on:
   push:
     branches:
-      - master
+      - masterTEMPDONOTRUN
     paths:
-      - 'cv.yaml'
-      - 'templates/cv.html.tmpl'
+      - 'src/cv.yaml'
+      - 'src/cv.css'
+      - 'src/cv.html.tmpl'
 
 jobs:
   build-and-deploy-cv:
     name: Build and deploy CV
-    uses: joshjennings98/joshjennings98.github.io/.github/workflows/update.yml@master
-    secrets:
-      GIT_SECRET: ${{ secrets.GITHUB_TOKEN }}
-    with:
-      update: cv
-      branch: ${{ github.head_ref || github.ref }}
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v3
+    - uses: actions/setup-python@v4
+      with:
+        python-version: 3.11
+        cache: 'pip'
+    - name: Generate CV from YAML
+      run: |
+          pip3 install -r requirements.txt
+          python3 scripts/generate_cv.py -c src/cv.yaml -t src/cv.html.tmpl -o CV-Josh-Jennings.html
+    - name: Commit changes
+      uses: stefanzweifel/git-auto-commit-action@v4
+      with:
+        commit_message: ":sparkles: CV Updates"

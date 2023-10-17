@@ -1,4 +1,4 @@
-style: ./cv.css # REMEMBER TO REMOVE ..
+style: ./src/cv.css
 
 about:
   name: Josh Jennings

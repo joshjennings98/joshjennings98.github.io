@@ -5,16 +5,23 @@ on:
     branches:
       - master
     paths:
-      - 'markdown/**.md'
-      - 'templates/**'
-      - '!/templates/cv.html.tmpl'
+      - 'src/markdown/**.md'
+      - 'src/website.css'
+      - 'scripts/**.awk'
 
 jobs:
   build-and-deploy-website:
     name: Build and deploy website
-    uses: joshjennings98/joshjennings98.github.io/.github/workflows/update.yml@master
-    secrets:
-      GIT_SECRET: ${{ secrets.GITHUB_TOKEN }}
-    with:
-      update: website
-      branch: ${{ github.head_ref || github.ref }}
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v3
+    - name: Generate website with AWK and sed
+      run: |
+          # todo: make compatible with plain old awk
+          mawk -f scripts/website.awk src/markdown/** > index.html
+          sed -i "s/{{ JOSH SVG }}/$(sed 's/[&/\]/\\&/g' src/josh.svg | tr -d '\n')/g" index.html
+          mawk -f scripts/syntax.awk index.html > tmp.html && mv -f tmp.html index.html
+    - name: Commit changes
+      uses: stefanzweifel/git-auto-commit-action@v4
+      with:
+        commit_message: ":sparkles: Website Updates"
