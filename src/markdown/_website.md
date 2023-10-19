@@ -228,31 +228,45 @@ And with that, we have a fully usable single-page website that behaves like it h
 
 ## Code Generation
 
-I implemented my own static site generator. Since my website is basically a single page application, I only ned to populate the `index.html` file. I use Go with it's powerful templating to fill the relevant sections of the `index.html` with content that has been parsed from markdown files. This means that if I want to add a page, I just add a markdown file, and the website will automatically regenerate the `index.html` when I push the change to GitHub. This is done with a simple CI workflow. GitHub pages then handles the deployment of the actual website, this is discuessed in the section below.
+This website is generated with two `awk` scripts and a `sed` command — the moving SVG needs to be embedded into the HTML to work but it's too big for `awk` to handle...
 
-The Go code is not interesting. It is written with only standard library modules. It reads the markdown from the markdown directory, converts it into HTML using regex to convert the various markdown tags into their HTML equivalent, and then populates the templates for the `index.html` and `404.html` pages. Since there is only one page to really think about, the code is kept relatively simple.
+### Markdown to HTML with AWK
 
-The index template [can be found here](https://github.com/joshjennings98/joshjennings98.github.io/blob/master/templates/index.html.tmpl), whilst the Go program for populating the template [can be found here](https://github.com/joshjennings98/joshjennings98.github.io/blob/master/main.go).
+Lorem ipsum dolor sit amet, officia excepteur ex fugiat reprehenderit enim labore culpa sint ad nisi Lorem pariatur mollit ex esse exercitation amet. Nisi anim cupidatat excepteur officia. Reprehenderit nostrud nostrud ipsum Lorem est aliquip amet voluptate voluptate dolor minim nulla est proident. Nostrud officia pariatur ut officia. Sit irure elit esse ea nulla sunt ex occaecat reprehenderit commodo officia dolor Lorem duis laboris cupidatat officia voluptate. Culpa proident adipisicing id nulla nisi laboris ex in Lorem sunt duis officia eiusmod. Aliqua reprehenderit commodo ex non excepteur duis sunt velit enim. Voluptate laboris sint cupidatat ullamco ut ea consectetur et est culpa et culpa duis.
 
-The workflow to run the program in CI is very simple. It uses GitHub actions to checkout the repo, and if there are changes to the markdown or templates then it will regenerate the index and commit the changes back to the repository. There is also a similar workflow that is used for generating my CV. In this case, the CV is kept as a `yaml` file and then a python script is used to turn it into HTML. 
+Lorem ipsum dolor sit amet, officia excepteur ex fugiat reprehenderit enim labore culpa sint ad nisi Lorem pariatur mollit ex esse exercitation amet. Nisi anim cupidatat excepteur officia. Reprehenderit nostrud nostrud ipsum Lorem est aliquip amet voluptate voluptate dolor minim nulla est proident. Nostrud officia pariatur ut officia. Sit irure elit esse ea nulla sunt ex occaecat reprehenderit commodo officia dolor Lorem duis laboris cupidatat officia voluptate. Culpa proident adipisicing id nulla nisi laboris ex in Lorem sunt duis officia eiusmod. Aliqua reprehenderit commodo ex non excepteur duis sunt velit enim. Voluptate laboris sint cupidatat ullamco ut ea consectetur et est culpa et culpa duis.
 
-The CI workflows [can be found here](https://github.com/joshjennings98/joshjennings98.github.io/tree/master/.github/workflows).
+### Syntax Highlighting with CSS gradients
+
+Lorem ipsum dolor sit amet, officia excepteur ex fugiat reprehenderit enim labore culpa sint ad nisi Lorem pariatur mollit ex esse exercitation amet. Nisi anim cupidatat excepteur officia. Reprehenderit nostrud nostrud ipsum Lorem est aliquip amet voluptate voluptate dolor minim nulla est proident. Nostrud officia pariatur ut officia. Sit irure elit esse ea nulla sunt ex occaecat reprehenderit commodo officia dolor Lorem duis laboris cupidatat officia voluptate. Culpa proident adipisicing id nulla nisi laboris ex in Lorem sunt duis officia eiusmod. Aliqua reprehenderit commodo ex non excepteur duis sunt velit enim. Voluptate laboris sint cupidatat ullamco ut ea consectetur et est culpa et culpa duis.
+
+```
+show the blocky gradient thing
+```
+
+Lorem ipsum dolor sit amet, officia excepteur ex fugiat reprehenderit enim labore culpa sint ad nisi Lorem pariatur mollit ex esse exercitation amet. Nisi anim cupidatat excepteur officia. Reprehenderit nostrud nostrud ipsum Lorem est aliquip amet voluptate voluptate dolor minim nulla est proident. 
+
+```
+show the broken stuff
+```
+
+Lorem ipsum dolor sit amet, officia excepteur ex fugiat reprehenderit enim labore culpa sint ad nisi Lorem pariatur mollit ex esse exercitation amet. Nisi anim cupidatat excepteur officia. Reprehenderit nostrud nostrud ipsum Lorem est aliquip amet voluptate voluptate dolor minim nulla est proident. 
+
+```
+show the fixed stuff with a span per line
+```
+
+Lorem ipsum dolor sit amet, officia excepteur ex fugiat reprehenderit enim labore culpa sint ad nisi Lorem pariatur mollit ex esse exercitation amet. Nisi anim cupidatat excepteur officia. Reprehenderit nostrud nostrud ipsum Lorem est aliquip amet voluptate voluptate dolor minim nulla est proident. 
+
+## Making the website less boring
+
+Lorem ipsum dolor sit amet, officia excepteur ex fugiat reprehenderit enim labore culpa sint ad nisi Lorem pariatur mollit ex esse exercitation amet. Nisi anim cupidatat excepteur officia. Reprehenderit nostrud nostrud ipsum Lorem est aliquip amet voluptate voluptate dolor minim nulla est proident. Nostrud officia pariatur ut officia. Sit irure elit esse ea nulla sunt ex occaecat reprehenderit commodo officia dolor Lorem duis laboris cupidatat officia voluptate. Culpa proident adipisicing id nulla nisi laboris ex in Lorem sunt duis officia eiusmod. Aliqua reprehenderit commodo ex non excepteur duis sunt velit enim. Voluptate laboris sint cupidatat ullamco ut ea consectetur et est culpa et culpa duis.
+
+Lorem ipsum dolor sit amet, officia excepteur ex fugiat reprehenderit enim labore culpa sint ad nisi Lorem pariatur mollit ex esse exercitation amet. Nisi anim cupidatat excepteur officia. Reprehenderit nostrud nostrud ipsum Lorem est aliquip amet voluptate voluptate dolor minim nulla est proident. Nostrud officia pariatur ut officia. Sit irure elit esse ea nulla sunt ex occaecat reprehenderit commodo officia dolor Lorem duis laboris cupidatat officia voluptate. Culpa proident adipisicing id nulla nisi laboris ex in Lorem sunt duis officia eiusmod. Aliqua reprehenderit commodo ex non excepteur duis sunt velit enim. Voluptate laboris sint cupidatat ullamco ut ea consectetur et est culpa et culpa duis.
 
 ## Deployment using GitHub Pages
 
-I don't want to spend money so I host the website with GitHub pages. This is particularly nice since I am hosting the repository on GitHub so deployments are trivial.
-
-You can use GitHub pages with fancy [Jekyll](https://jekyllrb.com/) setups but that probably involves some JavaScript which I don't want (also I prefer [Hugo](https://gohugo.io/) if I use a static site generator that isn't my own). Instead I just use my own static site generator that populates the `index.html.template` as talked about in the previous section. This makes the deployments very simple as there is only one page, it is as simple as the [hello world example for github pages](https://pages.github.com/). Since this is hosted on GitHub I don't even have to worry about CI for the actual deplyoment as it is handled by GitHub.
-
-Unfortunately I can't have just one page, I need a 404 page so that users can still navigate my website if they go to a wrong page. Again, because this is GitHub pages, this is very simple. You just need to create a `404.html` and have it at the root of the repo, no need for special files like a `.htaccess`. You can create a tempalte for the 404 page and populate it like the index so that the website looks consistent and all the links can be accessed easily from the 404 page.
-
-If you want to use a custom domain with GitHub pages, that is also relatively simple, you just need to add a CNAME record to your reopository. This involves two steps:
-* Adding a CNAME record file to your repository.
-* Creating a CNAME record with your DNS provider.
-
-The CNAME record file contains the domain you want to use for your website. A CNAME record is used to specify that a domain name is an alias for another domain. This basically acts as a redirect so a custom dmain name can be used. The target domain must have an A address record. The A address record is used to map a domain to it's corresponding IP where the werbsite is hosted.
-
-To create the CNAME record itself, you must go to your DNS provider and create a CNAME record that points the domain to the GitHub pages URL (in my case joshjenning98.github.io). This is a different process for different DNS provders. In my case I used Google domains (for the `.dev` top level domain) for which the information on setting up a CNAME record can be found [on this page](https://support.google.com/a/answer/47283?hl=en#zippy=%2Cstep-get-your-unique-cname-record%2Cstep-add-the-cname-record-to-your-domains-dns-records). If you want to enforce HTTPS (a requirement for `.dev`) you must aso go to the GitHub pages setting and have "Enforce HTTPS" enabled.
+I don't want to spend money so I host the website with GitHub pages. This is particularly nice since I am hosting the repository on GitHub so deployments are trivial, I just run the `awk` scripts and I am done.
 
 ## Acknowledgements
 
