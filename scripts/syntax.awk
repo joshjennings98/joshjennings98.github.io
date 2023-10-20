@@ -1,7 +1,7 @@
 #!/bin/awk -f
 
 function populate_html() {
-    if (i in regex) {
+    for (i in regex) {
         delete regex[i]
         delete val[i]
         delete code[i]
@@ -29,7 +29,7 @@ function populate_html() {
 }
 
 function populate_css() {
-    if (i in regex) {
+    for (i in regex) {
         delete regex[i]
         delete val[i]
         delete code[i]
@@ -66,7 +66,7 @@ function populate_css() {
 
 
 function populate_fsharp() {
-    if (i in regex) {
+    for (i in regex) {
         delete regex[i]
         delete val[i]
         delete code[i]
@@ -102,6 +102,50 @@ function populate_fsharp() {
     regex[10] = "( |^)(try|with|match|when|yield|return|let|do|and|or|not) "
     val[10] = "#66d9ef"
     code[10] = "J"
+}
+
+function populate_javascript() {
+    for (i in regex) {
+        delete regex[i]
+        delete val[i]
+        delete code[i]
+    }
+
+  regex[1] = "'(.*?)'"
+    val[1] = "#FFD658";
+    code[1] = "A";
+
+    regex[2] = "(([0-9]+\.[0-9]+)|([0-9]+)|([0-9]+))"
+    val[2] = "#A7C";
+    code[2] = "B";
+
+    regex[3] = "(\/\/.*)";
+    val[3] = "lightgrey";
+    code[3] = "C";
+
+    regex[4] = "(var|let|const|function|this|do|super|as|constructor|instanceof|default)";
+    val[4] = "#78dce8";
+    code[4] = "D";
+
+    regex[5] = "(typeof|try|catch|finally|delete|switch|case|in|of|if|else|import|from|as|export|extends|new|return|throw|for|while|break|continue|async|await|log)";
+    val[5] = "#a6e22e";
+    code[5] = "E";
+
+    regex[6] = "(true|false|null|undefined|NaN|Infinity)";
+    val[6] = "#ae81ff";
+    code[6] = "F";
+
+    regex[7] = "(<|=)";
+    val[7] = "#f92672";
+    code[7] = "G";
+
+    regex[8] = "(window|document|navigator|console|self|top|process|require|module|define|global|Promise|Array|Math|String|Number|Symbol|Function|Reflect|Proxy|Error)";
+    val[8] = "#fd971f";
+    code[8] = "H";
+
+    regex[9] = "(getElementsBy(TagName|ClassName|Name)|getElementById|(get|set|remove)Attribute|querySelector)";
+    val[9] = "#7E7";
+    code[9] = "J";
 }
 
 BEGIN {
@@ -177,11 +221,16 @@ function convert_to_css(line) {
             else if (class == "code-html") 
                 populate_html()
             else if (class == "code-css") 
-                populate_css()
+                populate_css()           
+            else if (class == "code-javascript") 
+                populate_javascript()
             
             in_pre = 1
             y = 1
-            content = "<pre>"  # Reset pre_content for each <pre> tag
+            if (class == "skip")
+                content = $0
+            else
+                content = "<pre>"  # Reset pre_content for each <pre> tag
             css_string = ""
             background_size = ""
             maxLen = 0
@@ -193,10 +242,13 @@ function convert_to_css(line) {
         }
     } else if ($0 ~ /<\/pre>/) {
         in_pre = 0
-	    final_string = "<div class=\"preOuter\">\n" content "</pre></div>"
+        if (class == "skip")
+            final_string = content "</pre>"
+        else
+	        final_string = "<div class=\"preOuter\">\n" content "</pre></div>"
 	    print final_string
     } else if (in_pre) {
-        if (class == "") {
+        if (class == "" || class == "skip") {
             content = content $0 "\n"
         } else {
             content = content "<span style=\"background: "  convert_to_css(find_tokens($0)) "; -webkit-background-clip: text\">" $0 "</span>\n"

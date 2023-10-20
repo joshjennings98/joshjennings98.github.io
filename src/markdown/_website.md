@@ -228,41 +228,72 @@ And with that, we have a fully usable single-page website that behaves like it h
 
 ## Code Generation
 
-This website is generated with two `awk` scripts and a `sed` command — the moving SVG needs to be embedded into the HTML to work but it's too big for `awk` to handle...
+This website is generated with two AWK scripts and a sed command — the moving SVG needs to be embedded into the HTML to work but it's too big for AWK to handle...
 
 ### Markdown to HTML with AWK
 
-Lorem ipsum dolor sit amet, officia excepteur ex fugiat reprehenderit enim labore culpa sint ad nisi Lorem pariatur mollit ex esse exercitation amet. Nisi anim cupidatat excepteur officia. Reprehenderit nostrud nostrud ipsum Lorem est aliquip amet voluptate voluptate dolor minim nulla est proident. Nostrud officia pariatur ut officia. Sit irure elit esse ea nulla sunt ex occaecat reprehenderit commodo officia dolor Lorem duis laboris cupidatat officia voluptate. Culpa proident adipisicing id nulla nisi laboris ex in Lorem sunt duis officia eiusmod. Aliqua reprehenderit commodo ex non excepteur duis sunt velit enim. Voluptate laboris sint cupidatat ullamco ut ea consectetur et est culpa et culpa duis.
+The website exists as a series of markdown files which are converted into HTML. There are many ways to do this but I decided to do it with an AWK script. I did this just to see what writing AWK scripts is like and the result is a mess, but it works. The scripts use regex to match the various elements of markdown and then wrap them in the correct HTML tags. Not everything from markdown is supported but it does support:
 
-Lorem ipsum dolor sit amet, officia excepteur ex fugiat reprehenderit enim labore culpa sint ad nisi Lorem pariatur mollit ex esse exercitation amet. Nisi anim cupidatat excepteur officia. Reprehenderit nostrud nostrud ipsum Lorem est aliquip amet voluptate voluptate dolor minim nulla est proident. Nostrud officia pariatur ut officia. Sit irure elit esse ea nulla sunt ex occaecat reprehenderit commodo officia dolor Lorem duis laboris cupidatat officia voluptate. Culpa proident adipisicing id nulla nisi laboris ex in Lorem sunt duis officia eiusmod. Aliqua reprehenderit commodo ex non excepteur duis sunt velit enim. Voluptate laboris sint cupidatat ullamco ut ea consectetur et est culpa et culpa duis.
+* Headers
+* Code blocks
+* Lists
+  * Including nested lists
+* Blockquotes
+* Tables
+* Inline styling within paragraphs
+
+This covers basically everything I need and means that adding pages to the website is as simple as adding a new markdown file to the `markdown` directory. The generator then creates the `index.html` using the techniques outlined in the previous sections to create this JavaScript-free website!
 
 ### Syntax Highlighting with CSS gradients
 
-Lorem ipsum dolor sit amet, officia excepteur ex fugiat reprehenderit enim labore culpa sint ad nisi Lorem pariatur mollit ex esse exercitation amet. Nisi anim cupidatat excepteur officia. Reprehenderit nostrud nostrud ipsum Lorem est aliquip amet voluptate voluptate dolor minim nulla est proident. Nostrud officia pariatur ut officia. Sit irure elit esse ea nulla sunt ex occaecat reprehenderit commodo officia dolor Lorem duis laboris cupidatat officia voluptate. Culpa proident adipisicing id nulla nisi laboris ex in Lorem sunt duis officia eiusmod. Aliqua reprehenderit commodo ex non excepteur duis sunt velit enim. Voluptate laboris sint cupidatat ullamco ut ea consectetur et est culpa et culpa duis.
+There are a lot of code snippets on my website and it would be nice if they could have some syntax highlighting. The most common way to do this is with a library like [highlight.js](https://highlightjs.org/) where JavaScript is used to determine the language and automatically highlight the code. This requires JavaScript which means I don't want it on my website. The other way is to generate the css for each syntax element in a language and wrap each part of the code in a span that matches the syntax element. This works but you end up with a million spans and it is also a bit boring and standard.
 
-```
-show the blocky gradient thing
-```
+The much more interesting and fun approach is to use CSS gradients. Like almost every approach, we use regex to work out the styling for each element but instead of wrapping each element in a span, we style the whole pre with gradients. This avoids having a mess of spans and uses no javascript.
 
-Lorem ipsum dolor sit amet, officia excepteur ex fugiat reprehenderit enim labore culpa sint ad nisi Lorem pariatur mollit ex esse exercitation amet. Nisi anim cupidatat excepteur officia. Reprehenderit nostrud nostrud ipsum Lorem est aliquip amet voluptate voluptate dolor minim nulla est proident. 
+Lets say we have the following code block:
 
-```
-show the broken stuff
-```
-
-Lorem ipsum dolor sit amet, officia excepteur ex fugiat reprehenderit enim labore culpa sint ad nisi Lorem pariatur mollit ex esse exercitation amet. Nisi anim cupidatat excepteur officia. Reprehenderit nostrud nostrud ipsum Lorem est aliquip amet voluptate voluptate dolor minim nulla est proident. 
-
-```
-show the fixed stuff with a span per line
+```html
+for(i = 0; i < 10; i++){
+    console.log(i);
+}
 ```
 
-Lorem ipsum dolor sit amet, officia excepteur ex fugiat reprehenderit enim labore culpa sint ad nisi Lorem pariatur mollit ex esse exercitation amet. Nisi anim cupidatat excepteur officia. Reprehenderit nostrud nostrud ipsum Lorem est aliquip amet voluptate voluptate dolor minim nulla est proident. 
+We utilise a horrible regex to match specific keywords etc. and create a gradient that lines up with the text. We then set this as the background for the `pre`:
+
+<pre class="skip" style="background: linear-gradient(to right, white 0ch, #a6e22e 0ch, #a6e22e 3ch, white 3ch, white 6ch, #f92672 6ch, #f92672 7ch, white 7ch, white 8ch, #A7C 8ch, #A7C 9ch, white 9ch, white 13ch, #f92672 13ch, #f92672 14ch, white 14ch, white 15ch, #A7C 15ch, #A7C 17ch, white 17ch, white 300ch), linear-gradient(to right, white 0ch, white 0ch, white 4ch, #fd971f 4ch, #fd971f 11ch, white 11ch, white 12ch, #a6e22e 12ch, #a6e22e 15ch, white 15ch, white 300ch), linear-gradient(to right, white 0ch, white 0ch, white 300ch); background-repeat: no-repeat; background-size: 80ch 22px, 80ch 44px, 80ch 66px, 80ch 88px; color: black; width: 80ch; font-family: monospace; font-size: 20px; line-height: 22px;">
+for(i = 0; i < 10; i++){
+    console.log(i);
+}
+</pre>
+
+I lied about not using spans. An unfortunate problem with the gradients is that depending on the browser, you can end up with the gradient from one line affecting the colours in the surrounding lines. You can also end up with some other rendering artifacts because browsers aren't designed carry out syntax highlighting with this method. Therefore we wrap each line in a span which avoids the rendering issues. Whilst there are some spans, this approach is still better than wrapping each syntax element in a span.
+
+The end result can be seen below:
+
+```javascript
+for(i = 0; i < 10; i++){
+    console.log(i);
+}
+```
+
+The resulting effect looks quite nice if you get the regular expressions for the language syntax correct (you will notice many places on this website where the choice of regex causes problems but this is just meant to be a bit of fun). It should be noted that this whole technique is quite pointless and it causes the website to take up more space than just using a JavaScript library for the highlighting.
 
 ## Making the website less boring
 
-Lorem ipsum dolor sit amet, officia excepteur ex fugiat reprehenderit enim labore culpa sint ad nisi Lorem pariatur mollit ex esse exercitation amet. Nisi anim cupidatat excepteur officia. Reprehenderit nostrud nostrud ipsum Lorem est aliquip amet voluptate voluptate dolor minim nulla est proident. Nostrud officia pariatur ut officia. Sit irure elit esse ea nulla sunt ex occaecat reprehenderit commodo officia dolor Lorem duis laboris cupidatat officia voluptate. Culpa proident adipisicing id nulla nisi laboris ex in Lorem sunt duis officia eiusmod. Aliqua reprehenderit commodo ex non excepteur duis sunt velit enim. Voluptate laboris sint cupidatat ullamco ut ea consectetur et est culpa et culpa duis.
+At this point the website is quite good (well I think it is). It satisfies the goals I set out with but it looks a bit boring. A criticism of these mimimal websites is that they are too minimal and all look the same. We can't be having that, I like the websites of the good old days where each page [was unique and a bit insane](https://www.spacejam.com/1996/). To rectify this, I have decided to add a nice scrolling grid effect to the webpage using CSS animations along with a fun animated website header. This way the website will be more fun and no-one will call it mimimalist and boring.
 
-Lorem ipsum dolor sit amet, officia excepteur ex fugiat reprehenderit enim labore culpa sint ad nisi Lorem pariatur mollit ex esse exercitation amet. Nisi anim cupidatat excepteur officia. Reprehenderit nostrud nostrud ipsum Lorem est aliquip amet voluptate voluptate dolor minim nulla est proident. Nostrud officia pariatur ut officia. Sit irure elit esse ea nulla sunt ex occaecat reprehenderit commodo officia dolor Lorem duis laboris cupidatat officia voluptate. Culpa proident adipisicing id nulla nisi laboris ex in Lorem sunt duis officia eiusmod. Aliqua reprehenderit commodo ex non excepteur duis sunt velit enim. Voluptate laboris sint cupidatat ullamco ut ea consectetur et est culpa et culpa duis.
+The header is an SVG that has been animated with CSS. I added an animation to the path element of the SVG that creates an effect so that the outline of the SVG appears and disapears in a dashed pattern along with the fill fading in and out. This makes it look like the text is appearing and disappearing. A problem with this is that to style an SVG with CSS, it must be inlined into the HTML, you cannot have it in a separate file. Since the SVG is of some text in a specific font ([Iosevka](https://en.wikipedia.org/wiki/Iosevka)) it is made up of many points meaning the SVG is too long for awk to print it. This means that I have to insert it into the HTML using sed after the website has been generated. Ideally, it would be possible to have a separate SVG and style it without inlining it. Unfortunatly we can't do that so we must make do with this horrendous solution.
+
+For the scrolling grid effect there are two classes, `.lighth` and `.lightv`, these define pseudo-elements so all I have to do is add a couple of small elements to the bottom of the page:
+
+```html
+<section class="lighth">
+<section class="lightv">
+</section>
+</section>
+```
+
+For `.lighth::before`, an absolutely positioned pseudo-element is defined with a linear gradient background that extends horizontally beyond the viewport on both sides. The `.lightv` class styles an element with a relative position, taking up the full width of the page whilst the `.lightv::before` pseudo-element creates a central vertical line, with multiple additional vertical lines positioned at intervals using the box-shadow property. The `.lightv::after` adds a horizontal element that extends beyond the viewport on both sides and has additional horizontal lines created using box-shadow. This element is then animated to move vertically in a loop, producing a scrolling grid effect that fades into the background.
 
 ## Deployment using GitHub Pages
 
@@ -273,6 +304,8 @@ I don't want to spend money so I host the website with GitHub pages. This is par
 A lot of inspiration was taked from [this blog post](https://kleinfreund.de/css-only-dark-mode/) on CSS-only dark mode for the initial work on reimplementing the theme toggle without JavaScript.
 
 This [person on codepen](https://codepen.io/finnhvman) has a lot of amazing CSS only stuff available that make this website seem like a toy. They also have some cool SVG stuff like this [gas giant](https://codepen.io/finnhvman/pen/jOQvYaz) that I want to include on my website somehow.
+
+The CSS only syntax highlighting is a slightly modified version of the work in [this blog post](https://dev.to/grahamthedev/impossible-css-only-js-syntax-highlighting-with-a-single-element-and-gradients-243j).
 
 ## Github
 

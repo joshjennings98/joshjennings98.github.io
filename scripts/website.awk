@@ -148,26 +148,38 @@ function titleLink(inputPath) {
     if (in_code_block) next
     close_lists(0)
     level = index($0, " ")
-    if (level == 2) next # Skip single # as it is used for the header (2 because '# ')
+    if (level == 2) next # skip single # as it is used for the header (2 because '# ')
     tag_content = substr($0, level)
     printf "<h%d>%s</h%d>\n", level, replaceInlineSyntax(tag_content), level
     next
 }
 
 # Matches lines starting with '```', toggles code block mode
-/^```/ {
+/^(```|<pre|<\/pre)/ {
     if (in_table) next
     if (in_code_block) {
-        print "</code></pre>"
+        if (inlinePre)
+            print "</pre>"
+        else
+            print "</code></pre>"
         in_code_block = 0
+        inlinePre = 0
     } else {
         close_lists(0)
         class = ""
+        inlinePre = 0
+        if (match($0, /^<pre(.*)>/)) { # If inline pre
+            class = substr($0, RSTART + 4, RLENGTH - 5) # cut of extra pre stuff
+            inlinePre = 1
+        }
         if (match($0, /^```([^ \n]*)/)) { # If language specified
             lang = substr($0, RSTART + 3, RLENGTH - 3)
             class = lang ? sprintf(" class=\"code-%s\"", lang) : ""
         }
-        printf "<pre%s><code>\n", class
+        if (inlinePre)
+            printf "<pre%s>\n", class
+        else
+            printf "<pre%s><code>\n", class
         in_code_block = 1
     }
     next
@@ -244,7 +256,10 @@ function titleLink(inputPath) {
 # Matches non-empty lines (lines where NF != 0), handle paragraphs
 NF {
     if (in_code_block) {
-        printf "%s\n", escapeHTML($0)
+        if (inlinePre)
+            print $0
+        else
+            printf "%s\n", escapeHTML($0)
     } else {
         close_lists(0)
         printf "<p>%s</p>\n", replaceInlineSyntax($0)
