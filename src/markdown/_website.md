@@ -260,7 +260,7 @@ for(i = 0; i < 10; i++){
 
 We utilise a horrible regex to match specific keywords etc. and create a gradient that lines up with the text. We then set this as the background for the `pre`:
 
-<pre class="skip" style="background: linear-gradient(to right, white 0ch, #a6e22e 0ch, #a6e22e 3ch, white 3ch, white 6ch, #f92672 6ch, #f92672 7ch, white 7ch, white 8ch, #A7C 8ch, #A7C 9ch, white 9ch, white 13ch, #f92672 13ch, #f92672 14ch, white 14ch, white 15ch, #A7C 15ch, #A7C 17ch, white 17ch, white 300ch), linear-gradient(to right, white 0ch, white 0ch, white 4ch, #fd971f 4ch, #fd971f 11ch, white 11ch, white 12ch, #a6e22e 12ch, #a6e22e 15ch, white 15ch, white 300ch), linear-gradient(to right, white 0ch, white 0ch, white 300ch); background-repeat: no-repeat; background-size: 80ch 22px, 80ch 44px, 80ch 66px, 80ch 88px; color: black; width: 80ch; font-family: monospace; font-size: 20px; line-height: 22px;">
+<pre class="skip" style="background: linear-gradient(to right, white 0ch, #a6e22e 0ch, #a6e22e 3ch, white 3ch, white 6ch, #f92672 6ch, #f92672 7ch, white 7ch, white 8ch, #A7C 8ch, #A7C 9ch, white 9ch, white 13ch, #f92672 13ch, #f92672 14ch, white 14ch, white 15ch, #A7C 15ch, #A7C 17ch, white 17ch, white 300ch), linear-gradient(to right, white 0ch, white 0ch, white 4ch, #fd971f 4ch, #fd971f 11ch, white 11ch, white 12ch, #a6e22e 12ch, #a6e22e 15ch, white 15ch, white 300ch), linear-gradient(to right, white 0ch, white 0ch, white 300ch); background-repeat: no-repeat; background-size: 80ch 22px, 80ch 44px, 80ch 66px, 80ch 88px; color: black; width: 80ch; font-family: monospace; font-size: 20px; line-height: 22px; width:inherit">
 for(i = 0; i < 10; i++){
     console.log(i);
 }
