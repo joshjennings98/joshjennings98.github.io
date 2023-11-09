@@ -95,6 +95,14 @@ body, html {
   padding-right: calc((100vw - 800px) / 2);
 }
 
+code {
+  border: 1px solid var(--c-text);
+  border-radius: 4px;
+  padding: 2px 4px; /* Top and bottom padding of 2px, left and right padding of 4px */
+  font-family: monospace; 
+  font-size: 1.2em;
+}
+
 .lighth {
   position: relative;
   background-color: var(--c-background);
