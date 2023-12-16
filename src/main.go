@@ -139,7 +139,9 @@ func AboutMe(aboutPage Page) gomponents.Node {
 		html.Class("homepage page"),
 		html.ID("homepage"),
 		gomponents.Raw(aboutPage.Content),
-		html.Class("bottom"),
+		html.Div(
+			html.Class("bottom"),
+		),
 	)
 }
 
