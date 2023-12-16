@@ -1,13 +1,16 @@
 name: Build Website
 
 on:
+  pull_request:
+    branches:
+      - master
   push:
     branches:
       - master
     paths:
       - 'src/markdown/**.md'
-      - 'src/website.css'
-      - 'scripts/**.awk'
+      - 'src/static/website.css'
+      - 'src/main.go'
 
 jobs:
   build-and-deploy-website:
@@ -15,12 +18,14 @@ jobs:
     runs-on: ubuntu-latest
     steps:
     - uses: actions/checkout@v3
-    - name: Generate website with AWK and sed
+    - uses: actions/setup-go@v4
+      with:
+        go-version: '1.21'
+    - name: Generate website
       run: |
-          # todo: make compatible with plain old awk
-          mawk -f scripts/website.awk src/markdown/** > index.html
-          sed -i "s/{{ JOSH SVG }}/$(sed 's/[&/\]/\\&/g' src/josh.svg | tr -d '\n')/g" index.html
-          mawk -f scripts/syntax.awk index.html > tmp.html && mv -f tmp.html index.html
+          cd src
+          go mod tidy
+          go run main.go --static ..
     - name: Commit changes
       uses: stefanzweifel/git-auto-commit-action@v4
       with:

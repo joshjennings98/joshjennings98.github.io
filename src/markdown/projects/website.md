@@ -1,3 +1,9 @@
+---
+title: This Website
+slug: website
+date: 2099-11-15T14:45:28Z
+---
+
 # This Website
 
 The goal of this website was to create an interactive static website using on HTML and CSS, no JavaScript. I had recently read [an article about the quiet web](https://briankoberlein.com/tech/quiet-web/) which inspired me to try and create an interesting website that satisfied the requirements laid out in the blog post:
@@ -219,7 +225,7 @@ An issue with this is that when you go to a heading via a fragment, it shifts th
 :target::before {
   content: "";
   display: block;
-  height: 1000px; /* Fixed header height*/
+  height: 1000px; /* Fixed header height */
   margin: -1000px 0 0; /* Negative fixed header height */
 }
 ```
@@ -228,21 +234,15 @@ And with that, we have a fully usable single-page website that behaves like it h
 
 ## Code Generation
 
-This website is generated with two AWK scripts and a sed command — the moving SVG needs to be embedded into the HTML to work but it's too big for AWK to handle...
+The website exists as a series of markdown files which are converted into HTML. The HTML is generated using my own static site generator that primarily uses the libraries [goldmark](https://github.com/yuin/goldmark) for markdown to HTML conversion and [gomponents](https://github.com/maragudk/gomponents) for the HTML components which means I can avoid using templates.
 
-### Markdown to HTML with AWK
+### Converting Markdown to HTML
 
-The website exists as a series of markdown files which are converted into HTML. There are many ways to do this but I decided to do it with an AWK script. I did this just to see what writing AWK scripts is like and the result is a mess, but it works. The scripts use regex to match the various elements of markdown and then wrap them in the correct HTML tags. Not everything from markdown is supported but it does support:
+To convert the markdown files into HTML they are parsed with the goldmark library. This is a markdown parser library that is compliant with the [CommonMark](https://commonmark.org/) specification. It contains a few extensions that you can use to extend the parser and renderer. For example there is an [extension for rendering mathjax](https://github.com/litao91/goldmark-mathjax) that I could use if I ever wanted to add support for rendering math equations (although that would require JavaScript too so I won't be using it). I chose goldmark over other markdown parsers since it is extensible and is compliant with CommonMark.
 
-* Headers
-* Code blocks
-* Lists
-  * Including nested lists
-* Blockquotes
-* Tables
-* Inline styling within paragraphs
+I used to use templates for generating my website content. This worked fine but it is hard to read and test the templates so I wanted a component library that meant I could write the website components in Go iteself and then render them at runtime. This also means that testing is easier as I can test individual components with [Go's inbuilt testing utilities](https://pkg.go.dev/testing) rather than writing to complex templates and checking the output. This also allows me to utilise Go's type safetly and compile time checks that templates would not.
 
-This covers basically everything I need and means that adding pages to the website is as simple as adding a new markdown file to the `markdown` directory. The generator then creates the `index.html` using the techniques outlined in the previous sections to create this JavaScript-free website!
+The code for the generators can be found in the [GitHub repo](https://github.com/joshjennings98/joshjennings98.github.io) for this project.
 
 ### Syntax Highlighting with CSS gradients
 
@@ -260,7 +260,7 @@ for(i = 0; i < 10; i++){
 
 We utilise a horrible regex to match specific keywords etc. and create a gradient that lines up with the text. We then set this as the background for the `pre`:
 
-<pre class="skip" style="background: linear-gradient(to right, white 0ch, #a6e22e 0ch, #a6e22e 3ch, white 3ch, white 6ch, #f92672 6ch, #f92672 7ch, white 7ch, white 8ch, #A7C 8ch, #A7C 9ch, white 9ch, white 13ch, #f92672 13ch, #f92672 14ch, white 14ch, white 15ch, #A7C 15ch, #A7C 17ch, white 17ch, white 300ch), linear-gradient(to right, white 0ch, white 0ch, white 4ch, #fd971f 4ch, #fd971f 11ch, white 11ch, white 12ch, #a6e22e 12ch, #a6e22e 15ch, white 15ch, white 300ch), linear-gradient(to right, white 0ch, white 0ch, white 300ch); background-repeat: no-repeat; background-size: 80ch 22px, 80ch 44px, 80ch 66px, 80ch 88px; color: black; width: 80ch; font-family: monospace; font-size: 20px; line-height: 22px; width:inherit">
+<pre class="skip" style="background: linear-gradient(to right, white 0ch, #E68 0ch, #E68 3ch, white 3ch, white 8ch, #A7C 8ch, #A7C 9ch, white 9ch, white 13ch, #f92672 13ch, #f92672 14ch, white 14ch, white 15ch, #A7C 15ch, #A7C 17ch, white 17ch, white 20ch, #f92672 20ch, #f92672 22ch, white 22ch, white 300ch), linear-gradient(to right, white 0ch, white 0ch, white 4ch, #fd971f 4ch, #fd971f 11ch, white 11ch, white 12ch, #a6e22e 12ch, #a6e22e 15ch, white 15ch, white 300ch), linear-gradient(to right, white 0ch, white 0ch, white 300ch); background-repeat: no-repeat; background-size: 80ch 22px, 80ch 44px, 80ch 66px, 80ch 88px; color: black; width: 80ch; font-family: monospace; font-size: 20px; line-height: 22px; width:inherit">
 for(i = 0; i < 10; i++){
     console.log(i);
 }
@@ -282,22 +282,22 @@ The resulting effect looks quite nice if you get the regular expressions for the
 
 At this point the website is quite good (well I think it is). It satisfies the goals I set out with but it looks a bit boring. A criticism of these mimimal websites is that they are too minimal and all look the same. We can't be having that, I like the websites of the good old days where each page [was unique and a bit insane](https://www.spacejam.com/1996/). To rectify this, I have decided to add a nice scrolling grid effect to the webpage using CSS animations along with a fun animated website header. This way the website will be more fun and no-one will call it mimimalist and boring.
 
-The header is an SVG that has been animated with CSS. I added an animation to the path element of the SVG that creates an effect so that the outline of the SVG appears and disapears in a dashed pattern along with the fill fading in and out. This makes it look like the text is appearing and disappearing. A problem with this is that to style an SVG with CSS, it must be inlined into the HTML, you cannot have it in a separate file. Since the SVG is of some text in a specific font ([Iosevka](https://en.wikipedia.org/wiki/Iosevka)) it is made up of many points meaning the SVG is too long for awk to print it. This means that I have to insert it into the HTML using sed after the website has been generated. Ideally, it would be possible to have a separate SVG and style it without inlining it. Unfortunatly we can't do that so we must make do with this horrendous solution.
+The header is an SVG that has been animated with CSS. I added an animation to the path element of the SVG that creates an effect so that the outline of the SVG appears and disapears in a dashed pattern along with the fill fading in and out. This makes it look like the text is appearing and disappearing. 
 
-For the scrolling grid effect there are two classes, `.lighth` and `.lightv`, these define pseudo-elements so all I have to do is add a couple of small elements to the bottom of the page:
+For the scrolling grid effect there are two classes, `.gridhoriz` and `.gridvert`, these define pseudo-elements so all I have to do is add a couple of small elements to the bottom of the page:
 
 ```html
-<section class="lighth">
-<section class="lightv">
+<section class="gridhoriz">
+<section class="gridvert">
 </section>
 </section>
 ```
 
-For `.lighth::before`, an absolutely positioned pseudo-element is defined with a linear gradient background that extends horizontally beyond the viewport on both sides. The `.lightv` class styles an element with a relative position, taking up the full width of the page whilst the `.lightv::before` pseudo-element creates a central vertical line, with multiple additional vertical lines positioned at intervals using the box-shadow property. The `.lightv::after` adds a horizontal element that extends beyond the viewport on both sides and has additional horizontal lines created using box-shadow. This element is then animated to move vertically in a loop, producing a scrolling grid effect that fades into the background.
+For `.gridhoriz::before`, an absolutely positioned pseudo-element is defined with a linear gradient background that extends horizontally beyond the viewport on both sides. The `.gridvert` class styles an element with a relative position, taking up the full width of the page whilst the `.gridvert::before` pseudo-element creates a central vertical line, with multiple additional vertical lines positioned at intervals using the box-shadow property. The `.gridvert::after` adds a horizontal element that extends beyond the viewport on both sides and has additional horizontal lines created using box-shadow. This element is then animated to move vertically in a loop, producing a scrolling grid effect that fades into the background.
 
 ## Deployment using GitHub Pages
 
-I don't want to spend money so I host the website with GitHub pages. This is particularly nice since I am hosting the repository on GitHub so deployments are trivial, I just run the `awk` scripts and I am done.
+I don't want to spend money so I host the website with GitHub pages. This is particularly nice since I am hosting the repository on GitHub so deployments are trivial, I just run the go code to generate the static files and I am done.
 
 ## Acknowledgements
 

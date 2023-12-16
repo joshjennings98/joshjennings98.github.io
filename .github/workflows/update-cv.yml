@@ -1,13 +1,16 @@
 name: Build CV
 
 on:
+  pull_request:
+    branches:
+      - TEMP_DO_NOT_RUN
   push:
     branches:
-      - masterTEMPDONOTRUN
+      - TEMP_DO_NOT_RUN
     paths:
-      - 'src/cv.yaml'
-      - 'src/cv.css'
-      - 'src/cv.html.tmpl'
+      - 'src/cv/cv.yaml'
+      - 'src/cv/cv.html.tmpl'
+      - 'src/static/cv.css'
 
 jobs:
   build-and-deploy-cv:
@@ -21,8 +24,8 @@ jobs:
         cache: 'pip'
     - name: Generate CV from YAML
       run: |
-          pip3 install -r requirements.txt
-          python3 scripts/generate_cv.py -c src/cv.yaml -t src/cv.html.tmpl -o CV-Josh-Jennings.html
+          pip3 install -r scripts/requirements.txt
+          python3 scripts/generate_cv.py -c src/cv/cv.yaml -t src/cv/cv.html.tmpl -o cv.html
     - name: Commit changes
       uses: stefanzweifel/git-auto-commit-action@v4
       with:

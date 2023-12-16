@@ -159,6 +159,8 @@ a {
 }
 ```
 
+This is combined with the following HTML:
+
 ```html
 <label for="homepage-button" class="page-button">Home</label>
 <label for="page1-button" class="page-button">Page 1</label>
@@ -217,7 +219,7 @@ An issue with this is that when you go to a heading via a fragment, it shifts th
 :target::before {
   content: "";
   display: block;
-  height: 1000px; /* Fixed header height*/
+  height: 1000px; /* Fixed header height */
   margin: -1000px 0 0; /* Negative fixed header height */
 }
 ```
@@ -226,34 +228,76 @@ And with that, we have a fully usable single-page website that behaves like it h
 
 ## Code Generation
 
-I implemented my own static site generator. Since my website is basically a single page application, I only ned to populate the `index.html` file. I use Go with it's powerful templating to fill the relevant sections of the `index.html` with content that has been parsed from markdown files. This means that if I want to add a page, I just add a markdown file, and the website will automatically regenerate the `index.html` when I push the change to GitHub. This is done with a simple CI workflow. GitHub pages then handles the deployment of the actual website, this is discuessed in the section below.
+The website exists as a series of markdown files which are converted into HTML. The HTML is generated using my own static site generator that primarily uses the libraries [goldmark](https://github.com/yuin/goldmark) for markdown to HTML conversion and [gomponents](https://github.com/maragudk/gomponents) for the HTML components which means I can avoid using templates.
 
-The Go code is not interesting. It is written with only standard library modules. It reads the markdown from the markdown directory, converts it into HTML using regex to convert the various markdown tags into their HTML equivalent, and then populates the templates for the `index.html` and `404.html` pages. Since there is only one page to really think about, the code is kept relatively simple.
+### Converting Markdown to HTML
 
-The index template [can be found here](https://github.com/joshjennings98/joshjennings98.github.io/blob/master/templates/index.html.tmpl), whilst the Go program for populating the template [can be found here](https://github.com/joshjennings98/joshjennings98.github.io/blob/master/main.go).
+To convert the markdown files into HTML they are parsed with the goldmark library. This is a markdown parser library that is compliant with the [CommonMark](https://commonmark.org/) specification. It contains a few extensions that you can use to extend the parser and renderer. For example there is an [extension for rendering mathjax](https://github.com/litao91/goldmark-mathjax) that I could use if I ever wanted to add support for rendering math equations (although that would require JavaScript too so I won't be using it). I chose goldmark over other markdown parsers since it is extensible and is compliant with CommonMark.
 
-The workflow to run the program in CI is very simple. It uses GitHub actions to checkout the repo, and if there are changes to the markdown or templates then it will regenerate the index and commit the changes back to the repository. There is also a similar workflow that is used for generating my CV. In this case, the CV is kept as a `yaml` file and then a python script is used to turn it into HTML. 
+I used to use templates for generating my website content. This worked fine but it is hard to read and test the templates so I wanted a component library that meant I could write the website components in Go iteself and then render them at runtime. This also means that testing is easier as I can test individual components with [Go's inbuilt testing utilities](https://pkg.go.dev/testing) rather than writing to complex templates and checking the output. This also allows me to utilise Go's type safetly and compile time checks that templates would not.
 
-The CI workflows [can be found here](https://github.com/joshjennings98/joshjennings98.github.io/tree/master/.github/workflows).
+The code for the generators can be found in the [GitHub repo](https://github.com/joshjennings98/joshjennings98.github.io) for this project.
+
+### Syntax Highlighting with CSS gradients
+
+There are a lot of code snippets on my website and it would be nice if they could have some syntax highlighting. The most common way to do this is with a library like [highlight.js](https://highlightjs.org/) where JavaScript is used to determine the language and automatically highlight the code. This requires JavaScript which means I don't want it on my website. The other way is to generate the css for each syntax element in a language and wrap each part of the code in a span that matches the syntax element. This works but you end up with a million spans and it is also a bit boring and standard.
+
+The much more interesting and fun approach is to use CSS gradients. Like almost every approach, we use regex to work out the styling for each element but instead of wrapping each element in a span, we style the whole pre with gradients. This avoids having a mess of spans and uses no javascript.
+
+Lets say we have the following code block:
+
+```html
+for(i = 0; i < 10; i++){
+    console.log(i);
+}
+```
+
+We utilise a horrible regex to match specific keywords etc. and create a gradient that lines up with the text. We then set this as the background for the `pre`:
+
+<pre class="skip" style="background: linear-gradient(to right, white 0ch, #E68 0ch, #E68 3ch, white 3ch, white 8ch, #A7C 8ch, #A7C 9ch, white 9ch, white 13ch, #f92672 13ch, #f92672 14ch, white 14ch, white 15ch, #A7C 15ch, #A7C 17ch, white 17ch, white 20ch, #f92672 20ch, #f92672 22ch, white 22ch, white 300ch), linear-gradient(to right, white 0ch, white 0ch, white 4ch, #fd971f 4ch, #fd971f 11ch, white 11ch, white 12ch, #a6e22e 12ch, #a6e22e 15ch, white 15ch, white 300ch), linear-gradient(to right, white 0ch, white 0ch, white 300ch); background-repeat: no-repeat; background-size: 80ch 22px, 80ch 44px, 80ch 66px, 80ch 88px; color: black; width: 80ch; font-family: monospace; font-size: 20px; line-height: 22px; width:inherit">
+for(i = 0; i < 10; i++){
+    console.log(i);
+}
+</pre>
+
+I lied about not using spans. An unfortunate problem with the gradients is that depending on the browser, you can end up with the gradient from one line affecting the colours in the surrounding lines. You can also end up with some other rendering artifacts because browsers aren't designed carry out syntax highlighting with this method. Therefore we wrap each line in a span which avoids the rendering issues. Whilst there are some spans, this approach is still better than wrapping each syntax element in a span.
+
+The end result can be seen below:
+
+```javascript
+for(i = 0; i < 10; i++){
+    console.log(i);
+}
+```
+
+The resulting effect looks quite nice if you get the regular expressions for the language syntax correct (you will notice many places on this website where the choice of regex causes problems but this is just meant to be a bit of fun). It should be noted that this whole technique is quite pointless and it causes the website to take up more space than just using a JavaScript library for the highlighting.
+
+## Making the website less boring
+
+At this point the website is quite good (well I think it is). It satisfies the goals I set out with but it looks a bit boring. A criticism of these mimimal websites is that they are too minimal and all look the same. We can't be having that, I like the websites of the good old days where each page [was unique and a bit insane](https://www.spacejam.com/1996/). To rectify this, I have decided to add a nice scrolling grid effect to the webpage using CSS animations along with a fun animated website header. This way the website will be more fun and no-one will call it mimimalist and boring.
+
+The header is an SVG that has been animated with CSS. I added an animation to the path element of the SVG that creates an effect so that the outline of the SVG appears and disapears in a dashed pattern along with the fill fading in and out. This makes it look like the text is appearing and disappearing. 
+
+For the scrolling grid effect there are two classes, `.gridhoriz` and `.gridvert`, these define pseudo-elements so all I have to do is add a couple of small elements to the bottom of the page:
+
+```html
+<section class="gridhoriz">
+<section class="gridvert">
+</section>
+</section>
+```
+
+For `.gridhoriz::before`, an absolutely positioned pseudo-element is defined with a linear gradient background that extends horizontally beyond the viewport on both sides. The `.gridvert` class styles an element with a relative position, taking up the full width of the page whilst the `.gridvert::before` pseudo-element creates a central vertical line, with multiple additional vertical lines positioned at intervals using the box-shadow property. The `.gridvert::after` adds a horizontal element that extends beyond the viewport on both sides and has additional horizontal lines created using box-shadow. This element is then animated to move vertically in a loop, producing a scrolling grid effect that fades into the background.
 
 ## Deployment using GitHub Pages
 
-I don't want to spend money so I host the website with GitHub pages. This is particularly nice since I am hosting the repository on GitHub so deployments are trivial.
-
-You can use GitHub pages with fancy [Jekyll](https://jekyllrb.com/) setups but that probably involves some JavaScript which I don't want (also I prefer [Hugo](https://gohugo.io/) if I use a static site generator that isn't my own). Instead I just use my own static site generator that populates the `index.html.template` as talked about in the previous section. This makes the deployments very simple as there is only one page, it is as simple as the [hello world example for github pages](https://pages.github.com/). Since this is hosted on GitHub I don't even have to worry about CI for the actual deplyoment as it is handled by GitHub.
-
-Unfortunately I can't have just one page, I need a 404 page so that users can still navigate my website if they go to a wrong page. Again, because this is GitHub pages, this is very simple. You just need to create a `404.html` and have it at the root of the repo, no need for special files like a `.htaccess`. You can create a tempalte for the 404 page and populate it like the index so that the website looks consistent and all the links can be accessed easily from the 404 page.
-
-If you want to use a custom domain with GitHub pages, that is also relatively simple, you just need to add a CNAME record to your reopository. This involves two steps:
-* Adding a CNAME record file to your repository.
-* Creating a CNAME record with your DNS provider.
-
-The CNAME record file contains the domain you want to use for your website. A CNAME record is used to specify that a domain name is an alias for another domain. This basically acts as a redirect so a custom dmain name can be used. The target domain must have an A address record. The A address record is used to map a domain to it's corresponding IP where the werbsite is hosted.
-
-To create the CNAME record itself, you must go to your DNS provider and create a CNAME record that points the domain to the GitHub pages URL (in my case joshjenning98.github.io). This is a different process for different DNS provders. In my case I used Google domains (for the `.dev` top level domain) for which the information on setting up a CNAME record can be found [on this page](https://support.google.com/a/answer/47283?hl=en#zippy=%2Cstep-get-your-unique-cname-record%2Cstep-add-the-cname-record-to-your-domains-dns-records). If you want to enforce HTTPS (a requirement for `.dev`) you must aso go to the GitHub pages setting and have "Enforce HTTPS" enabled.
+I don't want to spend money so I host the website with GitHub pages. This is particularly nice since I am hosting the repository on GitHub so deployments are trivial, I just run the go code to generate the static files and I am done.
 
 ## Acknowledgements
 
 A lot of inspiration was taked from [this blog post](https://kleinfreund.de/css-only-dark-mode/) on CSS-only dark mode for the initial work on reimplementing the theme toggle without JavaScript.
 
 This [person on codepen](https://codepen.io/finnhvman) has a lot of amazing CSS only stuff available that make this website seem like a toy. They also have some cool SVG stuff like this [gas giant](https://codepen.io/finnhvman/pen/jOQvYaz) that I want to include on my website somehow.
+
+The CSS only syntax highlighting is a slightly modified version of the work in [this blog post](https://dev.to/grahamthedev/impossible-css-only-js-syntax-highlighting-with-a-single-element-and-gradients-243j).
+

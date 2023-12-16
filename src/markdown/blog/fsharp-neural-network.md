@@ -1,112 +1,12 @@
-# F# Neural Network
+---
+title: Understand Neural Networks using F#
+slug: fsharp-neural-network
+date: 2017-11-15T14:45:28Z
+---
 
-A small F# library that allows for the creation of scalable fully-connected neural networks. It was developed for and built entirely using F#.
+# Understanding Neural Networks using F#
 
-## Usage
-
-### Defining a network
-
-Networks can be specified using the following format. Any number of layers are supported. Provided they align, the dimensions can be as large as desired.
-
-```fsharp
-let network = [
-    {inputDims = 3; outputDims = 5; activation = Sigmoid};
-    {inputDims = 5; outputDims = 6; activation = Sigmoid};
-    {inputDims = 6; outputDims = 2; activation = Sigmoid};
-]
-```
-
-You can choose from multiple different activation functions including:
-
-* Relu
-* Sigmoid
-* Tanh
-* Softmax
-* Leaky Relu
-* Elu
-* Selu
-* Softsign
-* Softplus
-* Exponential
-* Hard Sigmoid
-* Linear
-
-### Training a network
-
-Input data is provided in the form of a list of inputs, and a list of labels corresponding to each input.
-
-```fsharp
-(* Inputs *)
-let data = [
-    [0.5; 1.0; 0.2];
-    [0.1; 0.7; 1.0];
-    [1.0; 0.1; 0.1];
-    [0.0; 0.34; 0.8];
-    [0.6; 0.1; 0.3]
-]
-
-(* Labels *)
-let labels = [
-    [1.0; 1.0];
-    [0.0; 1.0];
-    [0.0; 0.0];
-    [1.0; 0.0];
-    [0.0; 1.0];
-]
-```
-
-To train and run the network, see the code snippets below:
-
-```fsharp
-(* trainNetwork architecture labels data learning-rate loss iterations *)
-let model = trainNetwork network labels data 0.05 MSE 100000
-```
-
-Currently, the following loss functions are avaliable:
-
-* Mean Square Error
-* Cross Entropy
-* Mean Absolute Error
-
-### Running a trained network
-
-A single run of the network can be specified as follows:
-
-```fsharp
-(* runNetwork model input architecture *)
-runNetwork model [0.1; 0.8; 0.4] network (* [0.90643753; 0.99834754] *)
-```
-
-We can test multiple inputs by using a loop:
-
-```fsharp
-for idx in List.init (List.length data) id do
-    printfn "Input: %A" data.[idx]
-    printfn "Output: %A" (runNetwork model data.[idx] network)
-```
-
-This will print the following:
-
-```
-Input: [0.5; 1.0; 0.2]
-Output: [0.9748251802; 0.9991071572]
-
-Input: [0.1; 0.7; 1.0]
-Output: [0.04458155893; 0.9556900964]
-
-Input: [1.0; 0.1; 0.1]
-Output: [1.150921027e-05; 0.03353754142]
-
-Input: [0.0; 0.34; 0.8]
-Output: [0.9681691113; 0.03517992806]
-
-Input: [0.6; 0.1; 0.3]
-Output: [0.003145187104; 0.9791424116]
-```
-
-These match up with the labels specified earlier.
-
-## How it works
+In this post I will show off a small F# library that allows for the creation of scalable fully-connected neural networks. It was developed for and built entirely using F#. I will use it to explain how forward and back propagation work via code examples.
 
 ### Forward Propagation
 
@@ -115,12 +15,12 @@ A single forward propagation though a layer just involves multiplying the inputs
 ```fsharp
 let forwardSingleLayer (bias : float) (weights : float list list) (inputs : float list) (activation : Activation) : float list =
     weights
-    |> List.map (fun list -> List.map2 ( * ) list inputs)
+    |> List.map (fun list -> List.map2 (*) list inputs)
     |> List.map (fun list -> List.sum list + bias)
     |> activateLayer activation
 ```
 
-The activateLayer function takes an activation and maps the corresponding activation function across the list before returning it. A small part of this function can be see below:
+The `activateLayer` function takes an activation and maps the corresponding activation function across the list before returning it. A small part of this function can be see below:
 
 ```fsharp
 let activateLayer (activation : Activation) (input : float list) : float list =
@@ -131,7 +31,11 @@ let activateLayer (activation : Activation) (input : float list) : float list =
         List.map (fun x -> max x 0.0) input
 ```
 
-The full forward propagation is slightly more complex. It first creates an empty list the size of the network. It folds though the epty list using the accumulator to store the intermediate activated and unactivated output of all layers. It then adds an extra layer containing only 1.0s to the end of the forward propagated output. This makes it easier when doing back propagation.
+That was a single layer, the process for the full forward propagation has the following steps: 
+
+1. First create an empty list the size of the network.
+2. Fold though the empty list using the accumulator to store the intermediate activated and unactivated output of all layers. This is done with the `forwardSingleLayer` function from before.
+3. Then add an extra layer containing only 1.0s to the end of the forward propagated output. This makes it easier when doing back propagation.
 
 ```fsharp
 let forwardFull (parameters : Parameters) (inputs : float list) (layers : Layer list) : float list list =
@@ -155,7 +59,9 @@ let getOverallError (targetOutputs : float list) (actualOutputs : float list) (l
     |> List.sum
 ```
 
-Similarly to the activation functions, the loss functions are supplied using pattern matching In this case however, they return a function that can be applied wherever the particular value required instead of taking an returning a list. Part of lossFunction can be seen below:
+A loss function quantifies the difference between the predicted outputs of the network and the actual target values.
+
+Here is how we can apply the loss functions with F#. Similarly to the activation functions, the loss functions are supplied using pattern matching. In this case however, they return a function that can be applied wherever the particular value required instead of taking an returning a list. Part of lossFunction can be seen below:
 
 ```fsharp
 let lossFunction (loss : Loss) (n : int) : float -> float -> float =
@@ -181,14 +87,14 @@ let backPropSingleLayer (targetOutputs : float list) (loss : Loss) (learningRate
 
     let intermediateOutputDeltaSum =
         if layerIndex = 0
-        then (* Output layer *)
+        then // Output layer 
             forwardPropParts.[layerIndex + 1]
             |> List.map2 (dLossFunction loss targetOutputs.Length) backPropPart
-        else (* Hidden layers *)
+        else // Hidden layers 
             List.init forwardPropParts.[layerIndex + 1].Length (fun _ ->
                 forwardPropParts.[layerIndex]
                 |> dActivateLayer layers.[layerIndex - 1].activation
-                |> List.map2 ( * ) backPropPart)
+                |> List.map2 (*) backPropPart)
             |> List.mapi (fun index1 deltas ->
                 allWeights.[layerIndex]
                 |> List.mapi (fun index2 weights -> weights.[index1] * deltas.[index2]))
@@ -197,7 +103,7 @@ let backPropSingleLayer (targetOutputs : float list) (loss : Loss) (learningRate
     let newWeights =
         forwardPropParts.[layerIndex + 1]
         |> dActivateLayer layers.[layerIndex].activation
-        |> List.map2 ( * ) intermediateOutputDeltaSum
+        |> List.map2 (*) intermediateOutputDeltaSum
         |> List.map (fun delta ->
             forwardPropParts.[layerIndex + 2]
             |> List.map (fun out -> learningRate * delta * out))
@@ -254,7 +160,9 @@ let dLossFunction (loss : Loss) (n : int) : float -> float -> float =
 
 ### Training
 
-Training the network is a fairly simple recursive function that continually picks a random sample of the data set and carries out forwards and backwards propagation using the sample for any number of iterations. A simplified version of the function (initialisation and printing etc. removed) can be seen below:
+To train a neural network you repeatedly run forward and backwards propagation and then update the weights accordingly. We repeatedly try out different inputs to avoid the network learning a specific input.
+
+Training the network in F# is a fairly simple recursive function that continually picks a random sample of the data set and carries out forwards and backwards propagation using the sample for any number of iterations. A simplified version of the function (initialisation and printing etc. removed) can be seen below:
 
 ```fsharp
 let rec train (parameters : Parameters) (model : Layer list) (maxIterations : int) (iterations : int) =
@@ -267,13 +175,121 @@ let rec train (parameters : Parameters) (model : Layer list) (maxIterations : in
 
     train fullSingle model maxIterations (iterations + 1)
 
-(* This is called like below *)
+// This is called like below 
 train initial architecture iterations 0
 ```
+
+## Using the library
+
+### Defining a network
+
+Networks can be specified using the following format. Any number of layers are supported. Provided they align, the dimensions can be as large as desired.
+
+```fsharp
+let network = [
+    {inputDims = 3; outputDims = 5; activation = Sigmoid};
+    {inputDims = 5; outputDims = 6; activation = Sigmoid};
+    {inputDims = 6; outputDims = 2; activation = Sigmoid};
+]
+```
+
+You can choose from multiple different activation functions including:
+
+* Relu
+* Sigmoid
+* Tanh
+* Softmax
+* Leaky Relu
+* Elu
+* Selu
+* Softsign
+* Softplus
+* Exponential
+* Hard Sigmoid
+* Linear
+
+### Training a network
+
+Input data is provided in the form of a list of inputs, and a list of labels corresponding to each input.
+
+```fsharp
+// Inputs
+let data = [
+    [0.5; 1.0; 0.2];
+    [0.1; 0.7; 1.0];
+    [1.0; 0.1; 0.1];
+    [0.0; 0.34; 0.8];
+    [0.6; 0.1; 0.3]
+]
+
+// Labels
+let labels = [
+    [1.0; 1.0];
+    [0.0; 1.0];
+    [0.0; 0.0];
+    [1.0; 0.0];
+    [0.0; 1.0];
+]
+```
+
+To train and run the network, see the code snippets below:
+
+```fsharp
+// trainNetwork architecture labels data learning-rate loss iterations
+let model = trainNetwork network labels data 0.05 MSE 100000
+```
+
+Currently, the following loss functions are avaliable:
+
+* Mean Square Error
+* Cross Entropy
+* Mean Absolute Error
+
+### Running a trained network
+
+A single run of the network can be specified as follows:
+
+```fsharp
+// runNetwork model input architecture 
+runNetwork model [0.1; 0.8; 0.4] network // [0.90643753; 0.99834754] 
+```
+
+We can test multiple inputs by using a loop:
+
+```fsharp
+for idx in List.init (List.length data) id do
+    printfn "Input: %A" data.[idx]
+    printfn "Output: %A" (runNetwork model data.[idx] network)
+```
+
+This will print the following:
+
+```
+Input: [0.5; 1.0; 0.2]
+Output: [0.9748251802; 0.9991071572]
+
+Input: [0.1; 0.7; 1.0]
+Output: [0.04458155893; 0.9556900964]
+
+Input: [1.0; 0.1; 0.1]
+Output: [1.150921027e-05; 0.03353754142]
+
+Input: [0.0; 0.34; 0.8]
+Output: [0.9681691113; 0.03517992806]
+
+Input: [0.6; 0.1; 0.3]
+Output: [0.003145187104; 0.9791424116]
+```
+
+These match up with the labels specified earlier.
 
 ## Bugs
 
 Be careful with the chosen parameters. The networks can die easily if the chosen parameters cause weigths to overflow and become NaN, alternatively the network won’t learn the data set correctly.
+
+## Acknowledgements
+
+A lot of inspiration comes from [this excellent blog post on backpropagation](https://mattmazur.com/2015/03/17/a-step-by-step-backpropagation-example/).
 
 ## GitHub
 
