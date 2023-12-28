@@ -1,7 +1,7 @@
 ---
 title: Understand Neural Networks using F#
 slug: fsharp-neural-network
-date: 2017-11-15T14:45:28Z
+date: 2019-11-15T14:45:28Z
 ---
 
 # Understanding Neural Networks using F#
