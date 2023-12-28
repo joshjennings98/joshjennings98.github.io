@@ -40,7 +40,7 @@ body, html {
 }
 
 .container {
-  font-family: iosevka, courier new, mono, monospace;
+  font-family: mono, monospace;
   line-height: 1.6;
   position: relative;
   display: -webkit-flex;
