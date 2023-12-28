@@ -8,8 +8,8 @@ date: 2099-11-15T14:45:28Z
 
 The goal of this website was to create an interactive static website using on HTML and CSS, no JavaScript. I had recently read [an article about the quiet web](https://briankoberlein.com/tech/quiet-web/) which inspired me to try and create an interesting website that satisfied the requirements laid out in the blog post:
 
-* Exclude any page that has ads. 
-* Remove them if they use Google Analytics or Google Fonts. 
+* Exclude any page that has ads.
+* Remove them if they use Google Analytics or Google Fonts.
 * Remove them if they use scripts or trackers.
 
 These are arbitrary requirements but it seemed like an interesting challenge. On top of this, in the event that CSS was disabled, I also wanted my website to retain most of it's usability.
@@ -21,7 +21,7 @@ I am not one for frontend development and none of the previous versions of my si
 The main feature that I wanted to emulate using CSS was a light mode toggle. I wanted to be able to click a button and have the colour scheme change. With JavaScript I would watch for a checkbox and have an `onchange` event that makes the colour changes. Since this relies on JavaScript, this approach is not possible. So using only CSS we need some way to:
 
 * Know that a checkbox has been checked.
-* If the user was previously in a dark mode the page should become light or vice versa. 
+* If the user was previously in a dark mode the page should become light or vice versa.
 * This needs to be dynamic and not just occur on page load but any time a user checks the checkbox.
 
 Luckily, CSS has [pseudo-classes](https://developer.mozilla.org/en-US/docs/Web/CSS/Pseudo-classes). These are keywords that are attached to a selector and specify a state of the selected element, for example `:hover` is triggered when an element is hovered over. There exists the [`:checked` pseudo-class](https://developer.mozilla.org/en-US/docs/Web/CSS/:checked) which can be used to change the style of a checkbox or radio button based on whether or not it is checked. This satisfies the goal of making the change dynamic and controllable by the user.
@@ -207,7 +207,7 @@ In our case we have behavior similar to the radio buttons. We will hide all page
 }
 ```
 
-There is a difference vs the radio button version, that being that we have explicit behavior for the homepage. Since the default is that there is no fragment, we want to make sure that the homepage is shown if there is no fragment. We can't have a default fragment as that would make the URL messy. We therefore use the power of the General sibling combinator again to have the homepage show by default then hide if any other sibling page is selected. This means that the individual pages of the website can be accessed by doing `https://website.com#page`! Due to the nature of the combinators, we need to make sure that the homepage is the final section of the website since we want to hide it if a page is selected and we can only affect elements that come after the current DOM element. 
+There is a difference vs the radio button version, that being that we have explicit behavior for the homepage. Since the default is that there is no fragment, we want to make sure that the homepage is shown if there is no fragment. We can't have a default fragment as that would make the URL messy. We therefore use the power of the General sibling combinator again to have the homepage show by default then hide if any other sibling page is selected. This means that the individual pages of the website can be accessed by doing `https://website.com#page`! Due to the nature of the combinators, we need to make sure that the homepage is the final section of the website since we want to hide it if a page is selected and we can only affect elements that come after the current DOM element.
 
 To specify links to the pages within the website, we just have to create links to them like you would in a table of contents:
 
@@ -246,25 +246,27 @@ The code for the generators can be found in the [GitHub repo](https://github.com
 
 ### Syntax Highlighting with CSS gradients
 
-There are a lot of code snippets on my website and it would be nice if they could have some syntax highlighting. The most common way to do this is with a library like [highlight.js](https://highlightjs.org/) where JavaScript is used to determine the language and automatically highlight the code. This requires JavaScript which means I don't want it on my website. The other way is to generate the css for each syntax element in a language and wrap each part of the code in a span that matches the syntax element. This works but you end up with a million spans and it is also a bit boring and standard.
+There are a lot of code snippets on my website and it would be nice if they could have some syntax highlighting. The most common way to do this is with a library like [highlight.js](https://highlightjs.org/) where JavaScript is used to determine the language and automatically highlight the code. This requires JavaScript which means I don't want it on my website. The other way is to generate the css for each syntax element in a language and wrap each part of the code in a span that matches the syntax element. This works but you end up with a million spans and it is also a bit boring.
 
 The much more interesting and fun approach is to use CSS gradients. Like almost every approach, we use regex to work out the styling for each element but instead of wrapping each element in a span, we style the whole pre with gradients. This avoids having a mess of spans and uses no javascript.
 
 Lets say we have the following code block:
 
-```html
+```
 for(i = 0; i < 10; i++){
     console.log(i);
 }
 ```
 
-We utilise a horrible regex to match specific keywords etc. and create a gradient that lines up with the text. We then set this as the background for the `pre`:
+We utilise a horrible regex to match specific keywords etc. and create a gradient that lines up with the text:
 
 <pre class="skip" style="background: linear-gradient(to right, white 0ch, #E68 0ch, #E68 3ch, white 3ch, white 8ch, #A7C 8ch, #A7C 9ch, white 9ch, white 13ch, #f92672 13ch, #f92672 14ch, white 14ch, white 15ch, #A7C 15ch, #A7C 17ch, white 17ch, white 20ch, #f92672 20ch, #f92672 22ch, white 22ch, white 300ch), linear-gradient(to right, white 0ch, white 0ch, white 4ch, #fd971f 4ch, #fd971f 11ch, white 11ch, white 12ch, #a6e22e 12ch, #a6e22e 15ch, white 15ch, white 300ch), linear-gradient(to right, white 0ch, white 0ch, white 300ch); background-repeat: no-repeat; background-size: 80ch 22px, 80ch 44px, 80ch 66px, 80ch 88px; color: black; width: 80ch; font-family: monospace; font-size: 20px; line-height: 22px; width:inherit">
 for(i = 0; i < 10; i++){
     console.log(i);
 }
 </pre>
+
+We then set this as the background for the `pre` and make the text transparent. This makes the colour of the text match the gradient.
 
 I lied about not using spans. An unfortunate problem with the gradients is that depending on the browser, you can end up with the gradient from one line affecting the colours in the surrounding lines. You can also end up with some other rendering artifacts because browsers aren't designed carry out syntax highlighting with this method. Therefore we wrap each line in a span which avoids the rendering issues. Whilst there are some spans, this approach is still better than wrapping each syntax element in a span.
 
@@ -282,7 +284,7 @@ The resulting effect looks quite nice if you get the regular expressions for the
 
 At this point the website is quite good (well I think it is). It satisfies the goals I set out with but it looks a bit boring. A criticism of these mimimal websites is that they are too minimal and all look the same. We can't be having that, I like the websites of the good old days where each page [was unique and a bit insane](https://www.spacejam.com/1996/). To rectify this, I have decided to add a nice scrolling grid effect to the webpage using CSS animations along with a fun animated website header. This way the website will be more fun and no-one will call it mimimalist and boring.
 
-The header is an SVG that has been animated with CSS. I added an animation to the path element of the SVG that creates an effect so that the outline of the SVG appears and disapears in a dashed pattern along with the fill fading in and out. This makes it look like the text is appearing and disappearing. 
+The header is an SVG that has been animated with CSS. I added an animation to the path element of the SVG that creates an effect so that the outline of the SVG appears and disapears in a dashed pattern along with the fill fading in and out. This makes it look like the text is appearing and disappearing.
 
 For the scrolling grid effect there are two classes, `.gridhoriz` and `.gridvert`, these define pseudo-elements so all I have to do is add a couple of small elements to the bottom of the page:
 
