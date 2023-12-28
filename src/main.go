@@ -258,6 +258,10 @@ func WebsiteContent(title string, aboutPage Page, projectPages, blogPages []Page
 		html.HTML(
 			html.Lang("en"),
 			html.Head(
+				html.Meta(
+					html.Name("viewport"),
+					html.Content("width=device-width, initial-scale=1.0"),
+				),
 				html.TitleEl(gomponents.Text(title)),
 				html.Link(
 					html.Rel("stylesheet"),

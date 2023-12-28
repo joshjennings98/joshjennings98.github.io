@@ -6,7 +6,7 @@ date: 2017-11-15T14:45:28Z
 
 # Understanding Neural Networks using F#
 
-In this post I will show off a small F# library that allows for the creation of scalable fully-connected neural networks. It was developed for and built entirely using F#. I will use it to explain how forward and back propagation work via code examples.
+In this post I will show off a small F# library that allows for the creation of scalable fully-connected neural networks. I will use it to explain how forward and back propagation work via code examples. I made this before I was a software engineer (so no tests...) and I did it to help me understand neural networks. Combining creating this library with [guides about backpropagation](https://mattmazur.com/2015/03/17/a-step-by-step-backpropagation-example/) helped me a lot with understanding neural networks and how they worked.
 
 ### Forward Propagation
 
@@ -31,7 +31,7 @@ let activateLayer (activation : Activation) (input : float list) : float list =
         List.map (fun x -> max x 0.0) input
 ```
 
-That was a single layer, the process for the full forward propagation has the following steps: 
+That was a single layer, the process for the full forward propagation has the following steps:
 
 1. First create an empty list the size of the network.
 2. Fold though the empty list using the accumulator to store the intermediate activated and unactivated output of all layers. This is done with the `forwardSingleLayer` function from before.
@@ -87,10 +87,10 @@ let backPropSingleLayer (targetOutputs : float list) (loss : Loss) (learningRate
 
     let intermediateOutputDeltaSum =
         if layerIndex = 0
-        then // Output layer 
+        then // Output layer
             forwardPropParts.[layerIndex + 1]
             |> List.map2 (dLossFunction loss targetOutputs.Length) backPropPart
-        else // Hidden layers 
+        else // Hidden layers
             List.init forwardPropParts.[layerIndex + 1].Length (fun _ ->
                 forwardPropParts.[layerIndex]
                 |> dActivateLayer layers.[layerIndex - 1].activation
@@ -175,7 +175,7 @@ let rec train (parameters : Parameters) (model : Layer list) (maxIterations : in
 
     train fullSingle model maxIterations (iterations + 1)
 
-// This is called like below 
+// This is called like below
 train initial architecture iterations 0
 ```
 
@@ -250,8 +250,8 @@ Currently, the following loss functions are avaliable:
 A single run of the network can be specified as follows:
 
 ```fsharp
-// runNetwork model input architecture 
-runNetwork model [0.1; 0.8; 0.4] network // [0.90643753; 0.99834754] 
+// runNetwork model input architecture
+runNetwork model [0.1; 0.8; 0.4] network // [0.90643753; 0.99834754]
 ```
 
 We can test multiple inputs by using a loop:
