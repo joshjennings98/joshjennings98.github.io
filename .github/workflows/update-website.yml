@@ -11,6 +11,7 @@ on:
       - 'src/markdown/**.md'
       - 'src/static/website.css'
       - 'src/main.go'
+  workflow_dispatch:
 
 jobs:
   build-and-deploy-website:
