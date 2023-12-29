@@ -443,7 +443,7 @@ func (d *MockDir) ReadDir(n int) ([]fs.DirEntry, error) {
 }
 
 func (e mockDirEntry) Name() string               { return e.name }
-func (e mockDirEntry) IsDir() bool                { return false }
+func (e mockDirEntry) IsDir() bool                { return true }
 func (e mockDirEntry) Type() fs.FileMode          { return 0 }
 func (e mockDirEntry) Info() (fs.FileInfo, error) { return mockFileInfo{}, nil }
 
