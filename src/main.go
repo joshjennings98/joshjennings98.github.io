@@ -6,6 +6,7 @@ import (
 	"flag"
 	"fmt"
 	html2 "html"
+	"io/fs"
 	"net/http"
 	"os"
 	"path/filepath"
@@ -51,7 +52,7 @@ type (
 
 var (
 	//go:embed all:markdown static
-	fs embed.FS
+	embedFS embed.FS
 
 	blogDir    = filepath.Join("markdown", "blog")
 	projectDir = filepath.Join("markdown", "projects")
@@ -348,8 +349,8 @@ func WebsiteContent(title string, aboutPage Page, projectPages, blogPages []Page
 	)
 }
 
-func ParsePage(path string) (page Page, err error) {
-	b, err := fs.ReadFile(path)
+func ParsePage(fsys fs.FS, path string) (page Page, err error) {
+	b, err := fs.ReadFile(fsys, path)
 	if err != nil {
 		return
 	}
@@ -387,14 +388,14 @@ func ParsePage(path string) (page Page, err error) {
 	return
 }
 
-func ParsePages(dir string) (pages []Page, err error) {
-	files, err := fs.ReadDir(dir)
+func ParsePages(fsys fs.FS, dir string) (pages []Page, err error) {
+	files, err := fs.ReadDir(fsys, dir)
 	if err != nil {
 		return
 	}
 
 	for _, entry := range files {
-		page, subErr := ParsePage(filepath.Join(dir, entry.Name()))
+		page, subErr := ParsePage(fsys, filepath.Join(dir, entry.Name()))
 		if subErr != nil {
 			err = subErr
 			return
@@ -409,33 +410,33 @@ func ParsePages(dir string) (pages []Page, err error) {
 	return
 }
 
-func loadContent() (err error) {
-	blogPages, err = ParsePages(blogDir)
+func loadContent(fsys fs.FS) (err error) {
+	blogPages, err = ParsePages(fsys, blogDir)
 	if err != nil {
 		return
 	}
 
-	projectPages, err = ParsePages(projectDir)
+	projectPages, err = ParsePages(fsys, projectDir)
 	if err != nil {
 		return
 	}
 
-	aboutPage, err = ParsePage(aboutFile)
+	aboutPage, err = ParsePage(fsys, aboutFile)
 	if err != nil {
 		return
 	}
 
-	stylesheetContent, err = fs.ReadFile(stylesheet)
+	stylesheetContent, err = fs.ReadFile(fsys, stylesheet)
 	if err != nil {
 		return
 	}
 
-	joshSVGContent, err = fs.ReadFile(joshSVG)
+	joshSVGContent, err = fs.ReadFile(fsys, joshSVG)
 	if err != nil {
 		return
 	}
 
-	faviconContent, err = fs.ReadFile(favicon)
+	faviconContent, err = fs.ReadFile(fsys, favicon)
 	if err != nil {
 		return
 	}
@@ -617,7 +618,7 @@ func main() {
 
 	flag.Parse()
 
-	if err := loadContent(); err != nil {
+	if err := loadContent(embedFS); err != nil {
 		fmt.Println("Error parsing content:", err.Error())
 		return
 	}
