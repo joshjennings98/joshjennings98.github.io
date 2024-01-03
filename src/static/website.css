@@ -4,14 +4,14 @@
   --c-alternative: rgba(0, 85, 255, 1);
   --c-dark-text: rgba(17, 17, 17, 1);
   --c-dark-background: rgba(238, 238, 238, 1);
-  --c-dark-alternative: rgba(229, 39, 157, 1);
+  --c-dark-alternative: rgba(32, 194, 14, 1);
 }
 
 @media (prefers-color-scheme: dark) {
   :root {
     --c-text: rgba(238, 238, 238, 1);
     --c-background: rgba(17, 17, 17, 1);
-    --c-alternative: rgba(229, 39, 157, 1);
+    --c-alternative: rgba(32, 194, 14, 1);
     --c-dark-text: rgba(17, 17, 17, 1);
     --c-dark-background: rgba(238, 238, 238, 1);
     --c-dark-alternative: rgba(0, 85, 255, 1);
@@ -255,6 +255,7 @@ nav a, nav label {
   display: block;
   padding: 0 20px;
   color: var(--c-dark-background);
+  text-shadow: 1px 1px #000000;
   font-size: 20px;
   line-height: 60px;
   text-decoration: none;
@@ -369,7 +370,6 @@ pre code:not([class]) {
   margin: -1000px 0 0; /* Negative fixed header height */
 }
 
-
 /* Stop bottom of bage fading out */
 .bottom {
   padding-bottom: 100px;
@@ -395,17 +395,12 @@ pre code:not([class]) {
 }
 
 @media all and (max-width : 370px) {
-  nav ul li {
-    display: block;
-    width: 100%;
-  }
   .nav-content {
-    min-height: 160px; /* 60 (per box) * 4 */
     margin-top: 10px;  
     margin-bottom: 10px;
   }
   nav a, nav label {
-    line-height: 40px;
+    line-height: 30px;
+    font-size: 14px;
   }
 }
-
