@@ -401,6 +401,6 @@ pre code:not([class]) {
   }
   nav a, nav label {
     line-height: 30px;
-    font-size: 15px;
+    font-size: 14px;
   }
 }
