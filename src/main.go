@@ -606,7 +606,7 @@ func main() {
 	flag.StringVar(&port, "port", "8080", "Port to serve on")
 	flag.StringVar(&port, "p", "8080", "Port to serve on")
 	flag.StringVar(&host, "host", "localhost", "Host to serve on")
-	flag.StringVar(&host, "H", "localhost", "Host to serve on")
+	flag.StringVar(&host, "h", "localhost", "Host to serve on")
 
 	flag.Parse()
 
