@@ -640,7 +640,7 @@ func main() {
 			content.Render(w)
 		}))
 
-		fmt.Printf("Serving content on %v:%v\n", host, port)
+		fmt.Printf("Serving content on http://%v:%v\n", host, port)
 		_ = http.ListenAndServe(fmt.Sprintf("%v:%v", host, port), nil)
 	} else if *staticDir != "" {
 		err := os.MkdirAll(filepath.Join(*staticDir, "static"), os.ModePerm)
