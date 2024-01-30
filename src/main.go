@@ -90,7 +90,8 @@ var (
 		'G': {Regex: regexp.MustCompile(`([!=]=|[!=]==|\+\+|--|\*|\/|&&|\|\||!|<=?|>=?|>>|<<|\.{3})`), Code: "G", Colour: "#f92672"},
 		'H': {Regex: regexp.MustCompile(`(\b(window|document|navigator|console|self|top|process|require|module|define|global|Promise|Array|Math|String|Number|Symbol|Function|Reflect|Proxy|Error)\b)`), Code: "H", Colour: "#fd971f"},
 		'I': {Regex: regexp.MustCompile(`\b(var|let|const|function|this|do|super|as|constructor|instanceof|default)\b`), Code: "I", Colour: "#78dce8"},
-		'J': {Regex: regexp.MustCompile(`(\b(getElementsBy(TagName|ClassName|Name)|getElementById|(get|set|remove)Attribute|querySelector(All)?)\b)`), Code: "J", Colour: "#7E7"}}
+		'J': {Regex: regexp.MustCompile(`(\b(getElementsBy(TagName|ClassName|Name)|getElementById|(get|set|remove)Attribute|querySelector(All)?)\b)`), Code: "J", Colour: "#7E7"},
+	}
 
 	fsharpHighlighting = HighlightingMap{
 		'A': {Regex: regexp.MustCompile(`("(.*?)")`), Code: "A", Colour: "#FFD658"},
