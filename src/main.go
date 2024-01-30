@@ -59,12 +59,10 @@ var (
 	aboutFile  = filepath.Join("markdown", "about.md")
 	stylesheet = filepath.Join("static", "website.css")
 	favicon    = filepath.Join("static", "favicon.ico")
-	joshSVG    = filepath.Join("static", "josh.svg")
 
 	aboutPage         Page
 	projectPages      []Page
 	blogPages         []Page
-	joshSVGContent    []byte
 	stylesheetContent []byte
 	faviconContent    []byte
 
@@ -124,25 +122,52 @@ var (
 		'G': {Regex: regexp.MustCompile(`@([a-zA-Z-]+)`), Code: "G", Colour: "#78dce8"},
 	}
 
+	noHightlighting = HighlightingMap{}
+
 	highlightingRules = map[string]HighlightingMap{
 		"language-javascript": jsHighlighting,
 		"language-fsharp":     fsharpHighlighting,
 		"language-html":       htmlHighlighting,
 		"language-css":        cssHighlighting,
+		"languge-none":        noHightlighting,
 	}
 
 	preWithClassRegex   = regexp.MustCompile(`(?P<pre><pre><code class="(?P<class>.*?)">)(?P<content>.*)`)
 	preWithNoClassRegex = regexp.MustCompile(`(?P<pre><pre><code>)(?P<content>.*)`)
 )
 
+func Footer(slug string) gomponents.Node {
+	return html.Footer(
+		html.Table(
+			html.Width("100%"),
+			html.Tr(
+				html.Td(
+					html.Width("50%"),
+					gomponents.Attr("align", "left"),
+					html.A(
+						html.Href(fmt.Sprintf("#%v", slug)),
+						gomponents.Text("Back to top"),
+					),
+				),
+				html.Td(
+					html.Width("50%"),
+					gomponents.Attr("align", "right"),
+					html.A(
+						html.Href("#"),
+						gomponents.Text("Home"),
+					),
+				),
+			),
+		),
+	)
+}
+
 func AboutMe(aboutPage Page) gomponents.Node {
 	return html.Div(
 		html.Class("homepage page"),
 		html.ID("homepage"),
 		gomponents.Raw(aboutPage.Content),
-		html.Div(
-			html.Class("bottom"),
-		),
+		Footer(""),
 	)
 }
 
@@ -179,9 +204,9 @@ func NavPages(pages []Page, includeDate bool) gomponents.Node {
 func BlogsPage(blogPages []Page) gomponents.Node {
 	return html.Div(
 		html.Class("page"),
-		html.ID("blog"),
+		html.ID("archive"),
 		html.H2(
-			gomponents.Text("Blog"),
+			gomponents.Text("Archive"),
 		),
 		html.P(
 			gomponents.Text(
@@ -189,9 +214,7 @@ func BlogsPage(blogPages []Page) gomponents.Node {
 			),
 		),
 		NavPages(blogPages, true),
-		html.Div(
-			html.Class("bottom"),
-		),
+		Footer("archive"),
 	)
 }
 
@@ -216,9 +239,7 @@ func ProjectsPage(projectPages []Page) gomponents.Node {
 			),
 			gomponents.Text("."),
 		),
-		html.Div(
-			html.Class("bottom"),
-		),
+		Footer("projects"),
 	)
 }
 
@@ -238,13 +259,7 @@ func PagesContent(aboutPage Page, projectPages, blogPages []Page) gomponents.Nod
 				html.Class("page"),
 				html.ID(page.Slug),
 				gomponents.Raw(strings.Join(content, "\n")),
-				html.Div(
-					html.Class("bottom"),
-					html.A(
-						html.Href(fmt.Sprintf("#%v", page.Slug)),
-						gomponents.Text("Back to top."),
-					),
-				),
+				Footer(page.Slug),
 			),
 		)
 	}
@@ -279,44 +294,38 @@ func WebsiteContent(title string, aboutPage Page, projectPages, blogPages []Page
 				),
 				html.Div(
 					html.Class("container"),
-					html.Nav(
-						html.Input(
-							html.Type("checkbox"),
-							html.ID("drop"),
-						),
-						html.Div(
-							html.Class("nav-content"),
-							html.Ul(
-								html.Class("menu"),
-								html.Li(
+					html.Header(
+						html.Table(
+							html.Width("100%"),
+							html.Class("nav"),
+							html.Tr(
+								html.Td(
+									html.Width("18%"),
+									gomponents.Attr("align", "left"),
 									html.A(
 										html.Href("#"),
 										gomponents.Text("Home"),
 									),
 								),
-								html.Li(
-									html.Input(
-										html.Type(
-											"checkbox"),
-										html.ID("drop-1"),
-									),
-									html.Label(
-										html.For("drop-1"),
-										html.Class("toggle"),
-										html.A(
-											html.Href("#projects"),
-											gomponents.Text("Projects"),
-										),
-									),
-									NavPages(projectPages, false),
-								),
-								html.Li(
+								html.Td(
+									html.Width("32%"),
+									gomponents.Attr("align", "center"),
 									html.A(
-										html.Href("#blog"),
-										gomponents.Text("Blog"),
+										html.Href("#projects"),
+										gomponents.Text("Projects"),
 									),
 								),
-								html.Li(
+								html.Td(
+									html.Width("32%"),
+									gomponents.Attr("align", "center"),
+									html.A(
+										html.Href("#archive"),
+										gomponents.Text("Archive"),
+									),
+								),
+								html.Td(
+									html.Width("18%"),
+									gomponents.Attr("align", "right"),
 									html.Label(
 										html.For("dark-mode"),
 										html.TitleAttr("Toggle light mode (if supported)"),
@@ -327,21 +336,9 @@ func WebsiteContent(title string, aboutPage Page, projectPages, blogPages []Page
 							),
 						),
 					),
-					html.Section(
+					html.Div(
 						html.Class("content"),
-						html.Section(
-							html.Class("header"),
-							gomponents.Raw(
-								string(joshSVGContent),
-							),
-						),
 						PagesContent(aboutPage, projectPages, blogPages),
-					),
-					html.Section(
-						html.Class("gridhoriz"),
-						html.Section(
-							html.Class("gridvert"),
-						),
 					),
 				),
 			),
@@ -431,11 +428,6 @@ func loadContent(fsys fs.FS) (err error) {
 		return
 	}
 
-	joshSVGContent, err = fs.ReadFile(fsys, joshSVG)
-	if err != nil {
-		return
-	}
-
 	faviconContent, err = fs.ReadFile(fsys, favicon)
 	if err != nil {
 		return
@@ -479,7 +471,7 @@ func (p *preProcessor) processLines(lines []string) (result []string, err error)
 
 func (p *preProcessor) startPre(line string) (err error) {
 	p.inPre = true
-	p.class = ""
+	p.class = "language-none"
 
 	var matches []string
 	var classIndex, preIndex, contentIndex int

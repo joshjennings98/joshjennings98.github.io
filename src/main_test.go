@@ -560,7 +560,6 @@ func TestLoadContent(t *testing.T) {
 	aboutFile = "about.md"
 	stylesheet = "website.css"
 	favicon = "favicon.ico"
-	joshSVG = "josh.svg"
 
 	mockFS := MockFS{
 		"blog/page1.md":     []byte(`---\ntitle: "Blog Page 1"\n---\nContent`),
@@ -568,7 +567,6 @@ func TestLoadContent(t *testing.T) {
 		"projects/proj1.md": []byte(`---\ntitle: "Project 1"\n---\nContent`),
 		"about.md":          []byte(`---\ntitle: "About"\n---\nContent`),
 		"website.css":       []byte(`body { color: red; }`),
-		"josh.svg":          []byte(`<svg></svg>`),
 		"favicon.ico":       []byte(`icon content`),
 	}
 
@@ -580,7 +578,6 @@ func TestLoadContent(t *testing.T) {
 		assert.NotEmpty(t, projectPages)
 		assert.NotEmpty(t, aboutPage.Content)
 		assert.NotEmpty(t, stylesheetContent)
-		assert.NotEmpty(t, joshSVGContent)
 		assert.NotEmpty(t, faviconContent)
 	})
 
