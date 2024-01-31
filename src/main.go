@@ -660,6 +660,12 @@ func main() {
 			return
 		}
 
+		err = os.WriteFile(filepath.Join(*staticDir, font), fontContent, 0644)
+		if err != nil {
+			fmt.Println("Error writing font:", err.Error())
+			return
+		}
+
 		err = os.WriteFile(filepath.Join(*staticDir, favicon), faviconContent, 0644)
 		if err != nil {
 			fmt.Println("Error writing favicon:", err.Error())
