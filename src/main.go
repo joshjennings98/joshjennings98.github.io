@@ -208,7 +208,7 @@ func BlogsPage(blogPages []Page) gomponents.Node {
 	return html.Div(
 		html.Class("page"),
 		html.ID("archive"),
-		html.H2(
+		html.H1(
 			gomponents.Text("Archive"),
 		),
 		html.P(
@@ -225,7 +225,7 @@ func ProjectsPage(projectPages []Page) gomponents.Node {
 	return html.Div(
 		html.Class("page"),
 		html.ID("projects"),
-		html.H2(
+		html.H1(
 			gomponents.Text("Projects"),
 		),
 		html.P(
