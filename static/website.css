@@ -1,357 +1,98 @@
+/* Simple style stuff */
+
+body {
+  margin: 0; /* Remove default margin so theme fills whole page */
+  line-height: 1.8;
+  font-family: Iosevka;
+  font-size: 1.2em;
+  display: flex; /* Enable flexbox layout (good for 1D layouts and sizing automatically) */
+  flex-direction: column; /* Stack children vertically */
+  height: 100vh; /* Full viewport height */
+  text-align: justify;
+  text-justify: inter-word;
+}
+
+header > table {
+  position: fixed;
+  border-bottom: 2px solid var(--c-text);
+  background-color: var(--c-background);
+}
+
+.container {
+  flex-grow: 1; /* Expand to fill available space */
+  background-color: var(--c-background);
+}
+
+header > table,
+.content {
+  color: var(--c-text);
+  padding: 10px calc(max(10px, (100vw - 650px) / 2)); /* 650px wide unless it's too much */
+}
+
+h1,
+h2,
+h3 {
+  line-height: 1.2; /* Closer line spacing for headers */
+}
+
+a:link,
+a:visited,
+a:hover,
+a:active, 
+td > label {
+  /* Remove link colour and make label in table act like link */
+  cursor: pointer;
+  padding: 1px 4px; /* Top and bottom padding of 2px, left and right padding of 4px */
+  border: 2px solid var(--c-text);
+  box-decoration-break: clone; /* fix rendering of border when content goes across multiple lines */
+  -webkit-box-decoration-break: clone;
+  border-radius: 10px;
+  color: var(--c-text);
+  text-decoration: none; /* no underline for links */
+}
+
+pre {
+  /* Make pre readable */
+  padding: 10px;
+  background-color: #181a1b;
+  font-size: 16px;
+  color: transparent; /* So that inline syntax highlighting gradients are shown */
+  border: 2px solid #ddd;
+  overflow-x: scroll;
+}
+
+/* Dark mode toggle stuff */
+
 :root {
-  --c-text: rgba(17, 17, 17, 1);
-  --c-background: rgba(238, 238, 238, 1);
-  --c-alternative: rgba(0, 85, 255, 1);
-  --c-dark-text: rgba(17, 17, 17, 1);
-  --c-dark-background: rgba(238, 238, 238, 1);
-  --c-dark-alternative: rgba(32, 194, 14, 1);
+  --c-text: #111;
+  --c-background: #eee;
+  --c-dark-text: #eee;
+  --c-dark-background: #111;
 }
 
 @media (prefers-color-scheme: dark) {
   :root {
-    --c-text: rgba(238, 238, 238, 1);
-    --c-background: rgba(17, 17, 17, 1);
-    --c-alternative: rgba(32, 194, 14, 1);
-    --c-dark-text: rgba(17, 17, 17, 1);
-    --c-dark-background: rgba(238, 238, 238, 1);
-    --c-dark-alternative: rgba(0, 85, 255, 1);
+    --c-text: #ddd;
+    --c-background: #181a1b;
+    --c-dark-text: #181a1b;
+    --c-dark-background: #eee;
   }
 }
 
 .dark-mode-checkbox:checked ~ .container {
+  /* Change theme when dark-mode-checkbox ticked */
   --c-text: var(--c-dark-text);
   --c-background: var(--c-dark-background);
-  --c-alternative: var(--c-dark-alternative);
 }
 
-::selection, ::-moz-selection {
-  background: var(--c-alternative);
-  color: var(--c-background);
-}
-
-*, *::after, *::before {
-  box-sizing: border-box
-}
-
-body, html {
-  height: 100%;
-  margin: 0;
-  overflow: hidden;
-}
-
-.container {
-  font-family: mono, monospace;
-  line-height: 1.6;
-  position: relative;
-  display: -webkit-flex;
-  display: -ms-flex;
-  display: flex;
-  -webkit-flex-direction: column;
-  -ms-flex-direction: column;
-  flex-direction: column;
-  justify-content: center;
-  -ms-align-items: center;
-  align-items: center;
-  background-color: var(--c-background);
-  height: 100vh;
-  padding: 0;
-  margin: 0;
-  overflow: hidden
-}
-
-.page-button {
-  cursor: pointer;
-  user-select: none;
-}
-
-.content {
-  display: -webkit-flex;
-  display: -ms-flex;
-  display: flex;
-  -webkit-flex-direction: column;
-  flex-direction: column;
-  -ms-align-items: center;
-  align-items: center;
-  flex-grow: 1;
-  color: var(--c-text);
-  z-index: 100;
-  overflow: scroll;
-  position: relative;
-}
-
-.content2 {
-  width: 100vw;
-  padding-left: calc((100vw - 800px) / 2);
-  padding-right: calc((100vw - 800px) / 2);
-}
-
-.gridhoriz {
-  position: relative;
-  background-color: var(--c-background);
-  height: 600px;
-  width: 250%;
-  perspective: 100px;
-  max-height: 300px;  
-  min-height: 300px;
-  overflow: hidden;
-}
-
-/* max height will be either 300px or if that is greater than 20% then 20% */
-@media (max-height: 1500px) {
-  .gridhoriz {
-    max-height: 20%;    
-    min-height: 20%;
-  }
-}
-
-.gridhoriz::before {
-  content: '';
-  position: absolute;
-  background: linear-gradient(0, transparent, var(--c-background));
-  top: 0;
-  right: -100vh;
-  left: -100vh;
-  height: 100px;
-  z-index: 99
-}
-
-.gridvert {
-  position: relative;
-  background-color: var(--c-background);
-  color: var(--c-alternative);
-  height: 100%;
-  width: 100%;
-  transform: rotateX(25deg);
-}
-
-.gridvert::before {
-  content: '';
-  position: absolute;
-  background-color: currentColor;
-  -webkit-transform: translateX(-50%);
-  -ms-transform: translateX(-50%);
-  transform: translateX(-50%);
-  top: -100vh;
-  bottom: -100vh;
-  left: 50%;
-  width: 10px;
-  box-shadow: -140px 0 0 currentColor, -290px 0 0 currentColor, -440px 0 0 currentColor, -590px 0 0 currentColor, -740px 0 0 currentColor, -890px 0 0 currentColor, -1040px 0 0 currentColor, -1190px 0 0 currentColor, -1450px 0 0 currentColor, -1700px 0 0 currentColor, -1950px 0 0 currentColor, 140px 0 0 currentColor, 290px 0 0 currentColor, 440px 0 0 currentColor, 590px 0 0 currentColor, 740px 0 0 currentColor, 890px 0 0 currentColor, 1040px 0 0 currentColor, 1190px 0 0 currentColor, 1450px 0 0 currentColor, 1700px 0 0 currentColor, 1950px 0 0 currentColor
-}
-
-.gridvert::after {
-  content: '';
-  position: absolute;
-  background-color: currentColor;
-  top: 0;
-  right: -100vh;
-  left: -100vh;
-  height: 10px;
-  box-shadow: 0 100px 0 0 currentColor, 0 200px 0 currentColor, 0 300px currentColor, 0 -100px 0 0 currentColor, 0 -200px 0 currentColor, 0 -300px currentColor;
-  animation: gridvert 1s linear infinite;
-}
-
-@keyframes gridvert {
-  from {
-    transform: translateY(0)
-  }
-  to {
-    transform: translateY(100px)
-  }
-}
-
-svg {
-	font-family: monospace;
-	position: relative; 
-  margin: 20px;
-}
-
-svg path {
-	animation: stroke 5s infinite alternate;
-}
-
-@keyframes stroke {
-	0%   {
-		fill: var(--c-background); stroke: var(--c-alternative);
-		stroke-dashoffset: 25%; stroke-dasharray: 0 50%; stroke-width: 3;
-	}
-	70%  {
-    fill: var(--c-background); stroke: var(--c-alternative); 
-  }
-	80%  {
-    fill: var(--c-background); stroke: var(--c-alternative); stroke-width: 3; 
-  }
-	100% {
-		fill: var(--c-alternative); stroke: var(--c-background); 
-		stroke-dashoffset: -25%; stroke-dasharray: 50% 0; stroke-width: 3;
-	}
-}
-
-p {
-  color: var(--c-text);
-  text-align: justify;
-  text-justify: inter-word;
-  position: relative;
-  z-index: 400;
-}
-
- /* Hide scrollbar for Chrome, Safari and Opera */
-.content::-webkit-scrollbar {
-  display: none;
-}
-
-/* Hide scrollbar for IE, Edge and Firefox */
-.content {
-  -ms-overflow-style: none;  /* IE and Edge */
-  scrollbar-width: none;  /* Firefox */
-} 
-
-.content{
-  -webkit-mask-image: linear-gradient(to top, transparent 0%, var(--c-background) 15%);
-  mask-image: linear-gradient(to top, transparent 0%, var(--c-background) 15%);
-  -webkit-mask-composite: destination-out;
-  mask-composite: destination-out;
-  padding-bottom: 5%;
-}
-
-[id^=drop] {
-  display: none;
-}
-
-nav {
-  margin: 0;
-  padding: 0;
-  background-color: var(--c-alternative);
-  width: 100%;
-}
-
-.nav-content {
-  display: flex;
-  justify-content: center;
-}
-
-nav:after {
-  content: "";
-  display: table;
-  clear: both;
-}
-
-nav ul {
-  padding: 0;
-  margin: 0;
-  list-style: none;
-  position: relative;
-  z-index: 200;
-}
-
-nav ul li {
-  margin: 0px;
-  display: inline-block;
-  float: left;
-  background-color: var(--c-alternative);
-  z-index: 200;
-}
-
-nav a, nav label {
-  display: block;
-  padding: 0 20px;
-  color: var(--c-dark-background);
-  text-shadow: 1px 1px #000000;
-  font-size: 20px;
-  line-height: 60px;
-  text-decoration: none;
-}
-
-nav label > a {
-    padding: 0; /* This removes the padding from <a> inside <label> */
-}
-
-nav ul ul {
-  display: none;
-  position: absolute;
-  top: 60px;
-}
-
-nav ul ul li {
-  width: 250px;
-}
-
-li > a:only-child:after { content: ''; }
-
-nav a:hover, nav ul ul ul a { 
-  user-select: none;
-}
-
-.toggle {
-  display: inline-flex;
-  padding: 0 20px;
-  font-size: 20px;
-  line-height: 60px;
-  text-decoration: none;
-  border: none;
-  justify-content: flex-end;
-}
-  
-@media not all and (pointer: coarse) { /* no hover on touch devices */
-  .toggle:hover { 
-    background-color: var(--c-alternative); 
-    cursor: pointer; 
-    user-select: none;
-    text-decoration: underline;
-    text-decoration-thickness: 2px;
-    text-decoration-color: var(--c-dark-background);
-    text-underline-offset: 5px;
-  }
-  
-  nav a:hover, nav label:hover {
-   text-decoration: underline;
-    text-decoration-thickness: 2px;
-      text-decoration-color: var(--c-dark-background);
-    text-underline-offset: 5px;
-  }
-  
-  nav ul li:hover > ul { display: inherit; }
-}
-
-a {
-  color: var(--c-text);
-  z-index: 500;
-}
-/* pre stuff */
-.pre {
-  border: 2px solid var(--c-text);
-  padding: 0px 15px 0px 15px;
-  background-color: #222;
-  overflow-x: auto;
-  scrollbar-color: #eee #222;
-}
-
-pre {
-  font-family: courier new, mono, monospace; font-size: 16px; line-height: 28.8px; 300ch 28.8px ; background-repeat: no-repeat;color: transparent; background-size: 300ch 28.8px; background-clip: text;
-}
-
-pre code:not([class]) {
-    color: white;
-}
-
-/* --------- */
-
-:not(pre) > code {
-  border: 1px solid var(--c-text);
-  border-radius: 4px;
-  padding: 2px 4px;
-  font-family: monospace;
-  font-size: 1.2em;
-}
-
-/* Single page stuff
---------------------------------------------- */
+/* Single page stuff */
 
 .homepage.page {
   display: block; /* The homepage is displayed by default */
 }
 
 .page {
-  display: none;
+  display: none; /* And other pages are hidden by default */
 }
 
 .page:target {
@@ -362,45 +103,11 @@ pre code:not([class]) {
   display: none; /* When an id is targeted, hide the homepage */
 }
 
-/* This CSS rule will add invisible content before every element that gets targeted by a hash link, effectively pushing the actual content down the page by a fixed amount. */
-:target::before {
-  content: "";
-  display: block;
-  height: 1000px; /* Fixed header height*/
-  margin: -1000px 0 0; /* Negative fixed header height */
+/* Add invisible content so that targetting a page keeps the header in view */
+.page::before {
+  content: ""; /* The invisible content. It is empty meaning no actual content is added, but the pseudo-element is still generated*/
+  display: block; /* This makes the ::before pseudo-element a block-level element so it starts on a new line and take up the full width available. */
+  height: 1050px; /* Fixed header height*/
+  margin: -1000px 0 0; /* Negative fixed header height to cancel out the above */
 }
 
-/* Stop bottom of bage fading out */
-.bottom {
-  padding-bottom: 100px;
-}
-
-/* Media Queries
---------------------------------------------- */
-
-@media all and (max-width : 768px) {
-  .content2 {
-    max-width: 90vw;
-  }
-  svg {
-    max-width: 100vw;
-    padding: 10px;
-  }
-  .nav-content {
-    display: flex;
-  }
-  nav { 
-    margin: 0; 
-  }
-}
-
-@media all and (max-width : 370px) {
-  .nav-content {
-    margin-top: 10px;  
-    margin-bottom: 10px;
-  }
-  nav a, nav label {
-    line-height: 30px;
-    font-size: 14px;
-  }
-}

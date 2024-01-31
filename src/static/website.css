@@ -44,6 +44,8 @@ td > label {
   cursor: pointer;
   padding: 1px 4px; /* Top and bottom padding of 2px, left and right padding of 4px */
   border: 2px solid var(--c-text);
+  box-decoration-break: clone; /* fix rendering of border when content goes across multiple lines */
+  -webkit-box-decoration-break: clone;
   border-radius: 10px;
   color: var(--c-text);
   text-decoration: none; /* no underline for links */
