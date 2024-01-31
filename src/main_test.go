@@ -32,7 +32,7 @@ func TestAboutMe(t *testing.T) {
 	assert.Contains(t, renderedHTML, aboutPage.Content)
 	assert.Contains(t, renderedHTML, "homepage page")
 	assert.Contains(t, renderedHTML, "homepage")
-	assert.Contains(t, renderedHTML, "bottom")
+	assert.Contains(t, renderedHTML, "<footer><table width=\"100%\"><tr><td width=\"50%\" align=\"left\"><a href=\"#\">Back to top</a></td><td width=\"50%\" align=\"right\"><a href=\"#\">Home</a></td></tr></table></footer></div>")
 }
 
 func TestNavPages(t *testing.T) {
@@ -117,10 +117,10 @@ func TestBlogsPage(t *testing.T) {
 		err := node.Render(b)
 		require.NoError(t, err)
 
-		assert.Contains(t, b.String(), "<div class=\"page\" id=\"blog\">")
-		assert.Contains(t, b.String(), "<h2>Blog</h2>")
+		assert.Contains(t, b.String(), "<div class=\"page\" id=\"archive\">")
+		assert.Contains(t, b.String(), "<h2>Archive</h2>")
 		assert.Contains(t, b.String(), "<ul></ul>")
-		assert.Contains(t, b.String(), "class=\"bottom\"")
+		assert.Contains(t, b.String(), "<footer><table width=\"100%\"><tr><td width=\"50%\" align=\"left\"><a href=\"#archive\">Back to top</a></td><td width=\"50%\" align=\"right\"><a href=\"#\">Home</a></td></tr></table></footer></div>")
 	})
 
 	t.Run("Single element", func(t *testing.T) {
@@ -136,7 +136,7 @@ func TestBlogsPage(t *testing.T) {
 
 		expectedNav := fmt.Sprintf("<ul><li><b>%s: </b><a href=\"#blog1\">Blog1</a></li></ul>", pages[0].Date.Format(time.DateOnly))
 		assert.Contains(t, b.String(), expectedNav)
-		assert.Contains(t, b.String(), "class=\"bottom\"")
+		assert.Contains(t, b.String(), "<footer><table width=\"100%\"><tr><td width=\"50%\" align=\"left\"><a href=\"#archive\">Back to top</a></td><td width=\"50%\" align=\"right\"><a href=\"#\">Home</a></td></tr></table></footer></div>")
 	})
 
 	t.Run("Multiple elements", func(t *testing.T) {
@@ -153,7 +153,7 @@ func TestBlogsPage(t *testing.T) {
 
 		expectedNav := fmt.Sprintf("<ul><li><b>%s: </b><a href=\"#blog1\">Blog1</a></li><li><b>%s: </b><a href=\"#blog2\">Blog2</a></li></ul>", pages[0].Date.Format(time.DateOnly), pages[1].Date.Format(time.DateOnly))
 		assert.Contains(t, b.String(), expectedNav)
-		assert.Contains(t, b.String(), "class=\"bottom\"")
+		assert.Contains(t, b.String(), "<footer><table width=\"100%\"><tr><td width=\"50%\" align=\"left\"><a href=\"#archive\">Back to top</a></td><td width=\"50%\" align=\"right\"><a href=\"#\">Home</a></td></tr></table></footer></div>")
 	})
 }
 
@@ -170,7 +170,7 @@ func TestProjectsPage(t *testing.T) {
 		assert.Contains(t, b.String(), "This page provides links to some of the projects")
 		assert.Contains(t, b.String(), "<ul></ul>")
 		assert.Contains(t, b.String(), "href=\"https://github.com/joshjennings98\">Github page</a>")
-		assert.Contains(t, b.String(), "class=\"bottom\"")
+		assert.Contains(t, b.String(), "<footer><table width=\"100%\"><tr><td width=\"50%\" align=\"left\"><a href=\"#projects\">Back to top</a></td><td width=\"50%\" align=\"right\"><a href=\"#\">Home</a></td></tr></table></footer></div>")
 	})
 
 	t.Run("Single element", func(t *testing.T) {
@@ -186,7 +186,7 @@ func TestProjectsPage(t *testing.T) {
 
 		expectedNav := fmt.Sprintf("<ul><li><a href=\"#project1\">Project1</a></li></ul>")
 		assert.Contains(t, b.String(), expectedNav)
-		assert.Contains(t, b.String(), "class=\"bottom\"")
+		assert.Contains(t, b.String(), "<footer><table width=\"100%\"><tr><td width=\"50%\" align=\"left\"><a href=\"#projects\">Back to top</a></td><td width=\"50%\" align=\"right\"><a href=\"#\">Home</a></td></tr></table></footer></div>")
 	})
 
 	t.Run("Multiple elements", func(t *testing.T) {
@@ -203,7 +203,7 @@ func TestProjectsPage(t *testing.T) {
 
 		expectedNav := fmt.Sprintf("<ul><li><a href=\"#project1\">Project1</a></li><li><a href=\"#project2\">Project2</a></li></ul>")
 		assert.Contains(t, b.String(), expectedNav)
-		assert.Contains(t, b.String(), "class=\"bottom\"")
+		assert.Contains(t, b.String(), "<footer><table width=\"100%\"><tr><td width=\"50%\" align=\"left\"><a href=\"#projects\">Back to top</a></td><td width=\"50%\" align=\"right\"><a href=\"#\">Home</a></td></tr></table></footer></div>")
 	})
 }
 
@@ -239,7 +239,7 @@ func TestPagesContent(t *testing.T) {
 		require.NoError(t, err)
 
 		assert.Contains(t, b.String(), "Project1 content")
-		assert.Contains(t, b.String(), "href=\"#project1\">Back to top.")
+		assert.Contains(t, b.String(), "href=\"#projects\">Back to top")
 	})
 
 	t.Run("Only blog pages", func(t *testing.T) {
@@ -254,7 +254,7 @@ func TestPagesContent(t *testing.T) {
 		require.NoError(t, err)
 
 		assert.Contains(t, b.String(), "Blog1 content")
-		assert.Contains(t, b.String(), "href=\"#blog1\">Back to top.")
+		assert.Contains(t, b.String(), "href=\"#archive\">Back to top")
 	})
 
 	t.Run("Project and blog pages", func(t *testing.T) {
@@ -273,8 +273,8 @@ func TestPagesContent(t *testing.T) {
 
 		assert.Contains(t, b.String(), "Project1 content")
 		assert.Contains(t, b.String(), "Blog1 content")
-		assert.Contains(t, b.String(), "href=\"#project1\">Back to top.")
-		assert.Contains(t, b.String(), "href=\"#blog1\">Back to top.")
+		assert.Contains(t, b.String(), "href=\"#projects\">Back to top")
+		assert.Contains(t, b.String(), "href=\"#archive\">Back to top")
 	})
 }
 
@@ -300,7 +300,7 @@ func TestWebsiteContent(t *testing.T) {
 		assert.Contains(t, b.String(), "About me content")
 		assert.Contains(t, b.String(), "Home")
 		assert.Contains(t, b.String(), "Projects")
-		assert.Contains(t, b.String(), "Blog")
+		assert.Contains(t, b.String(), "Archive")
 		assert.Contains(t, b.String(), "Theme")
 	})
 
