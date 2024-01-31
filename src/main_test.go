@@ -560,14 +560,16 @@ func TestLoadContent(t *testing.T) {
 	aboutFile = "about.md"
 	stylesheet = "website.css"
 	favicon = "favicon.ico"
+	font = "IosevkaFixedCurly-Regular.woff2"
 
 	mockFS := MockFS{
-		"blog/page1.md":     []byte(`---\ntitle: "Blog Page 1"\n---\nContent`),
-		"blog/page2.md":     []byte(`---\ntitle: "Blog Page 2"\n---\nContent`),
-		"projects/proj1.md": []byte(`---\ntitle: "Project 1"\n---\nContent`),
-		"about.md":          []byte(`---\ntitle: "About"\n---\nContent`),
-		"website.css":       []byte(`body { color: red; }`),
-		"favicon.ico":       []byte(`icon content`),
+		"blog/page1.md":                   []byte(`---\ntitle: "Blog Page 1"\n---\nContent`),
+		"blog/page2.md":                   []byte(`---\ntitle: "Blog Page 2"\n---\nContent`),
+		"projects/proj1.md":               []byte(`---\ntitle: "Project 1"\n---\nContent`),
+		"about.md":                        []byte(`---\ntitle: "About"\n---\nContent`),
+		"website.css":                     []byte(`body { color: red; }`),
+		"favicon.ico":                     []byte(`icon content`),
+		"IosevkaFixedCurly-Regular.woff2": []byte(`font content`),
 	}
 
 	t.Run("Successful content loading", func(t *testing.T) {
@@ -579,6 +581,7 @@ func TestLoadContent(t *testing.T) {
 		assert.NotEmpty(t, aboutPage.Content)
 		assert.NotEmpty(t, stylesheetContent)
 		assert.NotEmpty(t, faviconContent)
+		assert.NotEmpty(t, fontContent)
 	})
 
 	t.Run("Error when file is missing", func(t *testing.T) {

@@ -413,31 +413,37 @@ func ParsePages(fsys fs.FS, dir string) (pages []Page, err error) {
 func loadContent(fsys fs.FS) (err error) {
 	blogPages, err = ParsePages(fsys, blogDir)
 	if err != nil {
+		err = fmt.Errorf("blog dir not parsed: %v", err.Error())
 		return
 	}
 
 	projectPages, err = ParsePages(fsys, projectDir)
 	if err != nil {
+		err = fmt.Errorf("project dir not parsed: %v", err.Error())
 		return
 	}
 
 	aboutPage, err = ParsePage(fsys, aboutFile)
 	if err != nil {
+		err = fmt.Errorf("about page not parsed: %v", err.Error())
 		return
 	}
 
 	stylesheetContent, err = fs.ReadFile(fsys, stylesheet)
 	if err != nil {
+		err = fmt.Errorf("stylesheet not parsed: %v", err.Error())
 		return
 	}
 
 	faviconContent, err = fs.ReadFile(fsys, favicon)
 	if err != nil {
+		err = fmt.Errorf("favicon not parsed: %v", err.Error())
 		return
 	}
 
 	fontContent, err = fs.ReadFile(fsys, font)
 	if err != nil {
+		err = fmt.Errorf("font not parsed: %v", err.Error())
 		return
 	}
 
