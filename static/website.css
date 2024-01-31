@@ -21,6 +21,7 @@ header > table {
 .container {
   flex-grow: 1; /* Expand to fill available space */
   background-color: var(--c-background);
+  overflow: scroll; /* This fixes the weird tearing if you scroll very fast */
 }
 
 header > table,
