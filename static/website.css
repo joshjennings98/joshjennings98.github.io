@@ -54,6 +54,7 @@ td > label {
   -webkit-box-decoration-break: clone;
   border-radius: 10px;
   color: var(--c-text);
+  user-select: none;
   text-decoration: none; /* no underline for links */
 }
 
