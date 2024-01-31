@@ -279,23 +279,6 @@ for(i = 0; i < 10; i++){
 
 The resulting effect looks quite nice if you get the regular expressions for the language syntax correct (you will notice many places on this website where the choice of regex causes problems but this is just meant to be a bit of fun). It should be noted that this whole technique is quite pointless and it causes the website to take up more space than just using a JavaScript library for the highlighting.
 
-## Making the website less boring
-
-At this point the website is quite good (well I think it is). It satisfies the goals I set out with but it looks a bit boring. A criticism of these mimimal websites is that they are too minimal and all look the same. We can't be having that, I like the websites of the good old days where each page [was unique and a bit insane](https://www.spacejam.com/1996/). To rectify this, I have decided to add a nice scrolling grid effect to the webpage using CSS animations along with a fun animated website header. This way the website will be more fun and no-one will call it mimimalist and boring.
-
-The header is an SVG that has been animated with CSS. I added an animation to the path element of the SVG that creates an effect so that the outline of the SVG appears and disapears in a dashed pattern along with the fill fading in and out. This makes it look like the text is appearing and disappearing.
-
-For the scrolling grid effect there are two classes, `.gridhoriz` and `.gridvert`, these define pseudo-elements so all I have to do is add a couple of small elements to the bottom of the page:
-
-```html
-<section class="gridhoriz">
-<section class="gridvert">
-</section>
-</section>
-```
-
-For `.gridhoriz::before`, an absolutely positioned pseudo-element is defined with a linear gradient background that extends horizontally beyond the viewport on both sides. The `.gridvert` class styles an element with a relative position, taking up the full width of the page whilst the `.gridvert::before` pseudo-element creates a central vertical line, with multiple additional vertical lines positioned at intervals using the box-shadow property. The `.gridvert::after` adds a horizontal element that extends beyond the viewport on both sides and has additional horizontal lines created using box-shadow. This element is then animated to move vertically in a loop, producing a scrolling grid effect that fades into the background.
-
 ## Deployment using GitHub Pages
 
 I don't want to spend money so I host the website with GitHub pages. This is particularly nice since I am hosting the repository on GitHub so deployments are trivial, I just run the go code to generate the static files and I am done.
