@@ -317,7 +317,7 @@ func WebsiteContent(title string, aboutPage Page, projectPages, blogPages []Page
 									),
 								),
 								html.Td(
-									html.Width("32%"),
+									html.Width("28%"),
 									gomponents.Attr("align", "center"),
 									html.A(
 										html.Href("#archive"),
@@ -325,7 +325,7 @@ func WebsiteContent(title string, aboutPage Page, projectPages, blogPages []Page
 									),
 								),
 								html.Td(
-									html.Width("18%"),
+									html.Width("22%"),
 									gomponents.Attr("align", "right"),
 									html.Label(
 										html.For("dark-mode"),
