@@ -66,6 +66,7 @@ pre {
   color: transparent; /* So that inline syntax highlighting gradients are shown */
   border: 2px solid #ddd;
   overflow-x: scroll;
+  border-radius: 10px;
 }
 
 /* Dark mode toggle stuff */
