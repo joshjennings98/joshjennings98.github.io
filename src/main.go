@@ -59,12 +59,14 @@ var (
 	aboutFile  = filepath.Join("markdown", "about.md")
 	stylesheet = filepath.Join("static", "website.css")
 	favicon    = filepath.Join("static", "favicon.ico")
+	font       = filepath.Join("static", "IosevkaFixedCurly-Regular.woff2")
 
 	aboutPage         Page
 	projectPages      []Page
 	blogPages         []Page
 	stylesheetContent []byte
 	faviconContent    []byte
+	fontContent       []byte
 
 	markdownConverter = goldmark.New(
 		goldmark.WithExtensions(
@@ -434,6 +436,11 @@ func loadContent(fsys fs.FS) (err error) {
 		return
 	}
 
+	fontContent, err = fs.ReadFile(fsys, font)
+	if err != nil {
+		return
+	}
+
 	return
 }
 
@@ -627,6 +634,11 @@ func main() {
 		http.Handle(fmt.Sprintf("/%v", stylesheet), http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 			w.Header().Set("Content-Type", "text/css")
 			w.Write(stylesheetContent)
+		}))
+
+		http.Handle(fmt.Sprintf("/%v", font), http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+			w.Header().Set("Content-Type", "font/woff2")
+			w.Write(fontContent)
 		}))
 
 		http.Handle("/", http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
