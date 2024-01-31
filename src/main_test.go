@@ -118,7 +118,7 @@ func TestBlogsPage(t *testing.T) {
 		require.NoError(t, err)
 
 		assert.Contains(t, b.String(), "<div class=\"page\" id=\"archive\">")
-		assert.Contains(t, b.String(), "<h2>Archive</h2>")
+		assert.Contains(t, b.String(), "<h1>Archive</h1>")
 		assert.Contains(t, b.String(), "<ul></ul>")
 		assert.Contains(t, b.String(), "<footer><table width=\"100%\"><tr><td width=\"50%\" align=\"left\"><a href=\"#archive\">Back to top</a></td><td width=\"50%\" align=\"right\"><a href=\"#\">Home</a></td></tr></table></footer></div>")
 	})
@@ -166,7 +166,7 @@ func TestProjectsPage(t *testing.T) {
 		require.NoError(t, err)
 
 		assert.Contains(t, b.String(), "<div class=\"page\" id=\"projects\">")
-		assert.Contains(t, b.String(), "<h2>Projects</h2>")
+		assert.Contains(t, b.String(), "<h1>Projects</h1>")
 		assert.Contains(t, b.String(), "This page provides links to some of the projects")
 		assert.Contains(t, b.String(), "<ul></ul>")
 		assert.Contains(t, b.String(), "href=\"https://github.com/joshjennings98\">Github page</a>")
