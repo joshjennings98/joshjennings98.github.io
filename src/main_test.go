@@ -239,7 +239,7 @@ func TestPagesContent(t *testing.T) {
 		require.NoError(t, err)
 
 		assert.Contains(t, b.String(), "Project1 content")
-		assert.Contains(t, b.String(), "href=\"#projects\">Back to top")
+		assert.Contains(t, b.String(), "href=\"#project1\">Back to top")
 	})
 
 	t.Run("Only blog pages", func(t *testing.T) {
@@ -254,7 +254,7 @@ func TestPagesContent(t *testing.T) {
 		require.NoError(t, err)
 
 		assert.Contains(t, b.String(), "Blog1 content")
-		assert.Contains(t, b.String(), "href=\"#archive\">Back to top")
+		assert.Contains(t, b.String(), "href=\"#blog1\">Back to top")
 	})
 
 	t.Run("Project and blog pages", func(t *testing.T) {
@@ -273,8 +273,8 @@ func TestPagesContent(t *testing.T) {
 
 		assert.Contains(t, b.String(), "Project1 content")
 		assert.Contains(t, b.String(), "Blog1 content")
-		assert.Contains(t, b.String(), "href=\"#projects\">Back to top")
-		assert.Contains(t, b.String(), "href=\"#archive\">Back to top")
+		assert.Contains(t, b.String(), "href=\"#project1\">Back to top")
+		assert.Contains(t, b.String(), "href=\"#blog1\">Back to top")
 	})
 }
 
