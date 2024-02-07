@@ -1,14 +1,14 @@
 /* Simple style stuff */
 
 @font-face {
-	font-family: 'Iosevka-Curly';
-	src: url('IosevkaFixedCurly-Regular.woff2') format('woff2');
+  font-family: 'font';
+  src: url('font.woff2') format('woff2');
 }
 
 body {
   margin: 0; /* Remove default margin so theme fills whole page */
   line-height: 1.8;
-  font-family: Iosevka-Curly, Iosevka, Monospace;
+  font-family: font, Iosevka, Monospace;
   font-size: 1.2em;
   display: flex; /* Enable flexbox layout (good for 1D layouts and sizing automatically) */
   flex-direction: column; /* Stack children vertically */

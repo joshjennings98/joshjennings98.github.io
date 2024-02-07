@@ -59,7 +59,7 @@ var (
 	aboutFile  = filepath.Join("markdown", "about.md")
 	stylesheet = filepath.Join("static", "website.css")
 	favicon    = filepath.Join("static", "favicon.ico")
-	font       = filepath.Join("static", "IosevkaFixedCurly-Regular.woff2")
+	font       = filepath.Join("static", "font.woff2")
 
 	aboutPage         Page
 	projectPages      []Page
@@ -286,14 +286,24 @@ func WebsiteContent(title string, aboutPage Page, projectPages, blogPages []Page
 					html.Rel("stylesheet"),
 					html.Href(stylesheet),
 				),
-				html.Link(html.Rel("icon"), html.Href(favicon), html.Type("image/x-icon")),
+				html.Link(
+					html.Rel("preload"),
+					html.Href(font),
+					html.Type("font/woff2"),
+					gomponents.Attr("crossorigin"),
+				),
+				html.Link(
+					html.Rel("icon"),
+					html.Href(favicon),
+					html.Type("image/x-icon"),
+				),
 			),
 			html.Body(
 				html.Input(
 					html.Type("checkbox"),
 					html.ID("dark-mode"),
 					html.Class("dark-mode-checkbox"),
-					gomponents.Attr("hidden", ""),
+					gomponents.Attr("hidden"),
 				),
 				html.Div(
 					html.Class("container"),
