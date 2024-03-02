@@ -1,0 +1,39 @@
+; TODO: Improve these regexes (if I can be bothered.........). I need to update the regex code so that I can use capture groups in here...
+{
+  "javascript" 
+  [{:regex #regex "'[^']*'", :token {"A" "#FFD658"}}
+   {:regex #regex "\\b[0-9]\\.{0,1}+[0-9]*", :token {"B" "#A7C"}}
+   {:regex #regex "//.*", :token {"C" "lightgrey"}}
+   {:regex #regex "typeof|try|catch|finally|delete|switch|case|in|of|if|else|import|from|as|export|extends|new|return|throw|for|while|break|continue|async|await", :token {"E" "#E68"}}
+   {:regex #regex "\\b(?:true|false|null|undefined|NaN|Infinity|\\$)\\b", :token {"F" "#ae81ff"}}
+   {:regex #regex "[!=]=|[!=]==|\\+\\+|--|\\*|\\/|&&|\\|\\||!|<=?|>=?|>>|<<|\\.\\.\\.", :token {"G" "#f92672"}}
+   {:regex #regex "\\b(?:window|document|navigator|console|self|top|process|require|module|define|global|Promise|Array|Math|String|Number|Symbol|Function|Reflect|Proxy|Error)\\b", :token {"H" "#fd971f"}}
+   {:regex #regex "\\b(?:var|let|const|function|this|do|super|constructor|instanceof|default)\\b", :token {"I" "#78dce8"}}
+   {:regex #regex "\\b(?:getelementsby(?:tagname|classname|name)|getelementbyid|(?:get|set|remove)attribute|queryselector(?:all)?)\\b", :token {"J" "#7E7"}}
+   {:regex #regex "\\b\\w[a-z0-9]*\\b(?=\\()", :token {"D" "#a6e22e"}}
+   ]
+  "fsharp" 
+  [{:regex #regex "\".*?\"", :token {"A" "#FFD658"}}
+   {:regex #regex "//.*", :token {"C" "lightgrey"}}
+   {:regex #regex "(?<=:)\\s+[\\sa-z0-9\\->\\*\\(\\)]*(?=[\\)=])", :token {"D" "#a6e22e"}}
+   {:regex #regex "\\blet\\b|\\bmatch\\b|\\bwith\\b|\\bif\\b|\\bthen\\b|\\belse\\b|\\bopen\\b|\\bmodule\\b|\\btype\\b|\\bof\\b|\\bin\\b|\\bfor\\b|\\bdo\\b|\\byield\\b|\\breturn\\b|\\btry\\b|\\bmutable\\b|\\bstruct\\b|\\binterface\\b|\\babstract\\b|\\boverride\\b|\\bvirtual\\b|\\bnew\\b|\\bbase\\b", :token {"E" "#E68"}}
+   {:regex #regex "\\btrue\\b|\\bfalse\\b|\\bnull\\b|\\bnone\\b|\\bsome\\b|\\bunit\\b", :token {"F" "#ae81ff"}}
+   {:regex #regex "[!=]=|<>|\\+\\+|--|&&|\\|\\||<|[!-]>|<=|>=|\\|>|<<|::|\\+\\+|-->|\\.\\.|@", :token {"G" "#f92672"}}
+   {:regex #regex "\\smap\\b|\\(map\\bset\\b|\\boption\\b|\\bresult\\b|\\basync\\b|\\bprintfn\\b|\\bsprintfn\\b|\\bprintf\\b|\\bsprintf\\b|\\bfailwith\\b|\\braise\\b", :token {"H" "#fd971f"}}
+   {:regex #regex "\\blist(?=\\.)|\\bseq(?=\\.)|\\barray(?=\\.)", :token {"H" "#fd971f"}}
+   {:regex #regex "\\blet!\\b|\\buse\\b|\\buse!\\b|\\byield!\\b|\\breturn!\\b|\\basync\\b|\\bdo!\\b|\\belif\\b|\\bend\\b|\\bfinally\\b|\\bfun\\b|\\bfunction\\b|\\btry\\b|\\bwith\\b|\\brec\\b", :token {"I" "#78dce8"}}
+   {:regex #regex "\\b[0-9]\\.{0,1}+[0-9]*", :token {"B" "#A7C"}}]
+  "html" 
+  [{:regex #regex "<[a-z0-9]+[ >]", :token {"A" "#f92672"}}
+   {:regex #regex "[a-z]+(?==)", :token {"B" "#66d9ef"}}
+   {:regex #regex "\"[^\"]+\"", :token {"C" "#ae81ff"}}
+   {:regex #regex "</[a-z0-9]+>|/>|>", :token {"D" "#f92672"}}]
+  "css" 
+  [{:regex #regex "[a-z-]+(?=:)", :token {"B" "#a6e22e"}}
+   {:regex #regex "!important", :token {"E" "#f92672"}}
+   {:regex #regex "(?<=:)\\s[^[A-Z; ]]+(?=[; ])", :token {"C" "#ae81ff"}}
+   {:regex #regex "\\/\\*.*?\\*\\/", :token {"D" "lightgrey"}}
+   {:regex #regex ":[a-z-]+ ", :token {"F" "#fd971f"}}
+   {:regex #regex "@[a-z-]+ ", :token {"G" "#78dce8"}}
+   {:regex #regex "#[a-z0-9_-]+|\\.[a-z0-9_-]+|[a-z0-9_-]+", :token {"A" "#66d9ef"}}]
+}
