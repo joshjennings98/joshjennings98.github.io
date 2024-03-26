@@ -1,0 +1,8 @@
+; website configuration
+{
+  :base         "./index.html"        ; basename for the website (used in <base> tag)
+  :static       "aaa/src/static"      ; path to static directory (will be copied to :out/static)
+  :src          "aaa/src"             ; directory containing website markdown files
+  :langfile     "aaa/languages.edn"   ; path to languages file containing regexes for styling different pre classes
+  :dst          "aaa/out/"             ; where to output generated html files
+}
