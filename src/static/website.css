@@ -1,49 +1,48 @@
 @font-face {
-    font-family: 'font';
-    src: url('font.woff2') format('woff2');
+    font-family: 'Averia';
+    src: url('AveriaLibre.woff2') format('woff2');
+}
+
+@font-face {
+    font-family: 'IosevkaSmall';
+    src: url('IosevkaSmall.woff2') format('woff2');
 }
 
 :root {
     --c-normal: #eeeeee;
-    --c-inverted: #111111;
-    --c-alternate: #ca82ff;
+    --c-background: #040204;
     --c-translucent: #0000009a;
 }
 
 html,
 body {
-    font-family: font;
+    font-family: 'Averia', serif;
     text-align: justify;
     color: var(--c-normal);
     text-justify: inter-word;
-    background: #040204 url('stars.gif');
+    background: var(--c-background) url('stars.gif');
     background-attachment: fixed;
-}
-
-body {
     margin: 0;
 }
 
-.container {
+main {
     margin: 0 auto;
     font-size: 1.2em;
+    line-height: 1.6em;
+    padding: 0 30px;
     max-width: 800px;
-    padding: 15px 30px;
-    line-height: 1.8em;
-    background: #040204 url('stars.jpg');
+    background: var(--c-background) url('stars.jpg');
     background-attachment: fixed;
 }
 
-.container > .inner-container {
+main > article {
     background-color: var(--c-translucent);
-    box-shadow: 0 0 30px 30px var(--c-translucent);
+    box-shadow: 0 30px 0 30px var(--c-translucent);
 }
 
-@media only screen and (max-width: 800px) {
-    .container {
-        margin: 0;
-        padding: 15px 30px;
-    }
+header {
+    padding-top: 80px;
+    margin-bottom: 80px;
 }
 
 header > h1 {
@@ -53,27 +52,28 @@ header > h1 {
     line-height: 1.2em;
 }
 
-ul.nav,
-summary,
-details[open]:last-of-type {
-    border-bottom: 2px dotted var(--c-alternate);
+header nav ul {
+    text-align: center;
+    margin-top: 45px;
+    padding-inline-start: 0;
 }
 
-ul.nav {
-    width: 100%;
-    display: flex;
-    font-weight: bold;
-    padding: 0 !important; 
-    list-style-type: none;
-    justify-content: space-between;
-    border-top: 2px dotted var(--c-alternate);
-    margin-bottom: 0;
+header nav ul li,
+footer nav ul li {
+    display: inline;
+    margin: 0 20px;
 }
 
-summary {
-    cursor: pointer;
-    font-weight: bold;
-    color: var(--c-alternate) !important;
+header nav ul li a,
+footer nav ul li a,
+footer nav a,
+header a {
+    text-decoration: none;
+}
+
+footer {
+    text-align: center;
+    margin: 80px 0 30px 0;
 }
 
 pre {
@@ -81,21 +81,18 @@ pre {
     font-size: 16px;
     color: transparent;
     overflow-x: scroll;
-}
-
-pre,
-:not(pre) > code { 
     border: 2px solid #ddd;
     border-radius: 10px;
     padding: 5px 10px;
 }
+ 
+pre,
+code {
+    font-family: 'IosevkaSmall', 'Iosevka', monospace;
+}
 
-h1 a:link,
-h1 a:hover,
-h1 a:active,
-h1 a:visited,
-pre:not([class]) {
-    color: var(--c-normal);
+:where(main ol, main ul) {
+    list-style: '✦  ';
 }
 
 h1,
@@ -107,14 +104,71 @@ h6,
 a:link,
 a:hover,
 a:active,
-a:visited {
-    text-decoration: none;
-    color: var(--c-alternate);
+a:visited,
+h1 a:link,
+h1 a:hover,
+h1 a:active,
+h1 a:visited,
+pre:not([class]) {
+    color: var(--c-normal);
+}
+
+img {
+    width: 100%;
 }
 
 ::selection, 
 ::-moz-selection {
-    color: var(--c-inverted);
-    background: var(--c-alternate);
+    color: var(--c-background);
+    background: var(--c-normal);
+}
+
+@media (min-width: 601px) {
+    header nav ul li a::before,
+    footer nav a::before,
+    footer nav ul li a::before,
+    header nav ul li a::after,
+    footer nav a::after,
+    footer nav ul li a::after {
+        content: '✦  ';
+        opacity: 0;
+    }
+
+    header nav ul li a:hover::before,
+    footer nav ul li a:hover::before,
+    footer nav a:hover::before {
+        opacity: 1;
+    }
+}
+
+@media (max-width: 600px) {
+    html {
+        font-size: 80%;
+    }
+    section,
+    footer {
+        padding-top: 0;
+    }
+    header,
+    section,
+    footer {
+        margin-bottom: 30px;
+    }
+    header {
+        padding-top: 30px;
+        margin-bottom: 30px;
+    }
+    header nav ul {
+        margin-top: 25px;
+    }
+    header nav ul li {
+        margin: 0 calc(100vw / 25);
+    }
+}
+
+@media (max-width: 350px) {
+    header nav ul li {
+        margin: 0 8px;
+    }
 }
 

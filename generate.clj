@@ -95,21 +95,21 @@
       [:title (str "joshj.dev - " title)]
       [:base {:href base}]]
     [:body
-      [:main {:class "container"}
-        [:div {:class "inner-container"} 
+      [:main
+        [:article 
           [:header
             [:h1 [:a {:href "index.html"} "Josh's Website"]]
-            [:ul {:class "nav"}
-              [:li [:a {:href "index.html"} "Home"]]
-              [:li [:a {:href "projects.html"} "Projects"]]
-              [:li [:a {:href "blog.html"} "Blog"]]
-              [:li [:a {:href "misc.html"} "Misc"]]]]        
-          [:article {:id slug}
+            [:nav
+              [:ul {:class "nav"}
+                [:li [:a {:href "index.html"} "Home"]]
+                [:li [:a {:href "projects.html"} "Projects"]]
+                [:li [:a {:href "blog.html"} "Blog"]]
+                [:li [:a {:href "misc.html"} "Misc"]]]]]
+          [:section {:id slug}
             (markdown/markdown content :data)
           [:footer
-            [:ul {:class "nav"}
-              [:li [:a {:href (str slug ".html")} "Back to top"]]
-              [:li [:a {:href "index.html"} "Home"]]]]]]]]])
+            [:nav
+              [:a {:href (str slug ".html")} "Back to top"]]]]]]]])
 
 (let [[cfg-file] *command-line-args*]
   (when (or (empty? cfg-file))
