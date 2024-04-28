@@ -22,7 +22,7 @@ jobs:
     steps:
     - uses: actions/checkout@v4
     - name: Remove old index.html and static directory
-      run: find out ! -name 'cv.html' -type f -exec rm -f {} +
+      run: find out ! -name '*cv*' -type f -exec rm -f {} +
     - name: Execute babashka script
       uses: tzafrirben/babashka-docker-action@v1.1
       with:
