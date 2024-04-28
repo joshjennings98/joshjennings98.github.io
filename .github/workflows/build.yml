@@ -1,0 +1,32 @@
+name: Build Website
+
+on:
+  pull_request:
+    branches:
+      - master
+  push:
+    branches:
+      - master
+    paths:
+      - 'src/*'
+      - 'generate.clj'
+      - 'config.edn'
+  workflow_dispatch:
+
+jobs:
+  build-website:
+    name: Build  website
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    steps:
+    - uses: actions/checkout@v4
+    - name: Execute babashka script
+      uses: tzafrirben/babashka-docker-action@v1.1
+      with:
+        bb_src: generate.clj
+        bb_args: config.edn
+    - name: Commit changes
+      uses: stefanzweifel/git-auto-commit-action@v4
+      with:
+        commit_message: ":sparkles: Website Updates"
