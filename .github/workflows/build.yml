@@ -15,12 +15,14 @@ on:
 
 jobs:
   build-website:
-    name: Build  website
+    name: Build Website
     runs-on: ubuntu-latest
     permissions:
       contents: write
     steps:
     - uses: actions/checkout@v4
+    - name: Remove old index.html and static directory
+      run: find out ! -name 'cv.html' -type f -exec rm -f {} +
     - name: Execute babashka script
       uses: tzafrirben/babashka-docker-action@v1.1
       with:
