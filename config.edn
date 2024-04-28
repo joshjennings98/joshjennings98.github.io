@@ -3,6 +3,6 @@
   :base         "https://joshj.dev" ; basename for the website (used in <base> tag)
   :static       "src/static"        ; path to static directory (will be copied to :out/static)
   :src          "src"               ; directory containing website markdown files
-  :langfile     "anguages.edn"      ; path to languages file containing regexes for styling different pre classes
+  :langfile     "languages.edn"     ; path to languages file containing regexes for styling different pre classes
   :dst          "out/"              ; where to output generated html files
 }
