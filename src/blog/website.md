@@ -1,10 +1,9 @@
 ---
 title: This Website
 slug: website
-date: 2099-11-15T14:45:28Z
 ---
 
-# This Website
+## This Website
 
 The goal of this website was to create an interactive static website using on HTML and CSS, no JavaScript. I had recently read [an article about the quiet web](https://briankoberlein.com/tech/quiet-web/) which inspired me to try and create an interesting website that satisfied the requirements laid out in the blog post:
 
@@ -18,11 +17,12 @@ I am not one for frontend development and none of the previous versions of my si
 
 ## Re-implementing theme toggle using only CSS
 
-The main feature that I wanted to emulate using CSS was a light mode toggle. I wanted to be able to click a button and have the colour scheme change. With JavaScript I would watch for a checkbox and have an `onchange` event that makes the colour changes. Since this relies on JavaScript, this approach is not possible. So using only CSS we need some way to:
+The main feature that I wanted to emulate using CSS was a theme toggle. I wanted to be able to click a button and have the theme change in case a user doesn't like the default one. With JavaScript I would watch for a checkbox and have an `onchange` event that makes the colour changes. Since this relies on JavaScript, this approach is not possible. So using only CSS we need some way to:
 
 * Know that a checkbox has been checked.
-* If the user was previously in a dark mode the page should become light or vice versa.
+* If the user previously had the theme activated then it should deactivate or vice versa.
 * This needs to be dynamic and not just occur on page load but any time a user checks the checkbox.
+* Ideally it accounts for the user's light/dark mode preferences.
 
 Luckily, CSS has [pseudo-classes](https://developer.mozilla.org/en-US/docs/Web/CSS/Pseudo-classes). These are keywords that are attached to a selector and specify a state of the selected element, for example `:hover` is triggered when an element is hovered over. There exists the [`:checked` pseudo-class](https://developer.mozilla.org/en-US/docs/Web/CSS/:checked) which can be used to change the style of a checkbox or radio button based on whether or not it is checked. This satisfies the goal of making the change dynamic and controllable by the user.
 
@@ -59,14 +59,14 @@ From the [general sibling combinator docs](https://developer.mozilla.org/en-US/d
 </span>
 ```
 
-How does this help us? Well, since we can style elements based on the pseudo-class selectors, the CSS can be modified to change based on the checked state of a checkbox. Say we have a class for the checkbox called `.dark-mode-checkbox`, we can do the following and change the font for siblings of an element based on whether the checkbox is checked:
+How does this help us? Well, since we can style elements based on the pseudo-class selectors, the CSS can be modified to change based on the checked state of a checkbox. Say we have a class for the checkbox called `.theme-checkbox`, we can do the following and change the font for siblings of an element based on whether the checkbox is checked:
 
 ```css
 .content {
   font-family: Serif;
 }
 
-.dark-mode-checkbox:checked ~ .container {
+.theme-checkbox:checked ~ .container {
   font-family: Monospace;
 }
 ```
@@ -74,17 +74,17 @@ How does this help us? Well, since we can style elements based on the pseudo-cla
 And in the HTML do something like this:
 
 ```html
-<input hidden class="dark-mode-checkbox" id="dark-mode" type="checkbox">
+<input hidden class="theme-checkbox" id="theme" type="checkbox">
 
 <div class="container">
-  <label class="dark-mode-label" for="dark-mode">Toggle Dark Mode</label>
+  <label class="theme-label" for="theme">Toggle Theme</label>
   ...
 </div>
 ```
 
 You can see that the checkbox and the container are siblings. This is important as we wouldn't be able to have the content as a descendant of the checkbox due to the nature of inputs. One strange thing it does mean, is that we have the label for the button not be a parent or sibling of the checkbox. This is not an issue as we use the `for` attribute.
 
-Now that we have the general technique, we can utilise it for the dark mode.
+Now that we have the general technique, we can utilise it for theme toggle. In this example we are using it to toggle light and dark mode:
 
 ```css
 :root {
@@ -103,7 +103,7 @@ Now that we have the general technique, we can utilise it for the dark mode.
   }
 }
 
-.dark-mode-checkbox:checked ~ .container {
+.theme-checkbox:checked ~ .container {
   --c-text: var(--c-dark-text);
   --c-background: var(--c-dark-background);
 }
@@ -116,9 +116,9 @@ Now that we have the general technique, we can utilise it for the dark mode.
 
 We use [CSS variables](https://developer.mozilla.org/en-US/docs/Web/CSS/Using_CSS_custom_properties) and change them based on whether the checkbox is checked. We can then reference these variables in the CSS (such as when we set the background and text colour) to update the colours accordingly.
 
-We can also utilise [`prefers-color-scheme`](https://developer.mozilla.org/en-US/docs/Web/CSS/@media/prefers-color-scheme) to detect whether the initial colour scheme should be light or dark. Since we can use generic terminalogy in our labels, we can treat the light mode as the dark mode for users who initially requested the dark mode. There is this neat [codepen demo](https://codepen.io/kleinfreund/pen/NmpKZM) for determining whether your web browser supports this and what defaults to. This all means that the website will be the correct mode for users and they won't have to click the checkbox to toggle the theme. This ultimately makes the whole approach with the checkbox pointless, but this whole website is an exercise in pointlessness so I am doing it anyway. It also led to some interesting problems that I got to solve, I will go over theses in the next few sections.
+We also utilise [`prefers-color-scheme`](https://developer.mozilla.org/en-US/docs/Web/CSS/@media/prefers-color-scheme) to detect whether the alternative colour scheme should be light or dark. There is this neat [codepen demo](https://codepen.io/kleinfreund/pen/NmpKZM) for determining whether your web browser supports this and what defaults to. This all means that the website will have the correct colour scheme for users if they toggle the theme.
 
-One more problem arises. The checkbox is not part of the content and so it is unaffected by the styling. We cannot make it part of the container because it will never be able to affect the styling of it's parent. Luckily, since the label that you can click doesn't have to be a sibling of the checkbox itself, we can just hide the actual checkbox. Since the label can be clicked and we used the `for` attribute, it should still be accessible.
+One more problem arises. In this case, the checkbox is not part of the content and so it is unaffected by the styling. We cannot make it part of the container because it will never be able to affect the styling of it's parent. Luckily, since the label that you can click doesn't have to be a sibling of the checkbox itself, we can just hide the actual checkbox. Since the label can be clicked and we used the `for` attribute, it should still be accessible.
 
 ## Storing theme across pages
 
@@ -144,7 +144,7 @@ By default all the pages will be hidden, and then when a radio button is selecte
 <input type="radio" class="radio" id="page2-button">
 ```
 
-This is all good, except radio buttons don't look like page links. We want this webpage to look like a normal website, users should be able to interact with it like they would any other website and a set of radio buttons to switch pages looks a bit stupid. To solve this, we will use a simialr technique that we used with the theme toggle, we will hide the radio buttons themselves and rely on the button labels. We can make the radio button labels by styling them so they have underlines and so that when a user hovers over them, the mouse pointer changes. This way a user will never know they aren't actual links and from an accessability standpoint we will make sure to have good labels. We can make links stay the same colour if they have been visited (I never liked them changing colour) and then the page switch buttons will be indistinguishable from normal links.
+This is all good, except radio buttons don't look like page links. We want this webpage to look like a normal website, users should be able to interact with it like they would any other website and a set of radio buttons to switch pages looks a bit stupid. To solve this, we will use a similar technique that we used with the theme toggle, we will hide the radio buttons themselves and rely on the button labels. We can make the radio button labels by styling them so they have underlines and so that when a user hovers over them, the mouse pointer changes. This way a user will never know they aren't actual links and from an accessability standpoint we will make sure to have good labels. We can make links stay the same colour if they have been visited (I never liked them changing colour) and then the page switch buttons will be indistinguishable from normal links.
 
 ```css
 .page-button {
@@ -234,15 +234,13 @@ And with that, we have a fully usable single-page website that behaves like it h
 
 ## Code Generation
 
-The website exists as a series of markdown files which are converted into HTML. The HTML is generated using my own static site generator that primarily uses the libraries [goldmark](https://github.com/yuin/goldmark) for markdown to HTML conversion and [gomponents](https://github.com/maragudk/gomponents) for the HTML components which means I can avoid using templates.
+The website exists as a series of markdown files which are converted into HTML. I use clojure (with [babashka](https://babashka.org/)) to do this. The generated `index.html` is then hosted with [GitHub pages](https://pages.github.com/).
 
 ### Converting Markdown to HTML
 
-To convert the markdown files into HTML they are parsed with the goldmark library. This is a markdown parser library that is compliant with the [CommonMark](https://commonmark.org/) specification. It contains a few extensions that you can use to extend the parser and renderer. For example there is an [extension for rendering mathjax](https://github.com/litao91/goldmark-mathjax) that I could use if I ever wanted to add support for rendering math equations (although that would require JavaScript too so I won't be using it). I chose goldmark over other markdown parsers since it is extensible and is compliant with CommonMark.
+I used to use templates for generating my website content. This worked fine but it is hard to read so I wanted a component library that meant I could write the website components in Clojure itself. This also means that testing is easier as I can test individual components. I went with [bootleg](https://github.com/retrogradeorbit/bootleg) as it is available as a [babashka pod](https://github.com/babashka/pods) meaning I can use it's utilities from within Clojure code. The website boilerplate is written using [hiccup](https://github.com/weavejester/hiccup) which represents HTML in Clojure using vectors. This means that everything is written in Clojure and there are no templates needed.
 
-I used to use templates for generating my website content. This worked fine but it is hard to read and test the templates so I wanted a component library that meant I could write the website components in Go iteself and then render them at runtime. This also means that testing is easier as I can test individual components with [Go's inbuilt testing utilities](https://pkg.go.dev/testing) rather than writing to complex templates and checking the output. This also allows me to utilise Go's type safetly and compile time checks that templates would not.
-
-The code for the generators can be found in the [GitHub repo](https://github.com/joshjennings98/joshjennings98.github.io) for this project.
+The code for the generators can be found in the [`generate.clj`](https://github.com/joshjennings98/joshjennings98.github.io/blob/master/generate.clj) in the [GitHub repo](https://github.com/joshjennings98/joshjennings98.github.io) for this project.
 
 ### Syntax Highlighting with CSS gradients
 
@@ -260,11 +258,7 @@ for(i = 0; i < 10; i++){
 
 We utilise a horrible regex to match specific keywords etc. and create a gradient that lines up with the text:
 
-<pre class="skip" style="background: linear-gradient(to right, white 0ch, #E68 0ch, #E68 3ch, white 3ch, white 8ch, #A7C 8ch, #A7C 9ch, white 9ch, white 13ch, #f92672 13ch, #f92672 14ch, white 14ch, white 15ch, #A7C 15ch, #A7C 17ch, white 17ch, white 20ch, #f92672 20ch, #f92672 22ch, white 22ch, white 300ch), linear-gradient(to right, white 0ch, white 0ch, white 4ch, #fd971f 4ch, #fd971f 11ch, white 11ch, white 12ch, #a6e22e 12ch, #a6e22e 15ch, white 15ch, white 300ch), linear-gradient(to right, white 0ch, white 0ch, white 300ch); background-repeat: no-repeat; background-size: 80ch 22px, 80ch 44px, 80ch 66px, 80ch 88px; color: black; width: 80ch; font-family: monospace; font-size: 20px; line-height: 22px; width:inherit">
-for(i = 0; i < 10; i++){
-    console.log(i);
-}
-</pre>
+<preX style="padding: 0; background: linear-gradient(to right, white 0ch, #E68 0ch, #E68 3ch, white 3ch, white 8ch, #A7C 8ch, #A7C 9ch, white 9ch, white 13ch, #f92672 13ch, #f92672 14ch, white 14ch, white 15ch, #A7C 15ch, #A7C 17ch, white 17ch, white 20ch, #f92672 20ch, #f92672 22ch, white 22ch, white 300ch), linear-gradient(to right, white 0ch, white 0ch, white 4ch, #fd971f 4ch, #fd971f 11ch, white 11ch, white 12ch, #a6e22e 12ch, #a6e22e 15ch, white 15ch, white 300ch), linear-gradient(to right, white 0ch, white 0ch, white 300ch); background-repeat: no-repeat; background-size: 80ch 22px, 80ch 44px, 80ch 66px, 80ch 88px; color: black; width: 80ch; font-family: monospace; font-size: 20px; line-height: 22px; width:inherit">\\nfor(i = 0; i < 10; i++){\\n    console.log(i);\\n}\\n</preX>
 
 We then set this as the background for the `pre` and make the text transparent. This makes the colour of the text match the gradient.
 
@@ -280,30 +274,13 @@ for(i = 0; i < 10; i++){
 
 The resulting effect looks quite nice if you get the regular expressions for the language syntax correct (you will notice many places on this website where the choice of regex causes problems but this is just meant to be a bit of fun). It should be noted that this whole technique is quite pointless and it causes the website to take up more space than just using a JavaScript library for the highlighting.
 
-## Making the website less boring
-
-At this point the website is quite good (well I think it is). It satisfies the goals I set out with but it looks a bit boring. A criticism of these mimimal websites is that they are too minimal and all look the same. We can't be having that, I like the websites of the good old days where each page [was unique and a bit insane](https://www.spacejam.com/1996/). To rectify this, I have decided to add a nice scrolling grid effect to the webpage using CSS animations along with a fun animated website header. This way the website will be more fun and no-one will call it mimimalist and boring.
-
-The header is an SVG that has been animated with CSS. I added an animation to the path element of the SVG that creates an effect so that the outline of the SVG appears and disapears in a dashed pattern along with the fill fading in and out. This makes it look like the text is appearing and disappearing.
-
-For the scrolling grid effect there are two classes, `.gridhoriz` and `.gridvert`, these define pseudo-elements so all I have to do is add a couple of small elements to the bottom of the page:
-
-```html
-<section class="gridhoriz">
-<section class="gridvert">
-</section>
-</section>
-```
-
-For `.gridhoriz::before`, an absolutely positioned pseudo-element is defined with a linear gradient background that extends horizontally beyond the viewport on both sides. The `.gridvert` class styles an element with a relative position, taking up the full width of the page whilst the `.gridvert::before` pseudo-element creates a central vertical line, with multiple additional vertical lines positioned at intervals using the box-shadow property. The `.gridvert::after` adds a horizontal element that extends beyond the viewport on both sides and has additional horizontal lines created using box-shadow. This element is then animated to move vertically in a loop, producing a scrolling grid effect that fades into the background.
-
 ## Deployment using GitHub Pages
 
-I don't want to spend money so I host the website with GitHub pages. This is particularly nice since I am hosting the repository on GitHub so deployments are trivial, I just run the go code to generate the static files and I am done.
+I don't want to spend money so I host the website with [GitHub pages](https://pages.github.com/). This is particularly nice since I am hosting the repository on GitHub so deployments are trivial, I just run the go code to generate the static files and I am done.
 
 ## Acknowledgements
 
-A lot of inspiration was taked from [this blog post](https://kleinfreund.de/css-only-dark-mode/) on CSS-only dark mode for the initial work on reimplementing the theme toggle without JavaScript.
+A lot of inspiration was taked from [this blog post](https://kleinfreund.de/css-only-theme/) on CSS-only dark mode for the initial work on reimplementing the theme toggle without JavaScript.
 
 This [person on codepen](https://codepen.io/finnhvman) has a lot of amazing CSS only stuff available that make this website seem like a toy. They also have some cool SVG stuff like this [gas giant](https://codepen.io/finnhvman/pen/jOQvYaz) that I want to include on my website somehow.
 
@@ -312,3 +289,4 @@ The CSS only syntax highlighting is a slightly modified version of the work in [
 ## Github
 
 The full project can be viewed on [GitHub](https://github.com/joshjennings98/joshjennings98.github.io).
+

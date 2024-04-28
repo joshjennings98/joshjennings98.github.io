@@ -45,7 +45,7 @@
                               (format "%s, %s %sch, %s %sch" acc colour index colour (+ index length)))]
     (format "background: linear-gradient(to right %s); -webkit-background-clip: text" (reduce create-colour-block "" gradient-parts))))
 
-(defn syntax-highlight [lines langfile]
+(defn syntax-highlight [langfile lines]
   (let [regex #"(?s)<pre><code class=\"([^\"]*)\">(.*?)</code></pre>"
         hl-mappings (edn/read-string {:readers {'regex #(re-pattern %1)}} (slurp langfile)) 
         replace-func (fn [lang content]
@@ -82,34 +82,43 @@
         metadata (parse-metadata raw-metadata cfg)]
     {:md md :metadata metadata}))
 
-(defn add-hx-attributes [html-content]
-  (str/replace html-content #"<a([^>]+href=\"[^\"]*\")([^>]*)>" "<a$1$2 hx-boost=\"true\" hx-push-url=\"true\">"))
+(defn move-to-end [key pages]
+  (let [index-page (first (filter #(= key (:slug (:metadata %))) pages))
+        without-index (vec (remove #(= key (:slug (:metadata %))) pages))]
+    (conj without-index index-page)))
 
-(defn template-page [content {:keys [slug title base] :or {slug ""}}]
+(defn template-page [content {:keys [slug] :or {slug ""}}]
+  (let [slug (if (= slug "index") "" slug)]
+    [:article {:id slug :class (if (empty? slug) "homepage page" "page")}
+      (markdown/markdown content :data)
+      [:footer
+        [:nav
+          [:a {:href (str "#" slug)} "Back to top"]]]]))
+
+(defn template-site [{:keys [base]} content]
+  (utils/convert-to
   [:html
     [:head
       [:meta {:name "viewport" :content "width=device-width, initial-scale=1.0"}]
       [:link {:rel "icon" :href "static/favicon.ico" :type "image/x-icon"}]
       [:link {:rel "stylesheet" :href "static/website.css"}]
-      [:script {:src "static/htmx.min.js"}]
-      [:title (str "joshj.dev - " title)]
+      [:title "joshj.dev"]
       [:base {:href base}]]
-    [:body
-      [:main
-        [:article 
-          [:header
-            [:h1 [:a {:href "index.html"} "Josh's Website"]]
-            [:nav
-              [:ul {:class "nav"}
-                [:li [:a {:href "index.html"} "Home"]]
-                [:li [:a {:href "projects.html"} "Projects"]]
-                [:li [:a {:href "blog.html"} "Blog"]]
-                [:li [:a {:href "misc.html"} "Misc"]]]]]
-          [:section {:id slug}
-            (markdown/markdown content :data)
-          [:footer
-            [:nav
-              [:a {:href (str slug ".html")} "Back to top"]]]]]]]])
+      [:body
+        [:input {:type "checkbox" :id "theme" :class "theme-checkbox" :hidden true}]
+        [:main
+          [:div
+            [:section 
+              [:header
+                [:h1 [:a {:href "#"} "Josh's Website"]]
+                [:nav
+                  [:ul {:class "nav"}
+                    [:li [:a {:href "#"} "Home"]]
+                    [:li [:a {:href "#blog"} "Blog"]]
+                    [:li [:a {:href "http://github.com/joshjennings98" :target "_blank" :rel "noopener noreferrer"} "GitHub"]]
+                    [:li [:label {:for "theme" :title "Toggle stars theme" :class "page-button"} "Theme"]]]]]
+                content
+            ]]]]] :html))
 
 (let [[cfg-file] *command-line-args*]
   (when (or (empty? cfg-file))
@@ -122,14 +131,12 @@
       (fs/copy-tree static (io/file dst "static") :replace-existing)
       (->> (list-md-files src)
            (map #(extract-content cfg %))
+           (filter #(not (contains? (:metadata %) :skip)))
+           (move-to-end "index")
            (map (fn [{:keys [md metadata]}] 
-                  (let [slug (:slug metadata)
-                        content (-> md 
-                                    (template-page metadata)
-                                    (utils/convert-to :html)
-                                    (syntax-highlight langfile)
-                                    (add-hx-attributes))]
-                    {:content content :slug slug})))
-           (#(doseq [{:keys [content slug]} %]
-               (spit (str dst slug ".html") content)))))))
-
+                    (template-page md metadata)))
+           (reduce (fn [acc elem] (conj acc elem)) [:div])
+           (template-site cfg)
+           (syntax-highlight langfile)
+           (#(str/replace (str/replace %1 "prex" "pre") #"\\n" "\n")) ; hack for pres in markdown files
+           (spit (format "%s/index.html" dst))))))

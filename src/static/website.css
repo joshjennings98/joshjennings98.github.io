@@ -12,32 +12,60 @@
     --c-normal: #eeeeee;
     --c-background: #040204;
     --c-translucent: #0000009a;
+    --background-static: var(--c-background) url('stars.jpg');
+    --background-dynamic: var(--c-background) url('stars.gif');
 }
 
 html,
 body {
+    margin: 0;
+    height: 100%;
+    scroll-behavior: smooth;
+    /* need way to stop white rectangles when scrolling fast in dark mode and vice versa (without being weird for the stars theme) */
+}
+
+main {
     font-family: 'Averia', serif;
     text-align: justify;
     color: var(--c-normal);
     text-justify: inter-word;
-    background: var(--c-background) url('stars.gif');
+    background: var(--background-dynamic);
     background-attachment: fixed;
     margin: 0;
+    display: -webkit-flex;
+    display: -ms-flex;
+    display: flex;
+    -webkit-flex-direction: column;
+    -ms-flex-direction: column;
+    flex-direction: column;
+    min-height: 100%;
 }
 
-main {
+.theme-checkbox:checked ~ main {
+    --c-normal: #040204;
+    --c-background: #eeeeee;
+    @media (prefers-color-scheme: dark) {
+        --c-normal: #eeeeee;
+        --c-background: #040204;
+    }
+    --c-translucent: #00000000;
+    --background-static: var(--c-background);
+    --background-dynamic: var(--c-background);
+}
+
+main > div {
     margin: 0 auto;
     font-size: 1.2em;
     line-height: 1.6em;
-    padding: 0 30px;
     max-width: 800px;
-    background: var(--c-background) url('stars.jpg');
+    background: var(--background-static);
     background-attachment: fixed;
 }
 
-main > article {
+div > section {
     background-color: var(--c-translucent);
-    box-shadow: 0 30px 0 30px var(--c-translucent);
+    box-shadow: 0 0 50px 50px var(--c-translucent);
+    padding: 0 30px;
 }
 
 header {
@@ -64,11 +92,14 @@ footer nav ul li {
     margin: 0 20px;
 }
 
+header nav ul li label,
 header nav ul li a,
 footer nav ul li a,
 footer nav a,
 header a {
     text-decoration: none;
+    cursor: pointer;
+    user-select: none;
 }
 
 footer {
@@ -108,9 +139,21 @@ a:visited,
 h1 a:link,
 h1 a:hover,
 h1 a:active,
-h1 a:visited,
-pre:not([class]) {
+h1 a:visited {
     color: var(--c-normal);
+}
+
+pre:not([class]) {
+    color: #eee;
+}
+
+h1 a,
+h2 a,
+h3 a,
+h4 a,
+h5 a,
+h6 a {
+    text-decoration: none;
 }
 
 img {
@@ -124,17 +167,20 @@ img {
 }
 
 @media (min-width: 601px) {
+    header nav ul li label::before,
+    header nav ul li label::after,
     header nav ul li a::before,
-    footer nav a::before,
-    footer nav ul li a::before,
     header nav ul li a::after,
+    footer nav a::before,
     footer nav a::after,
-    footer nav ul li a::after {
+    footer nav ul li a::after,
+    footer nav ul li a::before {
         content: '✦  ';
         opacity: 0;
     }
 
     header nav ul li a:hover::before,
+    header nav ul li label:hover::before,
     footer nav ul li a:hover::before,
     footer nav a:hover::before {
         opacity: 1;
@@ -144,6 +190,10 @@ img {
 @media (max-width: 600px) {
     html {
         font-size: 80%;
+    }
+    main > div {
+        max-width: 96vw;
+        margin: 0 2vw;
     }
     section,
     footer {
@@ -164,6 +214,9 @@ img {
     header nav ul li {
         margin: 0 calc(100vw / 25);
     }
+    div > section {
+        padding: 0 5px;
+    }
 }
 
 @media (max-width: 350px) {
@@ -172,3 +225,26 @@ img {
     }
 }
 
+.homepage.page {
+    display: block;
+}
+
+.page {
+    display: none;
+}
+
+.page:target {
+    display: block;
+}
+
+.page:target ~ .homepage.page {
+    display: none;
+}
+
+.homepage.page::before,
+:target::before {
+    content: "";
+    display: block;
+    height: 1000px;
+    margin: -1000px 0 0;
+}

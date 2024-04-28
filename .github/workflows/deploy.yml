@@ -1,4 +1,4 @@
-name: Build Website
+name: Deploy
 
 on:
   pull_request:
@@ -8,9 +8,9 @@ on:
     branches:
       - master
     paths:
-      - 'src/markdown/**.md'
-      - 'src/static/website.css'
-      - 'src/main.go'
+      - 'src/*'
+      - 'generate.clj'
+      - 'config.edn'
   workflow_dispatch:
 
 jobs:
@@ -20,15 +20,12 @@ jobs:
     permissions:
       contents: write
     steps:
-    - uses: actions/checkout@v3
-    - uses: actions/setup-go@v4
+    - uses: actions/checkout@v4
+    - name: Execute babashka script
+      uses: tzafrirben/babashka-docker-action@v1
       with:
-        go-version: '1.21'
-    - name: Generate website
-      run: |
-          cd src
-          go mod tidy
-          go run main.go --static ..
+        bb_src: generate.clj
+        bb_args: config.edn
     - name: Commit changes
       uses: stefanzweifel/git-auto-commit-action@v4
       with:
