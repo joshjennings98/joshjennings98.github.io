@@ -1,10 +1,9 @@
 ---
 title: Understand Neural Networks using F#
 slug: fsharp-neural-network
-date: 2019-11-15T14:45:28Z
 ---
 
-# Understanding Neural Networks using F#
+## Understanding Neural Networks using F\#
 
 In this post I will show off a small F# library that allows for the creation of scalable fully-connected neural networks. I will use it to explain how forward and back propagation work via code examples. I made this before I was a software engineer (so no tests...) and I did it to help me understand neural networks. Combining creating this library with [guides about backpropagation](https://mattmazur.com/2015/03/17/a-step-by-step-backpropagation-example/) helped me a lot with understanding neural networks and how they worked.
 
@@ -151,11 +150,11 @@ let dActivateLayer (activation : Activation) (input : float list) : float list =
 let dLossFunction (loss : Loss) (n : int) : float -> float -> float =
     match loss with
     | MSE ->
-    fun actual target ->
-    (2.0 / (n |> float)) * (actual - target) * -1.0
+        fun actual target ->
+            (2.0 / (n |> float)) * (actual - target) * -1.0
     | MAE ->
-    fun target actual ->
-        if actual > target then 1.0 else -1.0
+        fun target actual ->
+            if actual > target then 1.0 else -1.0
 ```
 
 ### Training

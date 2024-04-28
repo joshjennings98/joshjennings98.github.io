@@ -1,0 +1,34 @@
+name: Build Website
+
+on:
+  pull_request:
+    branches:
+      - master
+  push:
+    branches:
+      - master
+    paths:
+      - 'src/**'
+      - 'generate.clj'
+      - 'config.edn'
+  workflow_dispatch:
+
+jobs:
+  build-website:
+    name: Build Website
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    steps:
+    - uses: actions/checkout@v4
+    - name: Remove old index.html and static directory
+      run: find out ! -name '*cv*' -type f -exec rm -f {} +
+    - name: Execute babashka script
+      uses: tzafrirben/babashka-docker-action@v1.1
+      with:
+        bb_src: generate.clj
+        bb_args: config.edn
+    - name: Commit changes
+      uses: stefanzweifel/git-auto-commit-action@v4
+      with:
+        commit_message: ":sparkles: Website Updates"
