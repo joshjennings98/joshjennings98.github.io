@@ -280,7 +280,7 @@ I don't want to spend money so I host the website with [GitHub pages](https://pa
 
 ## Acknowledgements
 
-A lot of inspiration was taked from [this blog post](https://kleinfreund.de/css-only-theme/) on CSS-only dark mode for the initial work on reimplementing the theme toggle without JavaScript.
+A lot of inspiration was taked from [this blog post](https://kleinfreund.de/css-only-dark-mode/) on CSS-only dark mode for the initial work on reimplementing the theme toggle without JavaScript.
 
 This [person on codepen](https://codepen.io/finnhvman) has a lot of amazing CSS only stuff available that make this website seem like a toy. They also have some cool SVG stuff like this [gas giant](https://codepen.io/finnhvman/pen/jOQvYaz) that I want to include on my website somehow.
 
