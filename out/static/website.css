@@ -1,0 +1,250 @@
+@font-face {
+    font-family: 'Averia';
+    src: url('AveriaLibre.woff2') format('woff2');
+}
+
+@font-face {
+    font-family: 'IosevkaSmall';
+    src: url('IosevkaSmall.woff2') format('woff2');
+}
+
+:root {
+    --c-normal: #eeeeee;
+    --c-background: #040204;
+    --c-translucent: #0000009a;
+    --background-static: var(--c-background) url('stars.jpg');
+    --background-dynamic: var(--c-background) url('stars.gif');
+}
+
+html,
+body {
+    margin: 0;
+    height: 100%;
+    scroll-behavior: smooth;
+    /* need way to stop white rectangles when scrolling fast in dark mode and vice versa (without being weird for the stars theme) */
+}
+
+main {
+    font-family: 'Averia', serif;
+    text-align: justify;
+    color: var(--c-normal);
+    text-justify: inter-word;
+    background: var(--background-dynamic);
+    background-attachment: fixed;
+    margin: 0;
+    display: -webkit-flex;
+    display: -ms-flex;
+    display: flex;
+    -webkit-flex-direction: column;
+    -ms-flex-direction: column;
+    flex-direction: column;
+    min-height: 100%;
+}
+
+.theme-checkbox:checked ~ main {
+    --c-normal: #040204;
+    --c-background: #eeeeee;
+    @media (prefers-color-scheme: dark) {
+        --c-normal: #eeeeee;
+        --c-background: #040204;
+    }
+    --c-translucent: #00000000;
+    --background-static: var(--c-background);
+    --background-dynamic: var(--c-background);
+}
+
+main > div {
+    margin: 0 auto;
+    font-size: 1.2em;
+    line-height: 1.6em;
+    max-width: 800px;
+    background: var(--background-static);
+    background-attachment: fixed;
+}
+
+div > section {
+    background-color: var(--c-translucent);
+    box-shadow: 0 0 50px 50px var(--c-translucent);
+    padding: 0 30px;
+}
+
+header {
+    padding-top: 80px;
+    margin-bottom: 80px;
+}
+
+header > h1 {
+    margin: 0;
+    font-size: 3em;
+    text-align: center;
+    line-height: 1.2em;
+}
+
+header nav ul {
+    text-align: center;
+    margin-top: 45px;
+    padding-inline-start: 0;
+}
+
+header nav ul li,
+footer nav ul li {
+    display: inline;
+    margin: 0 20px;
+}
+
+header nav ul li label,
+header nav ul li a,
+footer nav ul li a,
+footer nav a,
+header a {
+    text-decoration: none;
+    cursor: pointer;
+    user-select: none;
+}
+
+footer {
+    text-align: center;
+    margin: 80px 0 30px 0;
+}
+
+pre {
+    background-color: #111;
+    font-size: 16px;
+    color: transparent;
+    overflow-x: scroll;
+    border: 2px solid #ddd;
+    border-radius: 10px;
+    padding: 5px 10px;
+}
+ 
+pre,
+code {
+    font-family: 'IosevkaSmall', 'Iosevka', monospace;
+}
+
+:where(main ol, main ul) {
+    list-style: '✦  ';
+}
+
+h1,
+h2,
+h3,
+h4,
+h5,
+h6,
+a:link,
+a:hover,
+a:active,
+a:visited,
+h1 a:link,
+h1 a:hover,
+h1 a:active,
+h1 a:visited {
+    color: var(--c-normal);
+}
+
+pre:not([class]) {
+    color: #eee;
+}
+
+h1 a,
+h2 a,
+h3 a,
+h4 a,
+h5 a,
+h6 a {
+    text-decoration: none;
+}
+
+img {
+    width: 100%;
+}
+
+::selection, 
+::-moz-selection {
+    color: var(--c-background);
+    background: var(--c-normal);
+}
+
+@media (min-width: 601px) {
+    header nav ul li label::before,
+    header nav ul li label::after,
+    header nav ul li a::before,
+    header nav ul li a::after,
+    footer nav a::before,
+    footer nav a::after,
+    footer nav ul li a::after,
+    footer nav ul li a::before {
+        content: '✦  ';
+        opacity: 0;
+    }
+
+    header nav ul li a:hover::before,
+    header nav ul li label:hover::before,
+    footer nav ul li a:hover::before,
+    footer nav a:hover::before {
+        opacity: 1;
+    }
+}
+
+@media (max-width: 600px) {
+    html {
+        font-size: 80%;
+    }
+    main > div {
+        max-width: 96vw;
+        margin: 0 2vw;
+    }
+    section,
+    footer {
+        padding-top: 0;
+    }
+    header,
+    section,
+    footer {
+        margin-bottom: 30px;
+    }
+    header {
+        padding-top: 30px;
+        margin-bottom: 30px;
+    }
+    header nav ul {
+        margin-top: 25px;
+    }
+    header nav ul li {
+        margin: 0 calc(100vw / 25);
+    }
+    div > section {
+        padding: 0 5px;
+    }
+}
+
+@media (max-width: 350px) {
+    header nav ul li {
+        margin: 0 8px;
+    }
+}
+
+.homepage.page {
+    display: block;
+}
+
+.page {
+    display: none;
+}
+
+.page:target {
+    display: block;
+}
+
+.page:target ~ .homepage.page {
+    display: none;
+}
+
+.homepage.page::before,
+:target::before {
+    content: "";
+    display: block;
+    height: 1000px;
+    margin: -1000px 0 0;
+}
