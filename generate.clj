@@ -127,7 +127,8 @@
   (do
     (let [cfg (edn/read-string (slurp cfg-file))
           {src :src dst :dst langfile :langfile static :static} cfg]
-      (fs/create-dir dst)
+      (if-not (fs/exists? dst)
+        (fs/create-dir dst))
       (fs/copy-tree static (io/file dst "static") :replace-existing)
       (->> (list-md-files src)
            (map #(extract-content cfg %))
