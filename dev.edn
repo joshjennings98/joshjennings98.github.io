@@ -1,9 +1,9 @@
 ; website configuration for local use in docker image 
-; sudo rm -rf out && docker run -v (pwd):/dev -it babashka/babashka bb -f dev/generate.clj dev/dev.edn && sudo chown $USER -R out/
+; sudo rm -rf out && docker run -v (pwd):/website -it babashka/babashka bb -f website/generate.clj website/dev.edn && sudo chown $USER -R out/
 {
   :base         "./index.html"        ; basename for the website (used in <base> tag)
-  :static       "dev/src/static"      ; path to static directory (will be copied to :out/static)
-  :src          "dev/src"             ; directory containing website markdown files
-  :langfile     "dev/languages.edn"   ; path to languages file containing regexes for styling different pre classes
-  :dst          "dev/out/"            ; where to output generated html files
+  :static       "website/src/static"      ; path to static directory (will be copied to :out/static)
+  :src          "website/src"             ; directory containing website markdown files
+  :langfile     "website/languages.edn"   ; path to languages file containing regexes for styling different pre classes
+  :dst          "website/out/"            ; where to output generated html files
 }
