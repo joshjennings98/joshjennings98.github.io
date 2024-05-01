@@ -166,6 +166,14 @@ img {
     background: var(--c-normal);
 }
 
+pre {
+    ::selection, 
+    ::-moz-selection {
+        color: #040204;
+        background: #eeeeee;
+    }
+}
+
 @media (min-width: 801px) {
     header nav ul li label::before,
     header nav ul li label::after,
