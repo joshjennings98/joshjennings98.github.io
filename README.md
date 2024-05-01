@@ -275,7 +275,7 @@ for(i = 0; i < 10; i++){
 
 The resulting effect looks quite nice if you get the regular expressions for the language syntax correct (you will notice many places on this website where the choice of regex causes problems but this is just meant to be a bit of fun). It should be noted that this whole technique is quite pointless and it causes the website to take up more space than just using a JavaScript library for the highlighting.
 
-## Deployment using GitHub Pages
+## Deployment with GitHub Pages
 
 I don't want to spend money so I host the website with [GitHub pages](https://pages.github.com/). This is particularly nice since I am hosting the repository on GitHub so deployments are trivial, I just run the go code to generate the static files and I am done.
 
