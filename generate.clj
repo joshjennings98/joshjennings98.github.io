@@ -103,22 +103,23 @@
       [:link {:rel "icon" :href "static/favicon.ico" :type "image/x-icon"}]
       [:link {:rel "stylesheet" :href "static/website.css"}]
       [:title "joshj.dev"]
-      [:base {:href base}]]
-      [:body
-        [:input {:type "checkbox" :id "theme" :class "theme-checkbox" :hidden true}]
-        [:main
-          [:div
-            [:section 
-              [:header
-                [:h1 [:a {:href "#"} "Josh's Website"]]
-                [:nav
-                  [:ul {:class "nav"}
-                    [:li [:a {:href "#"} "Home"]]
-                    [:li [:a {:href "#blog"} "Blog"]]
-                    [:li [:a {:href "http://github.com/joshjennings98" :target "_blank" :rel "noopener noreferrer"} "GitHub"]]
-                    [:li [:label {:for "theme" :title "Toggle stars theme" :class "page-button"} "Theme"]]]]]
-                content
-            ]]]]] :html))
+      [:base {:href base}]
+      [:meta {:name "theme-color" :content "#040204"}]]
+    [:body
+      [:input {:type "checkbox" :id "theme" :class "theme-checkbox" :hidden true}]
+      [:main
+        [:div
+          [:section 
+            [:header
+              [:h1 [:a {:href "#"} "Josh's Website"]]
+              [:nav
+                [:ul {:class "nav"}
+                  [:li [:a {:href "#"} "Home"]]
+                  [:li [:a {:href "#blog"} "Blog"]]
+                  [:li [:a {:href "http://github.com/joshjennings98" :target "_blank" :rel "noopener noreferrer"} "GitHub"]]
+                  [:li [:label {:for "theme" :title "Toggle stars theme" :class "page-button"} "Theme"]]]]]
+              content
+          ]]]]] :html))
 
 (let [[cfg-file] *command-line-args*]
   (when (or (empty? cfg-file))
