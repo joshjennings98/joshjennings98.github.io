@@ -104,6 +104,8 @@
       [:link {:rel "stylesheet" :href "static/website.css"}]
       [:title "joshj.dev"]
       [:base {:href base}]
+      [:link {:rel "preload" :href "static/AveriaLibre.woff2" :as "font" :type "font/woff2" :crossorigin true}]
+      [:link {:rel "preload" :href "static/IosevkaSmall.woff2" :as "font" :type "font/woff2" :crossorigin true}]
       [:meta {:name "theme-color" :content "#040204"}]]
     [:body
       [:input {:type "checkbox" :id "theme" :class "theme-checkbox" :hidden true}]
