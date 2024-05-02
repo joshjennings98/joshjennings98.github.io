@@ -122,7 +122,7 @@ One more problem arises. In this case, the checkbox is not part of the content a
 
 ## Storing theme across pages
 
-Now there is a theme I can toggle without JavaScript (yay), but if I go to another page on the website, the theme resets. This is because there is no state stored between pages. If I were using JavaScript then I could use `localStorage` to store a flag that lets the website know which theme should be used. You could do this with three lines of JavaScript. Unfortunately, I want to do it with zero lines of JavaScript which sadly isn't possible. There is no way to access the `localStorage` without JavaScript or JQuery (or maybe some fancy HTML5 or something). This is a limitation of CSS, there is literally no way to solve this. You cannot persist the theme information across pages.
+Now there is a theme I can toggle without JavaScript (yay), but if I go to another page on the website, the theme resets. This is because there is no state stored between pages. If I were using JavaScript then I could use [`localStorage`](https://developer.mozilla.org/en-US/docs/Web/API/Window/localStorage) to store a flag that lets the website know which theme should be used. You could do this with three lines of JavaScript. Unfortunately, I want to do it with zero lines of JavaScript which sadly isn't possible. There is no way to access the `localStorage` without JavaScript or JQuery (or maybe some fancy HTML5 or something). This is a limitation of CSS, there is literally no way to solve this. You cannot persist the theme information across pages.
 
 Luckily there is a solution. Have the entire website in just one page, this way there is nothing to persist across pages because there are no pages. The website can act as if there are multiple pages whilst actually having only one page, this can be done using the power of CSS and radio buttons. In the previous section we went over the `:checked` psuedo-class for checkboxes. Another input type also has it's own `:checked` psuedo-class: radio buttons. Radio buttons allow you to select one option from a set of multiple options. You can select only one option at a time which means that we can use the radio button to control what page we are on. Then we can use the `:checked` pseudo-class to either show or hide sections on the website depending on the 'page' that has been chosen:
 
@@ -179,7 +179,7 @@ This is combined with the following HTML:
 
 A nice thing about having a single webpage and using the radio buttons is that the website is extremely responsive as there are no HTTP requests between page switches since we have all the 'pages' all the time. This could cause problems in the future if there were a lot of pages and the website became very large. However, this would only affect the initial page load and once loaded you would have a quick and snappy website. There are many websites outhere that have multi-megabyte pages as they load in all the image, scripts, and styles yet they remain responsive so I am confident this website would as well.
 
-A problem with this is that if we add a page we need to make changes to the CSS to add the new rule for which page to show and hide. This can be solved by tempalting the CSS when generating the website or it will be solved as a side effect of what we do in the next section.
+A problem with this is that if we add a page we need to make changes to the CSS to add the new rule for which page to show and hide. This can be solved by templating the CSS when generating the website or it will be solved as a side effect of what we do in the next section.
 
 ## Having usable URLs
 
@@ -246,7 +246,7 @@ The code for the generators can be found in the [`generate.clj`](https://github.
 
 There are a lot of code snippets on my website and it would be nice if they could have some syntax highlighting. The most common way to do this is with a library like [highlight.js](https://highlightjs.org/) where JavaScript is used to determine the language and automatically highlight the code. This requires JavaScript which means I don't want it on my website. The other way is to generate the css for each syntax element in a language and wrap each part of the code in a span that matches the syntax element. This works but you end up with a million spans and it is also a bit boring.
 
-The much more interesting and fun approach is to use CSS gradients. Like almost every approach, we use regex to work out the styling for each element but instead of wrapping each element in a span, we style the whole pre with gradients. This avoids having a mess of spans and uses no javascript.
+The much more interesting and fun approach is to use CSS gradients. Like almost every approach, we use regex (although I am sure some JavaScript libraries exist that use [treesitter](https://tree-sitter.github.io/tree-sitter/) to do syntax highlighting (like my [favourite text editor](https://helix-editor.com/) does)) to work out the styling for each element but instead of wrapping each element in a span, we style the whole pre with gradients. This avoids having a mess of spans and uses no javascript.
 
 Lets say we have the following code block:
 
@@ -272,7 +272,7 @@ for(i = 0; i < 10; i++){
 }
 ```
 
-The resulting effect looks quite nice if you get the regular expressions for the language syntax correct (you will notice many places on this website where the choice of regex causes problems but this is just meant to be a bit of fun). It should be noted that this whole technique is quite pointless and it causes the website to take up more space than just using a JavaScript library for the highlighting.
+The resulting effect looks quite nice if you get the regular expressions for the language syntax correct (you might notice some places on this website where the choice of regex causes problems but this is just meant to be a bit of fun). It should be noted that this whole technique is quite pointless and it causes the website to take up more space than just using a JavaScript library for the highlighting.
 
 ## Deployment using GitHub Pages
 
