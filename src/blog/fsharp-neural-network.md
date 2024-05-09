@@ -139,7 +139,7 @@ This value is then used to update the weights:
 
 ![how to update the weight based on the error](./static/assets/nn12.svg)
 
-With this we have modified the weights based on their contribution to the total error! This means that in subsequent forward propagations the error will be lower (for the same specific input). Later when we train the network we will constantly be updating the weights but due to using lots of different inputs this contribution will fluctuate. 
+With this we have modified the weights based on their contribution to the total error! This means that in subsequent forward propagations the error will be lower (for the same specific input). Later when we train the network, we will constantly be updating the weights and due to using lots of different inputs this contribution will fluctuate. 
 
 <details>
 <summary>
