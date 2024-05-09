@@ -85,7 +85,7 @@ This will result in a list of output values that will probably be completely wro
 
 ### Calculating Error
 
-To calculate the error in the output, the output of forward propagation and the target output are passed to a function that calculate the loss or error.
+To calculate the error in the output, the output of forward propagation and the target output are passed to a function that calculates the loss or error.
 
 ```fsharp
 let getOverallError (targetOutputs : float list) (actualOutputs : float list) (loss : Loss) : float =
