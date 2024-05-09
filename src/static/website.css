@@ -48,6 +48,12 @@ main {
         --c-normal: #eeeeee;
         --c-background: #040204;
     }
+    @media (prefers-color-scheme: light) {
+        img {
+            -webkit-filter: invert(1);
+            filter: invert(1);
+        }
+    }
     --c-translucent: #00000000;
     --background-static: var(--c-background);
     --background-dynamic: var(--c-background);
@@ -157,7 +163,26 @@ h6 a {
 }
 
 img {
-    width: 100%;
+    max-width: 100%;
+    display: block;
+    margin: 0 auto;
+    scale: 1.5;
+    max-height: calc(100vw/10);
+}
+
+summary,
+details[open]:last-of-type {
+    border-bottom: 2px dotted var(--c-normal);
+}
+
+summary {
+    border-top: 2px dotted var(--c-normal);
+}
+
+summary {
+    cursor: pointer;
+    font-weight: bold;
+    color: var(--c-normal) !important;
 }
 
 ::selection, 
