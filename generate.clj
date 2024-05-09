@@ -143,4 +143,5 @@
            (template-site cfg)
            (syntax-highlight langfile)
            (#(str/replace (str/replace %1 "prex" "pre") #"\\n" "\n")) ; hack for pres in markdown files
+           (#(str/replace %1 "<img" "<img loading='lazy'")) ; lazy load images
            (spit (format "%s/index.html" dst))))))
