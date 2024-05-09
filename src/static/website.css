@@ -177,9 +177,6 @@ details[open]:last-of-type {
 
 summary {
     border-top: 2px dotted var(--c-normal);
-}
-
-summary {
     cursor: pointer;
     font-weight: bold;
     color: var(--c-normal) !important;
