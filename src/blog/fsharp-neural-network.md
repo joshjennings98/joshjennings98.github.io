@@ -11,7 +11,7 @@ Combining the creation of this library with [guides about backpropagation](https
 
 ### Forward Propagation
 
-[Neural networks](https://en.wikipedia.org/wiki/Neural_network_\(machine_learning\)) consist of interconnected nodes organized in layers. They learn by adjusting the weights of connections between neurons during training, using techniques like forward and backward propagation to minimise the difference between predicted and actual outputs. By training the network on labeled data, neural networks can generalise patterns to make predictions on new data.
+[Neural networks](https://en.wikipedia.org/wiki/Neural_network_\(machine_learning\)) consist of interconnected nodes organised in layers. They learn by adjusting the weights of connections between neurons during training, using techniques like forward and backward propagation to minimise the difference between predicted and actual outputs. By training the network on labeled data, neural networks can generalise patterns to make predictions on new data.
 
 #### Single Layer Forward Propagation
 
