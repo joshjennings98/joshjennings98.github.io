@@ -5,7 +5,7 @@ slug: fsharp-neural-network
 
 ## Understand How A Neural Network Works Using F\#
 
-In this post I will show off a small F# library that allows for the creation of scalable fully-connected [neural networks](https://en.wikipedia.org/wiki/Neural_network_\(machine_learning\)). I will use it to explain how forward and back propagation work via code examples. 
+In this post I will show off a small F# library that allows for the creation of scalable fully-connected [neural networks](https://en.wikipedia.org/wiki/Neural_network_\(machine_learning\)). I will use it to explain how forward and back propagation work via code examples. If you find any mistakes let me know and I will make the necessary changes.
 
 Combining the creation of this library with [guides about backpropagation](https://mattmazur.com/2015/03/17/a-step-by-step-backpropagation-example/) helped me a lot with understanding neural networks and how they worked. I would recommend this as a simple project that could be helpful to learn new languages (especially functional ones) as it requires the use of a lot of fundamental programming language concepts.
 
@@ -117,36 +117,26 @@ The choice of loss function [depends on the type of problem](https://machinelear
 
 Back propagation is more complex than the forward version. We need to go backwards through the network and modify each weight based on how much it contributed to the error. 
 
+#### Output Layer
+
 For the output layer, we compute the derivative of the loss function with respect to the outputs. If `L` is the loss function and `o` represents a network output, the gradient is computed as:
 
 ![derivative of loss function with respect to the outputs](./static/assets/nn8.svg)
+
+#### Hidden Layers
 
 For the hidden layers, the individual deltas for each node in the previous layer are found by propagating the error backward from the output. This involves calculating the error contribution from each node to the subsequent layers, represented as:
 
 ![error contribution from each node to the subsequent layers](./static/assets/nn9.svg)
 
-This formula calculates the error term for a node by summing the contributions of errors from nodes in the subsequent layer, weighted by the connections.
-
-The new weights are then calculated using the chain rule. The derivative of the activation function is found, represented in the following equation where where `sigma` is the activation function and `z` is the input to the activation function:
-
-![derivative of the activation function](./static/assets/nn10.svg)
-
-This derivative is then multiplied by the corresponding output delta sum and this product is further multiplied by the output of the previous layer. The result is the derivative of the loss with respect to a specific weight, given by:
-
-![contribution of a weight to the error](./static/assets/nn11.svg)
-
-This value is then used to update the weights:
-
-![how to update the weight based on the error](./static/assets/nn12.svg)
-
-With this we have modified the weights based on their contribution to the total error! This means that in subsequent forward propagations the error will be lower (for the same specific input). Later when we train the network, we will constantly be updating the weights and due to using lots of different inputs this contribution will fluctuate. 
+This formular calculates the error term for a neuron `j` by summing the contributions of errors from neurons in the subsequent layer `k`, weighted by the connection `w` between the neurons in each layer and multiplies it by the derivative of the loss function.
 
 <details>
 <summary>
-Some more information on the role of the chain rule in back propagation
+Click here to see how the chain rule is used to get the above equation
 </summary>
 
-The [chain rule](https://en.wikipedia.org/wiki/Chain_rule) is a formula that expresses the derivative of the composition of two differentiable functions `f` and `g` in terms of the derivatives of `f` and `g`. It states the following:
+The contribution of the weights to the error can be calculated using the chain rule. The [chain rule](https://en.wikipedia.org/wiki/Chain_rule) is a formula that expresses the derivative of the composition of two differentiable functions `f` and `g` in terms of the derivatives of `f` and `g`. It states the following:
 
 ![the chain rule](./static/assets/chainrule.svg)
 
@@ -156,23 +146,33 @@ The chain rule is important in back propagation because it helps break down the 
 
 ![how the chain rule applies to back propagation](./static/assets/nn13.svg)
 
-The sensitivity of the loss function to the output of a specific neuron `k`:
+Where:
 
 ![using chain rule in back propagation 1](./static/assets/nn14.svg)
 
-The derivative of the output of neuron `k` with respect to its input, simplifying to the weight between `j` and `k`:
+is the sensitivity of the loss function to the output of a specific neuron `k`.
 
 ![using chain rule in back propagation 2](./static/assets/nn15.svg)
 
-The effect of weight on the input of neuron `j`, which is just the output of the previous layer's neuron `i`:
+is the derivative of the output of neuron `k` with respect to its input, simplifying to the weight between `j` and `k`.
 
 ![using chain rule in back propagation 3](./static/assets/nn16.svg)
 
-This makes it much easier to calculate the contribution of a specific weight to the error.
+is the effect of weight on the input of neuron `j`, which is the derivative of the activation function of neuron `j`.
+
+This makes it much easier to calculate the contribution of a specific weight to the error. The result of applying the chain rule (combined with the equation for calculating the contribution of a neuron to the error in a hidden layer) means that the derivative of the loss with respect to a specific weight is given by the much simpler equation:
+
+![contribution of a weight to the error](./static/assets/nn9.svg)
 
 </details>
 
-So how do we do this with F#? We first calculate the intermediate output sums. For the output layer, the only thing that needs to be done is for the derivatve of the loss function to applied to the outputs. For the hidden layers, the individual deltas for each node in the previous layer are found. Afterwards, the layer weights are taken and multiplied by their matching deltas. The values coming into each node are then summed.
+This value is then used to update the weights. We multiply it by a learning rate that controls how large the weight updates are between runs:
+
+![how to update the weight based on the error](./static/assets/nn12.svg)
+
+With this we have modified the weights based on their contribution to the total error! This means that in subsequent forward propagations the error will be lower (for the same specific input). Later when we train the network, we will constantly be updating the weights and due to using lots of different inputs this contribution will fluctuate. 
+
+So how do we do this with F#? We first calculate the intermediate output sums. For the output layer, the only thing that needs to be done is for the derivatve of the loss function to applied to the outputs. For the hidden layers, we can utilise the chain rule. This simplifies the calculation so that the  the individual deltas for each node in the previous layer are found. Afterwards, the layer weights are taken and multiplied by their matching deltas. The values coming into each node are then summed.
 
 The new weights are then calculated. This is simpler. The derivative of the activation function is found and then multiplied by the corresponding output delta sum. This is then multiplied by the output of of the previous layer resulting in a value corresponding to `learningRate * delta * outPrev`. This value is then subtracted from the corresponding weight as back propagation is defined.
 
