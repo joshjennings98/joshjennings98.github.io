@@ -167,7 +167,6 @@ img {
     display: block;
     margin: 0 auto;
     scale: 1.5;
-    max-height: calc(100vw/10);
 }
 
 summary,
@@ -246,6 +245,9 @@ pre {
     }
     div > section {
         padding: 0 5px;
+    }
+    img {
+        max-width: 66%;
     }
 }
 
