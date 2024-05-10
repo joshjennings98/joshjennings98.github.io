@@ -129,7 +129,7 @@ For the hidden layers, the individual deltas for each node in the previous layer
 
 ![error contribution from each node to the subsequent layers](./static/assets/nn9.svg)
 
-This formular calculates the error term for a neuron `j` by summing the contributions of errors from neurons in the subsequent layer `k`, weighted by the connection `w` between the neurons in each layer and multiplies it by the derivative of the loss function.
+This formula calculates the error term for a neuron `j` by summing the contributions of errors from neurons in the subsequent layer `k`, weighted by the connection `w` between the neurons in each layer and multiplies it by the derivative of the loss function.
 
 <details>
 <summary>
