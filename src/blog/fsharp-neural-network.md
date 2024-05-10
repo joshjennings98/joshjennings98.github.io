@@ -119,7 +119,7 @@ Back propagation is more complex than the forward version. We need to go backwar
 
 #### Output Layer
 
-For the output layer, we compute the derivative of the loss function with respect to the outputs. If `L` is the loss function and `o` represents a network output, the gradient is computed as:
+For the output layer, we compute the derivative of the loss function with respect to the outputs. For the following equations `L` is the loss function, `o` is a network output, `t` is the target output, and the derivative is that of the activation function. The gradient can then be computed as:
 
 ![derivative of loss function with respect to the outputs](./static/assets/nn8.svg)
 
