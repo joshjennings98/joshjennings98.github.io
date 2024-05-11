@@ -136,7 +136,7 @@ This formula calculates the error contributed by a neuron `j` by summing the con
 Click here to see how the chain rule is used to derive the above equation
 </summary>
 
-Let's consider a neural network with layered architecture where:
+Let's consider a neural network with a layered architecture where:
 
 ![z_j](./static/assets/nn17.svg)
 
