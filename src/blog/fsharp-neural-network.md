@@ -152,7 +152,7 @@ is the activation output of neuron `j`,
 
 ![w_{jk}](./static/assets/nn20.svg)
 
-represents the weight from neuron `j` in layer `l` to neuron `k` in layer `l+1`,
+represents the weight from neuron `j` in layer `l` to neuron `k` in layer `l+1`, and
 
 ![\delta_k](./static/assets/nn21.svg)
 
