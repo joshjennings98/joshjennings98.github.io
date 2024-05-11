@@ -19,23 +19,23 @@ A single forward propagation though a layer just involves multiplying the inputs
 
 This can be represented with the following equation:
 
-![forward propagation](./static/assets/nn1.svg)
+![z_j^{(l)}=\sum_{i=1}^{n^{(l-1)}}w_{ij}^{(l)}x_i^{(l-1)}+b_j^{(l)}](./static/assets/nn1.svg)
 
 The number of neurons in the previous layer is:
 
-![number of neurons](./static/assets/nn2.svg)
+![n^{(l-1)}](./static/assets/nn2.svg)
 
 The weight of the connection between neuron `i` in the previous layer and neuron `j` in the current layer is:
 
-![weights between layers](./static/assets/nn3.svg)
+![w_{ij}^{(l)}](./static/assets/nn3.svg)
 
 The output of neuron `i` in the previous layer is:
 
-![outputs of layers](./static/assets/nn4.svg)
+![x_i^{(l-1)}](./static/assets/nn4.svg)
 
 The bias term for neuron `j` in the current layer:
 
-![biases of layers](./static/assets/nn5.svg)
+![b_j^{(l)}](./static/assets/nn5.svg)
 
 How can we represent this in F#? It is simple, we just split up the equation into several parts and pipe the output from one part to another. The `List.map` applies the function to every element in the list:
 
@@ -49,7 +49,7 @@ let forwardSingleLayer (bias : float) (weights : float list list) (inputs : floa
 
 What is `activateLayer`? It is a function that is applied to each of the weighted sums to introduce non-linearity into the network:
 
-![activation function](./static/assets/nn6.svg)
+![a_j^{(l)}=f(z_j^{(l)})](./static/assets/nn6.svg)
 
 The `activateLayer` function takes an activation and maps the corresponding activation function across the list before returning it. A small part of this function can be see below:
 
@@ -96,7 +96,7 @@ let getOverallError (targetOutputs : float list) (actualOutputs : float list) (l
 
 A loss function (`L`) quantifies the difference between the predicted outputs (`y` with hat) of the network and the actual target values (`y`). This can be used to calculate the total error via the following equation:
 
-![loss function](./static/assets/nn7.svg)
+![E=\frac{1}{n}\sum_{i=1}^{n}L(y_i,\hat{y}_i)](./static/assets/nn7.svg)
 
 Here is how we can apply the loss function with F#. Similarly to the activation functions, the loss functions are supplied using pattern matching. In this case however, they return a function that can be applied wherever the particular value required instead of taking an returning a list. Part of `lossFunction` can be seen below. There are multiple loss functions that are supported, the ones you see here are mean squared error and mean absolute error:
 
@@ -121,54 +121,106 @@ Back propagation is more complex than the forward version. We need to go backwar
 
 For the output layer, we compute the derivative of the loss function with respect to the outputs. For the following equations, `L` is the loss function, `o` is a network output, `t` is the target output, and the derivative is that of the activation function. The gradient can then be computed as:
 
-![derivative of loss function with respect to the outputs](./static/assets/nn8.svg)
+![\delta_i=\frac{\partial L}{\partial o_i}=(o_i - t_i)\cdot\frac{\partial\sigma}{\partial z_i}](./static/assets/nn8.svg)
 
 #### Hidden Layers
 
 For the hidden layers, the individual deltas for each node in the previous layer are found by propagating the error backward from the output. This involves calculating the error contribution from each node to the subsequent layers, represented as:
 
-![error contribution from each node to the subsequent layers](./static/assets/nn9.svg)
+![\delta_j=\sum_{k}\delta_k w_{jk}\cdot\frac{\partial\sigma}{\partial z_j}](./static/assets/nn9.svg)
 
-This formula calculates the error term for a neuron `j` by summing the contributions of errors from neurons in the subsequent layer `k`, weighted by the connection `w` between the neurons in each layer and multiplies it by the derivative of the loss function.
+This formula calculates the error contributed by a neuron `j` by summing the contributions of errors from neurons in the subsequent layer `k`, weighted by the connection `w` between the neurons in each layer and multiplies it by the derivative of the activation function with respect to the input to neuron `j`.
 
 <details>
 <summary>
-Click here to see how the chain rule is used to get the above equation
+Click here to see how the chain rule is used to derive the above equation
 </summary>
+
+Let's consider a neural network with layered architecture where:
+
+![z_j](./static/assets/nn17.svg)
+
+represents the input to neuron `j` in layer `l`,
+
+![\sigma](./static/assets/nn18.svg)
+
+is the activation function,
+
+![a_j=\sigma(z_j)](./static/assets/nn19.svg)
+
+is the activation output of neuron `j`,
+
+![w_{jk}](./static/assets/nn20.svg)
+
+represents the weight from neuron `j` in layer `l` to neuron `k` in layer `l+1`,
+
+![\delta_k](./static/assets/nn21.svg)
+
+is the backpropagated error (gradient of the loss with respect to the input of neuron `k`) for neurons in layer `l+1`.
 
 The contribution of the weights to the error can be calculated using the chain rule. The [chain rule](https://en.wikipedia.org/wiki/Chain_rule) is a formula that expresses the derivative of the composition of two differentiable functions `f` and `g` in terms of the derivatives of `f` and `g`. It states the following:
 
-![the chain rule](./static/assets/chainrule.svg)
+![\frac{\partial f}{\partial g}=\frac{\partial f}{\partial x}\cdot\frac{\partial x}{\partial g}](./static/assets/chainrule.svg)
 
 To see how it works there is some good information [on the wikipedia page](https://en.wikipedia.org/wiki/Chain_rule#Intuitive_explanation)
 
 The chain rule is important in back propagation because it helps break down the calculation of how each weight affects the loss function into easier to manage components. Each weight's gradient is obtained by multiplying simpler derivatives through each layer. When updating the weights, the chain rule is applied as follows:
 
-![how the chain rule applies to back propagation](./static/assets/nn13.svg)
+### Expressing the partial derivative of the gradient of the loss function with respect to the weight between `i` and `j`
+
+Using the chain rule we get:
+
+![\frac{\partial L}{\partial w_{ij}}=\frac{\partial L}{\partial a_j}\frac{\partial a_j}{\partial z_j}\frac{\partial z_j}{\partial w_{ij}}](./static/assets/nn13.svg)
 
 Where:
 
-![using chain rule in back propagation 1](./static/assets/nn14.svg)
+![\frac{\partial L}{\partial a_j}](./static/assets/nn14.svg)
 
-is the sensitivity of the loss function to the output of a specific neuron `k`.
+is the gradient of the loss with respect to the activation output of neuron `j` and:
 
-![using chain rule in back propagation 2](./static/assets/nn15.svg)
+![\frac{\partial a_j}{\partial z_j}=\sigma'(z_j)](./static/assets/nn15.svg)
 
-is the derivative of the output of neuron `k` with respect to its input, simplifying to the weight between `j` and `k`.
+since `a` is the activation function applied to `z` and:
 
-![using chain rule in back propagation 3](./static/assets/nn16.svg)
+![\frac{\partial z_j}{\partial w_{ij}}=a_i](./static/assets/nn16.svg)
 
-is the effect of weight on the input of neuron `j`, which is the derivative of the activation function of neuron `j`.
+since `z` is the sum of the weights multiplied by the outputs of the activation function:
 
-This makes it much easier to calculate the contribution of a specific weight to the error. The result of applying the chain rule (combined with the equation for calculating the contribution of a neuron to the error in a hidden layer) means that the derivative of the loss with respect to a specific weight is given by the much simpler equation:
+![z_j = \sum_i w_{ij} a_i](./static/assets/nn10.svg)
 
-![contribution of a weight to the error](./static/assets/nn9.svg)
+### Error for neuron `j`
+
+The error for neuron `j` is the effect of weight on the input of neuron `j`, which is the derivative of the activation function of neuron `j`:
+
+![\delta_j=\frac{\partial L}{\partial z_j}](./static/assets/nn22.svg)
+
+By the chain rule, this can be expanded as:
+
+![\delta_j=\frac{\partial L}{\partial a_j}\frac{\partial a_j}{\partial z_j}=\left(\sum_{k}\frac{\partial L}{\partial z_k}\frac{\partial z_k}{\partial a_j}\right)\sigma'(z_j)](./static/assets/nn23.svg)
+
+Where:
+
+![\frac{\partial z_k}{\partial a_j}=w_{jk}](./static/assets/nn24.svg)
+
+since:
+
+![z_k=\sum_j w_{jk}a_j](./static/assets/nn11.svg)
+
+and by definition:
+
+![\frac{\partial L}{\partial z_k}=\delta_k](./static/assets/nn25.svg)
+
+### Final result
+
+Combining these equations together makes it much easier to calculate the contribution of a specific weight to the error. The result of applying the chain rule means that the derivative of the loss with respect to a specific weight is given by the much simpler equation:
+
+![\delta_j=\sum_{k}\delta_k w_{jk}\cdot\frac{\partial\sigma}{\partial z_j}](./static/assets/nn9.svg)
 
 </details>
 
 This value is then used to update the weights. We multiply it by a learning rate that controls how large the weight updates are between runs:
 
-![how to update the weight based on the error](./static/assets/nn12.svg)
+![w_{new}=w_{old}-learningRate\times\frac{\partial L}{\partial w_{ij}}](./static/assets/nn12.svg)
 
 With this we have modified the weights based on their contribution to the total error! This means that in subsequent forward propagations the error will be lower (for the same specific input). Later when we train the network, we will constantly be updating the weights and due to using lots of different inputs this contribution will fluctuate. 
 
