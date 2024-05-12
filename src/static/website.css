@@ -44,19 +44,32 @@ main {
 .theme-checkbox:checked ~ main {
     --c-normal: #040204;
     --c-background: #eeeeee;
-    @media (prefers-color-scheme: dark) {
-        --c-normal: #eeeeee;
-        --c-background: #040204;
-    }
-    @media (prefers-color-scheme: light) {
-        img {
-            -webkit-filter: invert(0);
-            filter: invert(0);
-        }
-    }
     --c-translucent: #00000000;
     --background-static: var(--c-background);
     --background-dynamic: var(--c-background);
+}
+
+@media (prefers-color-scheme: dark) {
+    .theme-checkbox:checked ~ main {
+        --c-normal: #eeeeee;
+        --c-background: #040204;
+    }
+}
+
+img {
+    max-width: 100%;
+    display: block;
+    margin: 0 auto;
+    scale: 1.5;
+    -webkit-filter: invert(0.935);
+    filter: invert(0.935);
+}
+
+@media (prefers-color-scheme: light) {
+    .theme-checkbox:checked ~ main img {
+        -webkit-filter: invert(0);
+        filter: invert(0);
+    }
 }
 
 main > div {
@@ -160,15 +173,6 @@ h4 a,
 h5 a,
 h6 a {
     text-decoration: none;
-}
-
-img {
-    max-width: 100%;
-    display: block;
-    margin: 0 auto;
-    scale: 1.5;
-    -webkit-filter: invert(0.935);
-    filter: invert(0.935);
 }
 
 summary,
