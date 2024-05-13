@@ -100,8 +100,9 @@
 
 (defn template-page [content {:keys [base slug title dst] :or {slug ""}}]
   (let [slug (if (= slug "index") "" slug)]
-    (when (not (empty? slug)) 
-      (generate-placeholder-file base slug title dst))
+    (when (not (empty? slug))
+      (generate-placeholder-file base slug title dst)
+      (spit (format "%s/sitemap.txt" dst) (format "%s/%s.html\n" base slug) :append true))
     [:article {:id slug :class (if (empty? slug) "homepage page" "page")}
       (markdown/markdown content :data)
       [:footer
@@ -142,9 +143,12 @@
     (System/exit 1))
   (do
     (let [cfg (edn/read-string (slurp cfg-file))
-          {src :src dst :dst langfile :langfile static :static} cfg]
+          {src :src dst :dst langfile :langfile static :static base :base} cfg]
       (if-not (fs/exists? dst)
         (fs/create-dir dst))
+      (let [sitemap (format "%s/sitemap.txt" dst)]
+        (fs/delete-if-exists sitemap)
+        (spit sitemap (format "%s/index.html\n" base)))
       (fs/copy-tree static (io/file dst "static") :replace-existing)
       (->> (list-md-files src)
            (map #(extract-content cfg %))
