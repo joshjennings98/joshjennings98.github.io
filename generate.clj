@@ -87,9 +87,9 @@
         without-index (vec (remove #(= key (:slug (:metadata %))) pages))]
     (conj without-index index-page)))
 
-(defn generate-placeholder-file [base slug title]
+(defn generate-placeholder-file [base slug title dst]
   (spit 
-    (format "%s.html" slug)
+    (format "%s/%s.html" dst slug)
     (utils/convert-to
       [:html
         [:head
@@ -98,10 +98,10 @@
           [:h1 title]
           [:p title]]] :html)))
 
-(defn template-page [content {:keys [base slug title] :or {slug ""}}]
+(defn template-page [content {:keys [base slug title dst] :or {slug ""}}]
   (let [slug (if (= slug "index") "" slug)]
     (when (not (empty? slug)) 
-      (generate-placeholder-file base slug title))
+      (generate-placeholder-file base slug title dst))
     [:article {:id slug :class (if (empty? slug) "homepage page" "page")}
       (markdown/markdown content :data)
       [:footer
