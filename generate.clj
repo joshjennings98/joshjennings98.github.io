@@ -94,7 +94,7 @@
       [:html
         [:head
           [:meta {:http-equiv "refresh" :content (format "0; URL=%s#%s" base slug)}]]
-        [:body {:style "color:#040204;"} 
+        [:body {:style "background-color:#040204;"} 
           [:h1 {:style "color:#040204;"} title]
           [:p {:style "color:#040204;"} title]]] :html)))
 
