@@ -94,7 +94,7 @@
               [:meta {:http-equiv "refresh" :content (format "0; URL=%s#%s" base slug)}]]
             [:body 
               [:h1 title]
-              [:p title]]] :html)) (format "%s.html" slug))
+              [:p title]]] :html) (format "%s.html" slug)))
 
 (defn template-page [content {:keys [base slug title] :or {slug ""}}]
   (let [slug (if (= slug "index") "" slug)]
