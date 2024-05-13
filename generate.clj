@@ -100,7 +100,8 @@
 
 (defn template-page [content {:keys [base slug title] :or {slug ""}}]
   (let [slug (if (= slug "index") "" slug)]
-    (do (generate-placeholder-file base slug title))
+    (when (not (empty? slug) 
+      (generate-placeholder-file base slug title))
     [:article {:id slug :class (if (empty? slug) "homepage page" "page")}
       (markdown/markdown content :data)
       [:footer
