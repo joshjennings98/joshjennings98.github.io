@@ -88,13 +88,15 @@
     (conj without-index index-page)))
 
 (defn generate-placeholder-file [base slug title]
-  (spit (utils/convert-to
-          [:html
-            [:head
-              [:meta {:http-equiv "refresh" :content (format "0; URL=%s#%s" base slug)}]]
-            [:body 
-              [:h1 title]
-              [:p title]]] :html) (format "%s.html" slug)))
+  (spit 
+    (format "%s.html" slug)
+    (utils/convert-to
+      [:html
+        [:head
+          [:meta {:http-equiv "refresh" :content (format "0; URL=%s#%s" base slug)}]]
+        [:body 
+          [:h1 title]
+          [:p title]]] :html)))
 
 (defn template-page [content {:keys [base slug title] :or {slug ""}}]
   (let [slug (if (= slug "index") "" slug)]
