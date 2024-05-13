@@ -148,7 +148,7 @@
         (fs/create-dir dst))
       (let [sitemap (format "%s/sitemap.txt" dst)]
         (fs/delete-if-exists sitemap)
-        (spit sitemap (format "%s/index.html\n" base)))
+        (spit sitemap (format "%s\n" base)))
       (fs/copy-tree static (io/file dst "static") :replace-existing)
       (spit (format "%s/robots.txt" dst) (format "Sitemap: %s/sitemap.txt\n" base))
       (->> (list-md-files src)
