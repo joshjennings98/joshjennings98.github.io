@@ -150,6 +150,7 @@
         (fs/delete-if-exists sitemap)
         (spit sitemap (format "%s/index.html\n" base)))
       (fs/copy-tree static (io/file dst "static") :replace-existing)
+      (spit (format "%s/robots.txt" dst) (format "Sitemap: %s/sitemap.txt\n" base))
       (->> (list-md-files src)
            (map #(extract-content cfg %))
            (filter #(not (contains? (:metadata %) :skip)))
