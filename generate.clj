@@ -94,9 +94,9 @@
       [:html
         [:head
           [:meta {:http-equiv "refresh" :content (format "0; URL=%s#%s" base slug)}]]
-        [:body 
-          [:h1 title]
-          [:p title]]] :html)))
+        [:body {:style "color:#040204;"} 
+          [:h1 {:style "color:#040204;"} title]
+          [:p {:style "color:#040204;"} title]]] :html)))
 
 (defn template-page [content {:keys [base slug title dst] :or {slug ""}}]
   (let [slug (if (= slug "index") "" slug)]
