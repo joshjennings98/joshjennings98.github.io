@@ -52,7 +52,7 @@ $ echo 'long running commands are also supported' && sleep 5 && echo 'thanks to 
 
 $ echo $VAR # This variable was set up earlier
 
-```go
+`​``go
 func main() {
     fmt.Println("Use fenced code blocks with markdown syntax to get")
     fmt.Println("a block of syntax highlighted code with highlight.js")
