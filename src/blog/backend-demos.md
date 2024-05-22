@@ -21,11 +21,12 @@ The result is that with this application backend demos should be much easier to 
 Features
 
 * A presentation is just a simple text file.
-* A slide can contain one of: text, an executed command, a code block, or an image. The syntax is very similar to markdown.
+* A slide can contain: text, an executed command, code blocks, or images. The syntax uses markdown.
 * Executed commands will stream output to be shown in the slide thanks to [xterm.js](http://xtermjs.org/).
 * The command that is executed is shown above the command output.
 * Shell commands can be executed before the presentation runs allowing for setup before a presentation.
 * Code blocks are automatically highlighted using [highlight.js](https://highlightjs.org/).
+* HTML can be embedded meaning you can include videos or iframes etc.
 * Left click or right arrow to go forwards, right click or left arrow to go backwards.
 * Easy to use and share via screen sharing.
 * Styling done via CSS meaning it can be easily reconfigured.
