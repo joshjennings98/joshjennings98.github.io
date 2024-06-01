@@ -87,6 +87,11 @@
         without-index (vec (remove #(= key (:slug (:metadata %))) pages))]
     (conj without-index index-page)))
 
+(defn move-to-start [key pages]
+  (let [index-page (first (filter #(= key (:slug (:metadata %))) pages))
+        without-index (vec (remove #(= key (:slug (:metadata %))) pages))]
+    (cons index-page without-index)))
+
 (defn generate-placeholder-file [base slug title dst]
   (spit 
     (format "%s/%s.html" dst slug)
@@ -155,6 +160,7 @@
            (map #(extract-content cfg %))
            (filter #(not (contains? (:metadata %) :skip)))
            (move-to-end "index")
+           (move-to-start "blog")
            (map (fn [{:keys [md metadata]}] 
                     (template-page md metadata)))
            (reduce (fn [acc elem] (conj acc elem)) [:div])
