@@ -184,11 +184,15 @@ The other partial derivative is the gradient at neuron `j` due to its role in th
 
 ![\delta_j=\frac{\partial L}{\partial z_j}](./static/assets/nn22.svg)
 
-By using the chain rule again, this can be expanded as:
+By applying the chain rule then replacing the second partial derivative with the derivative of the activation function and then applying the chain run again on the first partial derivative, we can rewrite the equation as:
 
 ![\delta_j=\frac{\partial L}{\partial a_j}\frac{\partial a_j}{\partial z_j}=\left(\sum_{k}\frac{\partial L}{\partial z_k}\frac{\partial z_k}{\partial a_j}\right)\sigma'(z_j)](./static/assets/nn23.svg)
 
-Where:
+We were able to replace the second partial derivative with the derivative of the activation because:
+
+![\frac{\partial a_j}{\partial z_j}=\sigma'(z_j)](./static/assets/nn13.svg)
+
+On top of this, we know that:
 
 ![\frac{\partial z_k}{\partial a_j}=w_{jk}](./static/assets/nn24.svg)
 
