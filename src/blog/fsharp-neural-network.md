@@ -208,7 +208,7 @@ Combining these equations together makes it much easier to calculate the contrib
 
 ![\delta_j=\sum_{k}\delta_k w_{jk}\cdot\frac{\partial\sigma}{\partial z_j}](./static/assets/nn9.svg)
 
-*Note: Remember that sigma is just another version of the activation function `a`* 
+*Note: Remember that sigma is just another version of the activation function `a`.*
 
 </details>
 
