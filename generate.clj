@@ -125,7 +125,8 @@
       [:base {:href base}]
       [:link {:rel "preload" :href "static/AveriaLibre.woff2" :as "font" :type "font/woff2" :crossorigin true}]
       [:link {:rel "preload" :href "static/IosevkaSmall.woff2" :as "font" :type "font/woff2" :crossorigin true}]
-      [:meta {:name "theme-color" :content "#040204"}]]
+      [:meta {:name "theme-color" :content "#040204"}]
+      [:meta {:name "google-site-verification" :content "HzLecO0vaXdE95EUaURQI_yb5rqq-vj_3bv6PInHxvI"}]]
     [:body
       [:input {:type "checkbox" :id "theme" :class "theme-checkbox" :hidden true}]
       [:main
