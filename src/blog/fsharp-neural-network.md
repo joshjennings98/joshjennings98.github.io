@@ -200,13 +200,15 @@ since:
 
 ![z_k=\sum_j w_{jk}a_j](./static/assets/nn11.svg)
 
-and by definition:
+and by definition (since we were calculating the same derivative but for `j` and this is just `k`):
 
 ![\frac{\partial L}{\partial z_k}=\delta_k](./static/assets/nn25.svg)
 
 Combining these equations together makes it much easier to calculate the contribution of a specific weight to the error. The result of applying the chain rule means that the derivative of the loss with respect to a specific weight is given by the much simpler equation:
 
 ![\delta_j=\sum_{k}\delta_k w_{jk}\cdot\frac{\partial\sigma}{\partial z_j}](./static/assets/nn9.svg)
+
+*Note: Remember that sigma is just another version of the activation function `a`* 
 
 </details>
 
