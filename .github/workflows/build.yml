@@ -4,13 +4,14 @@ on:
   pull_request:
     branches:
       - master
-  push:
-    branches:
-      - master
-    paths:
-      - 'src/**'
-      - 'generate.clj'
-      - 'config.edn'
+  # don't rebuild on push to main since changes should be made through PR
+  # push:
+  #   branches:
+  #     - master
+  #   paths:
+  #     - 'src/**'
+  #     - 'generate.clj'
+  #     - 'config.edn'
   workflow_dispatch:
 
 jobs:
