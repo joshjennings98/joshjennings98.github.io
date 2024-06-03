@@ -3,7 +3,7 @@ title: This Website
 slug: website
 ---
 
-## This Website
+## How I Made This Website Using Only HTML and CSS (No JavaScript)
 
 The goal of this website was to create an interactive static website using on HTML and CSS, no JavaScript. I had recently read [an article about the quiet web](https://briankoberlein.com/tech/quiet-web/) which inspired me to try and create an interesting website that satisfied the requirements laid out in the blog post:
 
