@@ -166,39 +166,33 @@ To see how it works there is some good information [on the wikipedia page](https
 
 The chain rule is important in back propagation because it helps break down the calculation of how each weight affects the loss function into easier to manage components. Each weight's gradient is obtained by multiplying simpler derivatives through each layer. When updating the weights, the chain rule is applied as follows:
 
-### Expressing the partial derivative of the gradient of the loss function with respect to the weight between `i` and `j`
+### Applying the chain rule
 
 Using the chain rule we get:
 
-![\frac{\partial L}{\partial w_{ij}}=\frac{\partial L}{\partial a_j}\frac{\partial a_j}{\partial z_j}\frac{\partial z_j}{\partial w_{ij}}](./static/assets/nn13.svg)
+![\frac{\partial L}{\partial w_{ij}}=\frac{\partial L}{\partial a_j}\frac{\partial a_j}{\partial z_j}\frac{\partial z_j}{\partial w_{ij}}](./static/assets/nn15.svg)
 
-Where:
-
-![\frac{\partial L}{\partial a_j}](./static/assets/nn14.svg)
-
-is the gradient of the loss with respect to the activation output of neuron `j` and:
-
-![\frac{\partial a_j}{\partial z_j}=\sigma'(z_j)](./static/assets/nn15.svg)
-
-since `a` is the activation function applied to `z` and:
+From this we can calculate that:
 
 ![\frac{\partial z_j}{\partial w_{ij}}=a_i](./static/assets/nn16.svg)
 
-since `z` is the sum of the weights multiplied by the outputs of the activation function:
+because `z` is the sum of the weights multiplied by the outputs of the activation function:
 
 ![z_j = \sum_i w_{ij} a_i](./static/assets/nn10.svg)
 
-### Error for neuron `j`
-
-The error for neuron `j` is the effect of weight on the input of neuron `j`, which is the derivative of the activation function of neuron `j`:
+The other partial derivative is the gradient at neuron `j` due to its role in the network's overall error. It can be defined as:
 
 ![\delta_j=\frac{\partial L}{\partial z_j}](./static/assets/nn22.svg)
 
-By the chain rule, this can be expanded as:
+By applying the chain rule then replacing the second partial derivative with the derivative of the activation function and then applying the chain run again on the first partial derivative, we can rewrite the equation as:
 
 ![\delta_j=\frac{\partial L}{\partial a_j}\frac{\partial a_j}{\partial z_j}=\left(\sum_{k}\frac{\partial L}{\partial z_k}\frac{\partial z_k}{\partial a_j}\right)\sigma'(z_j)](./static/assets/nn23.svg)
 
-Where:
+We were able to replace the second partial derivative with the derivative of the activation because:
+
+![\frac{\partial a_j}{\partial z_j}=\sigma'(z_j)](./static/assets/nn13.svg)
+
+On top of this, we know that:
 
 ![\frac{\partial z_k}{\partial a_j}=w_{jk}](./static/assets/nn24.svg)
 
@@ -206,15 +200,15 @@ since:
 
 ![z_k=\sum_j w_{jk}a_j](./static/assets/nn11.svg)
 
-and by definition:
+and by definition (since we were calculating the same derivative but for `j` and this is just `k`):
 
 ![\frac{\partial L}{\partial z_k}=\delta_k](./static/assets/nn25.svg)
-
-### Final result
 
 Combining these equations together makes it much easier to calculate the contribution of a specific weight to the error. The result of applying the chain rule means that the derivative of the loss with respect to a specific weight is given by the much simpler equation:
 
 ![\delta_j=\sum_{k}\delta_k w_{jk}\cdot\frac{\partial\sigma}{\partial z_j}](./static/assets/nn9.svg)
+
+*Note: Remember that sigma is just another version of the activation function `a`* 
 
 </details>
 
