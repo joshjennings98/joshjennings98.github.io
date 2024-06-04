@@ -106,7 +106,6 @@ header > h1 {
 header nav table {
     text-align: center;
     margin-top: 45px;
-    padding-inline-start: 0;
 }
 
 header nav table tr td {
