@@ -113,12 +113,12 @@
       [:footer
         [:nav
           [:hr {:class "hidden"}]
-            [:table [:tbody [:tr
-              [:td {:width "50%" :align "left"}
-                [:a {:href (str "#" slug)} "Back to top"]]
-              [:td {:width "50%" :align "right"}
-                [:a {:href "#"} "Home"]]
-              [:hr {:class "hidden"}]]]]]]]))
+          [:table {:width "100%"} [:tbody [:tr
+            [:td {:width "50%" :align "left"}
+              [:a {:href (str "#" slug)} "Back to top"]]
+            [:td {:width "50%" :align "right"}
+              [:a {:href "#" :class "hidden"} "Home"]]]]]
+          [:hr {:class "hidden"}]]]]))
 
 (defn template-site [{:keys [base]} content]
   (utils/convert-to
@@ -142,7 +142,7 @@
               [:h1 [:a {:href "#"} "Josh's Website"]]
               [:nav
                 [:hr {:class "hidden"}]
-                [:table [:tbody [:tr
+                [:table {:width "100%"} [:tbody [:tr
                   [:td {:width "25%" :align "left"}
                     [:a {:href "#"} "Home"]]
                   [:td {:width "25%" :align "center"}
