@@ -21,13 +21,13 @@ body {
     margin: 0;
     height: 100%;
     scroll-behavior: smooth;
-    color: var(--c-normal);
-    background-color: var(--c-background);
+    background-color: #040204;
 }
 
 main {
     font-family: 'Averia', serif;
     text-align: justify;
+    color: var(--c-normal);
     text-justify: inter-word;
     background: var(--background-dynamic);
     background-attachment: fixed;
@@ -228,6 +228,11 @@ pre {
     footer nav table tr td a:hover::before {
         opacity: 1;
     }
+}
+
+footer nav table tr td {
+    display: block;
+    width: 100%;
 }
 
 @media (max-width: 800px) {
