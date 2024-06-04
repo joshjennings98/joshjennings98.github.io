@@ -24,7 +24,8 @@ body {
     background-color: #040204;
 }
 
-main {
+main,
+header label {
     font-family: 'Averia', serif;
     text-align: justify;
     color: var(--c-normal);
