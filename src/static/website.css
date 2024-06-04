@@ -65,6 +65,10 @@ img {
     filter: invert(0.935);
 }
 
+.hidden {
+    display: none;
+}
+
 @media (prefers-color-scheme: light) {
     .theme-checkbox:checked ~ main img {
         -webkit-filter: invert(0);
@@ -99,22 +103,30 @@ header > h1 {
     line-height: 1.2em;
 }
 
-header nav ul {
+header nav table {
     text-align: center;
     margin-top: 45px;
     padding-inline-start: 0;
 }
 
-header nav ul li,
-footer nav ul li {
+header nav table tr td {
     display: inline;
     margin: 0 20px;
 }
 
+
+header nav ul li,
+footer nav table tr td,
+header nav table tr td {
+    font-size: 1.2em;
+}
+
 header nav ul li label,
 header nav ul li a,
+header nav table tr td label,
+header nav table tr td a,
 footer nav ul li a,
-footer nav a,
+footer nav table tr td a,
 header a {
     text-decoration: none;
     cursor: pointer;
@@ -202,24 +214,31 @@ pre {
 }
 
 @media (min-width: 801px) {
-    header nav ul li label::before,
-    header nav ul li label::after,
-    header nav ul li a::before,
-    header nav ul li a::after,
-    footer nav a::before,
-    footer nav a::after,
-    footer nav ul li a::after,
-    footer nav ul li a::before {
+    header nav table tr td label::before,
+    header nav table tr td a::before,
+    header nav table tr td label::after,
+    header nav table tr td a::after,
+    footer nav table tr td a::after,
+    footer nav table tr td a::before {
         content: '✦  ';
         opacity: 0;
     }
 
-    header nav ul li a:hover::before,
-    header nav ul li label:hover::before,
-    footer nav ul li a:hover::before,
-    footer nav a:hover::before {
+    header nav table tr td a:hover::before,
+    header nav table tr td label:hover::before,
+    footer nav table tr td a:hover::before {
         opacity: 1;
     }
+}
+
+footer nav table tr td {
+    display: block;
+    width: 100%;
+}
+
+footer nav table tr td a {
+    display: block;
+    text-align: center;
 }
 
 @media (max-width: 800px) {
@@ -243,10 +262,10 @@ pre {
         padding-top: 30px;
         margin-bottom: 30px;
     }
-    header nav ul {
+    header nav table tr {
         margin-top: 25px;
     }
-    header nav ul li {
+    header nav table tr td {
         margin: 0 calc(100vw / 25);
     }
     div > section {
