@@ -114,6 +114,10 @@ header nav table tr td {
     margin: 0 20px;
 }
 
+footer nav table tr td {
+    width: 100%;
+    text-align: center;
+}
 
 footer nav table tr td,
 header nav table tr td {
@@ -228,11 +232,6 @@ pre {
     footer nav table tr td a:hover::before {
         opacity: 1;
     }
-}
-
-footer nav table tr td {
-    display: block;
-    width: 100%;
 }
 
 @media (max-width: 800px) {
