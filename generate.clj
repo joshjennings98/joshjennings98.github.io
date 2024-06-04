@@ -133,7 +133,7 @@
       [:link {:rel "preload" :href "static/IosevkaSmall.woff2" :as "font" :type "font/woff2" :crossorigin true}]
       [:meta {:name "theme-color" :content "#040204"}]
       [:meta {:name "google-site-verification" :content "HzLecO0vaXdE95EUaURQI_yb5rqq-vj_3bv6PInHxvI"}]]
-    [:body
+    [:body {:bgcolor "#c9e5ff"}
       [:input {:type "checkbox" :id "theme" :class "theme-checkbox" :hidden true}]
       [:main
         [:div
