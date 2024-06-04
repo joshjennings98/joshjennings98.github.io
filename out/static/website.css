@@ -24,8 +24,7 @@ body {
     background-color: #040204;
 }
 
-main,
-header label {
+main {
     font-family: 'Averia', serif;
     text-align: justify;
     color: var(--c-normal);
@@ -95,6 +94,7 @@ div > section {
 header {
     padding-top: 80px;
     margin-bottom: 80px;
+    color: var(--c-normal);
 }
 
 header > h1 {
