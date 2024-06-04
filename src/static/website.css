@@ -120,16 +120,8 @@ footer nav table tr td {
     text-align: center;
 }
 
-footer nav table tr td,
-header nav table tr td {
-    font-size: 1.2em;
-}
-
-header nav ul li label,
-header nav ul li a,
 header nav table tr td label,
 header nav table tr td a,
-footer nav ul li a,
 footer nav table tr td a,
 header a {
     text-decoration: none;
@@ -218,6 +210,11 @@ pre {
 }
 
 @media (min-width: 801px) {
+    footer nav table tr td,
+    header nav table tr td {
+        font-size: 1.2em;
+    }
+
     header nav table tr td label::before,
     header nav table tr td label::after,
     header nav table tr td a::before,
@@ -270,8 +267,8 @@ pre {
     }
 }
 
-@media (max-width: 350px) {
-    header nav ul li {
+@media (max-width: 300px) {
+    header nav table tr td {
         margin: 0 8px;
     }
 }
