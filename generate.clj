@@ -150,8 +150,8 @@
                   [:td {:width "32%" :align "center"}
                     [:a {:href "http://github.com/joshjennings98" :target "_blank" :rel "noopener noreferrer"} "GitHub"]]
                   [:td {:width "18%" :align "right"}
-                    [:label {:for "theme" :title "Toggle stars theme" :class "page-button"} "Theme"]]
-                [:hr {:class "hidden"}]]]]]]
+                    [:label {:for "theme" :title "Toggle stars theme" :class "page-button"} "Theme"]]]]]
+                [:hr {:class "hidden"}]]]
               content
           ]]]]] :html))
 
