@@ -112,7 +112,13 @@
       (markdown/markdown content :data)
       [:footer
         [:nav
-          [:a {:href (str "#" slug)} "Back to top"]]]]))
+          [:hr {:class "hidden"}]
+          [:table {:width "100%"} [:tbody [:tr
+            [:td {:width "50%" :align "left"}
+              [:a {:href (str "#" slug)} "Back to top"]]
+            [:td {:width "50%" :align "right"}
+              [:a {:href "#" :class "hidden"} "Home"]]]]]
+          [:hr {:class "hidden"}]]]]))
 
 (defn template-site [{:keys [base]} content]
   (utils/convert-to
@@ -135,11 +141,17 @@
             [:header
               [:h1 [:a {:href "#"} "Josh's Website"]]
               [:nav
-                [:ul {:class "nav"}
-                  [:li [:a {:href "#"} "Home"]]
-                  [:li [:a {:href "#blog"} "Blog"]]
-                  [:li [:a {:href "http://github.com/joshjennings98" :target "_blank" :rel "noopener noreferrer"} "GitHub"]]
-                  [:li [:label {:for "theme" :title "Toggle stars theme" :class "page-button"} "Theme"]]]]]
+                [:hr {:class "hidden"}]
+                [:table {:width "100%"} [:tbody [:tr
+                  [:td {:width "25%" :align "left"}
+                    [:a {:href "#"} "Home"]]
+                  [:td {:width "25%" :align "center"}
+                    [:a {:href "#blog"} "Blog"]]
+                  [:td {:width "32%" :align "center"}
+                    [:a {:href "http://github.com/joshjennings98" :target "_blank" :rel "noopener noreferrer"} "GitHub"]]
+                  [:td {:width "18%" :align "right"}
+                    [:label {:for "theme" :title "Toggle stars theme" :class "page-button"} "Theme"]]]]]]]
+                [:hr {:class "hidden"}]
               content
           ]]]]] :html))
 
